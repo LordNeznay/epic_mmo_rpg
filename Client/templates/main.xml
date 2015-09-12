@@ -1,0 +1,12 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+	<h1>Epic MMO RPG</h1>
+	<div>
+		<button id="js-start-game">Start Game</button>
+	</div>
+	<div>
+		<button id="js-scoreboard">Score Board</button>
+	</div>
+	<div>
+		<button id="js-login">Login</button>
+	</div>
+</fest:template>
