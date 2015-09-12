@@ -1,0 +1,4 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+    	<h1>Login</h1>
+    	<button id="js-back">Back</button>
+</fest:template>
