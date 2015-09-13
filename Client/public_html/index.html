@@ -2,7 +2,7 @@
 <html><head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="/css/main.css"/>
-    <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="/js/jquery-2.1.4.min.js"></script>
 	<script src="/js/tmpl/main.js"></script>
     <script src="/js/tmpl/scoreboard.js"></script>
     <script src="/js/tmpl/game.js"></script>
@@ -12,50 +12,53 @@
     <div id="page" align="center"></div>
 	
 	<script>
-		function showMainScreen() { // Конструктор экрана "Главный" 
-			$('#page').html(mainTmpl());// Рендерим шаблон
+		$(document).ready(function(){
+			var $page = $('#page');
+			
+			function showMainScreen() { // Конструктор экрана "Главный" 
+				$page.html(mainTmpl());// Рендерим шаблон
 
-			// Удаляем установленные обработчики событий
-			$('#page').find('#js-back').off('click', showMainScreen);
+				// Удаляем установленные обработчики событий
+				$page.find('#js-back').off('click', showMainScreen);
 
-			// Инициализируем обработчики событий
-			$('#page').find('#js-scoreboard').on('click', showScoreboardScreen);
-			$('#page').find('#js-start-game').on('click', showGameScreen);
-			$('#page').find('#js-login').on('click', showLoginScreen);
-		}
+				// Инициализируем обработчики событий
+				$page.find('#js-scoreboard').on('click', showScoreboardScreen);
+				$page.find('#js-start-game').on('click', showGameScreen);
+				$page.find('#js-login').on('click', showLoginScreen);
+			}
 
-		function hideMainScreen() { // Деструктор экрана "Главный"
-			// Удаляем установленные обработчики событий
-			$('#page').find('#js-scoreboard').off('click', showScoreboardScreen);
-			$('#page').find('#js-start-game').off('click', showGameScreen);
-		}
+			function hideMainScreen() { // Деструктор экрана "Главный"
+				// Удаляем установленные обработчики событий
+				$page.find('#js-scoreboard').off('click', showScoreboardScreen);
+				$page.find('#js-start-game').off('click', showGameScreen);
+			}
 
-		function showGameScreen() { // Конструктор экрана "Игра" 
-			hideMainScreen();
-			$('#page').html(gameTmpl());// Рендерим шаблон
+			function showGameScreen() { // Конструктор экрана "Игра" 
+				hideMainScreen();
+				$page.html(gameTmpl());// Рендерим шаблон
 
-			$('#page').find('#js-back').on('click', showMainScreen);
-		}
+				$page.find('#js-back').on('click', showMainScreen);
+			}
 
-		function showScoreboardScreen() { // Конструктор экрана "Лучшие игроки"
-			hideMainScreen(); 
-			$('#page').html(scoreboardTmpl());// Рендерим шаблон
+			function showScoreboardScreen() { // Конструктор экрана "Лучшие игроки"
+				hideMainScreen(); 
+				$page.html(scoreboardTmpl());// Рендерим шаблон
 
-			// Инициализируем обработчики событий
-			$('#page').find('#js-back').on('click', showMainScreen);
-		}
+				// Инициализируем обработчики событий
+				$page.find('#js-back').on('click', showMainScreen);
+			}
 
-		function showLoginScreen() { // Конструктор экрана "Авторизации"
-			hideMainScreen(); 
-			$('#page').html(loginTmpl());// Рендерим шаблон
+			function showLoginScreen() { // Конструктор экрана "Авторизации"
+				hideMainScreen(); 
+				$page.html(loginTmpl());// Рендерим шаблон
 
-			// Инициализируем обработчики событий
-			$('#page').find('#js-back').on('click', showMainScreen);
-		}
+				// Инициализируем обработчики событий
+				$page.find('#js-back').on('click', showMainScreen);
+			}
 
-		showMainScreen();
+			showMainScreen();
+		}); //Конец $(document).ready
 	</script>
-
 
 	<script src="//localhost:35729/livereload.js"></script>
 </body>

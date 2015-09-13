@@ -1,4 +1,25 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
     	<h1>Login</h1>
+		
+		<script>
+			$(document).ready(function(){
+				//При отправки формы
+				$('#form_login').submit(function(){
+					var login_name = $('#form_login input[name="name"]').val();
+					$.post("/api/v1/auth/signin", {login: login_name}, function(data){
+						$("#div_login").html(data);
+					});
+					return false;
+				});
+			});
+		</script>
+		
+		<div id="div_login">
+			<form id="form_login">
+				<input type="text" name="name"> </input>
+				<input type="submit" value="Login"> </input>
+			</form>
+		</div>
+		
     	<button id="js-back">Back</button>
 </fest:template>
