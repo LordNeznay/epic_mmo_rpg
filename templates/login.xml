@@ -6,7 +6,8 @@
 				//При отправки формы
 				$('#form_login').submit(function(){
 					var login_name = $('#form_login input[name="name"]').val();
-					$.post("/api/v1/auth/signin", {login: login_name}, function(data){
+					var pass = $('#form_login input[name="pass"]').val();
+					$.post("/api/v1/auth/signin", {name: login_name, password: pass}, function(data){
 						$("#div_login").html(data);
 					});
 					return false;
@@ -17,6 +18,7 @@
 		<div id="div_login">
 			<form id="form_login">
 				<input type="text" name="name"> </input>
+				<input type="password" name="pass"> </input>
 				<input type="submit" value="Login"> </input>
 			</form>
 		</div>

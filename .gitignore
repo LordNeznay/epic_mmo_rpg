@@ -1,4 +1,6 @@
 # игнорирование папки инструментов
-Client/node_modules/
+node_modules/
 #Игнорирование папки автоматически генерируемых файлов
-Client/public_html/js/tmpl/
+public_html/js/tmpl/
+#Игнорирование папки с байт-кодом
+target
