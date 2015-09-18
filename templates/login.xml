@@ -1,27 +1,6 @@
-<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
-    	<h1>Login</h1>
-		
-		<script>
-			$(document).ready(function(){
-				//При отправки формы
-				$('#form_login').submit(function(){
-					var login_name = $('#form_login input[name="name"]').val();
-					var pass = $('#form_login input[name="pass"]').val();
-					$.post("/api/v1/auth/signin", {name: login_name, password: pass}, function(data){
-						$("#div_login").html(data);
-					});
-					return false;
-				});
-			});
-		</script>
-		
-		<div id="div_login">
-			<form id="form_login">
-				<input type="text" name="name"> </input>
-				<input type="password" name="pass"> </input>
-				<input type="submit" value="Login"> </input>
-			</form>
-		</div>
-		
-    	<button id="js-back">Back</button>
+<fest:template xmlns:fest="http://fest.mail.ru">
+Login
+<ul>
+	<li><a href="#"> Back </a></li>
+</ul>
 </fest:template>
