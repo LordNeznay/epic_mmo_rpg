@@ -1,6 +1,6 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
 Main Menu
-<ul>
+<ul class="main_menu">
 	<li><a href="#game"> Game </a></li>
 	<li><a href="#scoreboard"> Scoreboard </a></li>
 	<li><a href="#login"> Login </a></li>

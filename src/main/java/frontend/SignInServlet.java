@@ -23,6 +23,22 @@ public class SignInServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String session = request.getSession().getId().toString();
+
+        Map<String, Object> pageVariables = new HashMap<>();
+        if(accountService.getSessions(session) == null) {
+
+            pageVariables.put("loginStatus", "Enter login/password");
+            response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
+        }else {
+            pageVariables.put("status", "ok");
+            response.getWriter().println(PageGenerator.getPage("exitform.html", pageVariables));
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         //Извлечение параметров
@@ -36,11 +52,15 @@ public class SignInServlet extends HttpServlet {
 
         //Если профиль не нулевой и его пароль совпадает с введенным
         if (profile != null && profile.getPassword().equals(password)) {
-            pageVariables.put("loginStatus", "Login passed");
+            String session = request.getSession().getId().toString();
+            accountService.addSessions(session, profile);
+            pageVariables.put("status", "ok");
+            response.getWriter().println(PageGenerator.getPage("exitform.html", pageVariables));
         } else {
             pageVariables.put("loginStatus", "Wrong login/password");
+            response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
         }
 
-        response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
+
     }
 }

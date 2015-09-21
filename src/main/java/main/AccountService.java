@@ -28,4 +28,9 @@ public class AccountService {
     public UserProfile getSessions(String sessionId) {
         return sessions.get(sessionId);
     }
+
+    public UserProfile removeUser(String sessionId) {
+        sessions.remove(sessionId);
+        return sessions.get(sessionId);
+    }
 }

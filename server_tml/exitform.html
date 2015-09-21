@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+<script>
+$(document).ready(function(){
+	$("#form_exit").on("submit", function(event) {
+            var url = "/api/v1/auth/exit";
+            //event.preventDefautlt();
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   success: function(data)
+                   {
+                       //postDispatcher(data);
+                       $("#div_exit").load("/api/v1/auth/signin");
+                   }
+            });
+            return false;
+    });
+
+});
+</script>
+<div id="div_exit">
+    <form id="form_exit">
+        <p><button>Exit</button></p>
+    </form>
+</div>
+
+</body>
+</html>

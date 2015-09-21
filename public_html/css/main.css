@@ -1,0 +1,11 @@
+#page {
+	width: 100%;
+	border: 1px dashed #000;
+	text-align: center;
+}
+
+.main_menu li{
+	text-decoration: none;
+	display: block;
+	padding: 15px 15px 15px 15px;
+}

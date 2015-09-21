@@ -10,17 +10,16 @@ define([
         template: tmpl,
 		className: "main-view",
         initialize: function () {
-            this.render();
-            this.hide();
+		
         },
         render: function () {
-            this.$el.html( this.template() );
+
         },
         show: function () {
-            this.$el.show();
+            $("#page").html( this.template() );
         },
         hide: function () {
-            this.$el.hide();
+
         }
 
     });
