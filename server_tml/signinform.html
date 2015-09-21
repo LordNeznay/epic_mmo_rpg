@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+<script>
+$(document).ready(function(){
+    $('#form_login').submit(function(){
+			var login_name = $('#form_login input[name="name"]').val();
+			var login_password = $('#form_login input[name="name"]').val();
+
+			$.post("/api/v1/auth/signin", {name: login_name, password: login_password}, function(data){
+				$("#div_login_from").html(data);
+			});
+
+			return false;
+		});
+	});
+</script>
+<div id="div_login_from">
+    <p>Login status: ${loginStatus}</p>
+    <form id="form_login">
+        <input type="text" name="name"> </input>
+        <input type="text" name="password"> </input>
+        <input type="submit" value="Login"> </input>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+<script>
+$(document).ready(function(){
+    $('#form_exit').submit(function(){
+			$.post("/api/v1/auth/exit", function(data){
+				$("#div_exit").html(data);
+			});
+
+			return false;
+		});
+	});
+</script>
+<div id="div_exit">
+    <form id="form_exit">
+        <input type="submit" value="Exit"> </input>
+    </form>
+</div>
+
+</body>
+</html>

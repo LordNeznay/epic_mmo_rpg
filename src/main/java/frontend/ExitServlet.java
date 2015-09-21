@@ -11,56 +11,36 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 /**
- * @author v.chibrikov
+ * Created by uschsh on 21.09.15.
  */
-public class SignInServlet extends HttpServlet {
+public class ExitServlet extends HttpServlet {
     private AccountService accountService;
 
-    public SignInServlet(AccountService accountService) {
+    public ExitServlet(AccountService accountService) {
         this.accountService = accountService;
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String session = request.getSession().getId().toString();
-
-        Map<String, Object> pageVariables = new HashMap<>();
-        if(accountService.getSessions(session) == null) {
-
-            pageVariables.put("loginStatus", "Enter login/password");
-            response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
-        }else {
-            pageVariables.put("status", "ok");
-            response.getWriter().println(PageGenerator.getPage("exitform.html", pageVariables));
-        }
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        //Извлечение параметров
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
+        String session = request.getSession().getId().toString();
+        accountService.getSessions(session);
+/*
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
 
         //Если профиль не нулевой и его пароль совпадает с введенным
         if (profile != null && profile.getPassword().equals(password)) {
             pageVariables.put("loginStatus", "Login passed");
-            String session = request.getSession().getId().toString();
-            accountService.addSessions(session, profile);
+
             response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
         } else {
             pageVariables.put("loginStatus", "Wrong login/password");
             response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
         }
 
-
+*/
     }
 }
