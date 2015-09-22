@@ -14,10 +14,10 @@ define([
 		
         },
         render: function () {
-
+            $("#page").html( this.template() );
         },
         show: function () {
-            $("#page").html( this.template() );
+
         },
         hide: function () {
 

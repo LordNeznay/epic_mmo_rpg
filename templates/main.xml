@@ -4,5 +4,6 @@ Main Menu
 	<li><a href="#game"> Game </a></li>
 	<li><a href="#scoreboard"> Scoreboard </a></li>
 	<li><a href="#login"> Login </a></li>
+	<li><a href="#registration"> Registration </a></li>
 </ul>
 </fest:template>

@@ -3,12 +3,14 @@ define([
 	'views/main',	//Прописываем путь к файлу из папки js
 	'views/game',
 	'views/scoreboard',
+	'views/registration',
 	'views/login'
 ], function(
     Backbone,
 	mainView,	//Даем название
 	gameView,
 	scoreboardView,
+	registrationView,
 	loginView
 ){
 	$("#page").append(mainView.el);
@@ -21,19 +23,23 @@ define([
             'scoreboard': 'scoreboardAction',
             'game': 'gameAction',
             'login': 'loginAction',
+			'registration' : 'registrationAction',
             '*default': 'defaultActions'
         },
         defaultActions: function () {
-            mainView.show();	//Вызываем функцию
+            mainView.render();	//Вызываем функцию
         },
         scoreboardAction: function () {
-            scoreboardView.show();
+            scoreboardView.render();
         },
         gameAction: function () {
-            gameView.show();
+            gameView.render();
         },
+		registrationAction: function(){
+			registrationView.render();
+		},
         loginAction: function () {
-            loginView.show();
+            loginView.render();
         }
     });
 
