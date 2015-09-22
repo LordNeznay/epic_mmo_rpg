@@ -29,21 +29,5 @@ public class ExitServlet extends HttpServlet {
         if(accountService.getSessions(session) != null){
             accountService.removeUser(session);
         }
-
-/*
-        Map<String, Object> pageVariables = new HashMap<>();
-        UserProfile profile = accountService.getUser(name);
-
-        //Если профиль не нулевой и его пароль совпадает с введенным
-        if (profile != null && profile.getPassword().equals(password)) {
-            pageVariables.put("loginStatus", "Login passed");
-
-            response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
-        } else {
-            pageVariables.put("loginStatus", "Wrong login/password");
-            response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
-        }
-
-*/
     }
 }
