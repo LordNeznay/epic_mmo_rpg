@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.jetbrains.annotations.NotNull;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -19,34 +20,38 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
 
-    public SignUpServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignUpServlet(AccountService accService) {
+        this.accountService = accService;
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("status", "ok");
         response.getWriter().println(PageGenerator.getPage("signupform.html", pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
     }
     @Override
-    public void doPost(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(@NotNull HttpServletRequest request,
+                       @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         String name = request.getParameter("name");
         String password = request.getParameter("password");
 
-        Map<String, Object> pageVariables = new HashMap<>();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("signUpStatus", "New user created");
-        } else {
-            pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
-        }
+        if((name != null) && (password != null)) {
+            if(accountService != null) {
+                Map<String, Object> pageVariables = new HashMap<>();
+                if (accountService.addUser(name, new UserProfile(name, password, ""))) {
+                    pageVariables.put("signUpStatus", "New user created");
+                } else {
+                    pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
+                }
 
-        response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        }else
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
 
