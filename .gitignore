@@ -4,3 +4,4 @@ node_modules/
 public_html/js/tmpl/
 #Игнорирование папки с байт-кодом
 target
+.idea/
