@@ -21,9 +21,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         int port = PORT;
-        if (args.length == 1) {
-            String portString = args[0];
-            port = Integer.valueOf(portString);
+        if (args != null) {
+            if (args.length == 1) {
+                String portString = args[0];
+                port = Integer.valueOf(portString);
+            }
         }
 
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');

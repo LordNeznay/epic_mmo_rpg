@@ -1,28 +1,30 @@
 package main;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by v.chibrikov on 13.09.2014.
  */
 public class UserProfile {
-    private String login;
-    private String password;
-    private String email;
+    @NotNull private String login;
+    @NotNull private String password;
+    @NotNull private String email;
 
-    public UserProfile(String login, String password, String email) {
+    public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
         this.login = login;
         this.password = password;
         this.email = email;
     }
 
-    public String getLogin() {
+    @NotNull public String getLogin() {
         return login;
     }
 
-    public String getPassword() {
+    @NotNull public String getPassword() {
         return password;
     }
 
-    public String getEmail() {
+    @NotNull public String getEmail() {
         return email;
     }
 }
