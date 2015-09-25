@@ -3,6 +3,7 @@ package main;
 import frontend.ExitServlet;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
+import frontend.AdminServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -16,7 +17,7 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
-    public static final int PORT = 8080;
+    public static final int PORT = 8081;
 
     public static void main(String[] args) throws Exception {
         int port = PORT;
@@ -34,11 +35,13 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet exitServlet = new ExitServlet(accountService);
+        Servlet adminServlet = new AdminServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(exitServlet), "/api/v1/auth/exit");
+        context.addServlet(new ServletHolder(adminServlet), "/api/admin");
 
 
         ResourceHandler resource_handler = new ResourceHandler();
