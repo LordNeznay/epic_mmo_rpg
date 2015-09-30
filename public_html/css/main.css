@@ -1,11 +1,22 @@
-#page {
+.page {
 	width: 100%;
 	border: 1px dashed #000;
 	text-align: center;
 }
 
-.main_menu li{
-	text-decoration: none;
+.main-menu{
+
+}
+
+.main-menu__item,
+.back-button__button{
 	display: block;
-	padding: 15px 15px 15px 15px;
+	border: 1px #000 solid;
+	background-color: #D5D5D5;
+	padding: 10px 15px 10px 15px;
+}
+	
+.main-menu__item:hover,
+.back-button__button:hover{
+	background-color: #E5E5E5;
 }
