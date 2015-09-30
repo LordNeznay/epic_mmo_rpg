@@ -1,6 +1,5 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
-Game
-<ul class="main_menu">
-	<li><a href="#"> Back </a></li>
-</ul>
+    <fest:script>var json = {title: 'Game' };</fest:script>
+    <fest:include src="./base.xml" context="json"/>
+    <fest:include src="./backbutton.xml"/>	
 </fest:template>

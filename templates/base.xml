@@ -1,0 +1,8 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+    <div class="game-name">
+        EPIC MMO RPG
+    </div>
+    <div class="page-title">
+        <fest:value output="text">json.title</fest:value>
+    </div>
+</fest:template>

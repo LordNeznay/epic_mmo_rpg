@@ -1,17 +1,20 @@
 <fest:template xmlns:fest="http://fest.mail.ru">
-Login
+    <fest:script>var json = {title: 'Login' };</fest:script>
+    <fest:include src="./base.xml" context="json"/>
 
-<script>
-$(document).ready(function(){
-	$.get("/api/v1/auth/signin", function(data){
-		$("#div_login").html(data);
-	});
-});
-</script>
+	<div class="login-form">
+	    <form class="login-form__form"  method="post" action="">
+			<p class="login-form__errors"> </p>
+			<p> <label><input type="text" name="name" class="login-form__input"/></label></p>
+			<p> <label><input type="password" name="password" class="login-form__input"/></label></p>
+			<p> <button class="login-form__button">Login</button></p>
+		</form>
+	</div>
+	<div class="unlogin-form"  method="post" action="">
+	    <form class="unlogin-form__form">
+			<p><button>Exit</button></p>
+		</form>
+	</div>
 
-<div id="div_login"></div>
-
-<ul class="main_menu">
-	<li><a href="#"> Back </a></li>
-</ul>
+	<fest:include src="./backbutton.xml"/>	
 </fest:template>
