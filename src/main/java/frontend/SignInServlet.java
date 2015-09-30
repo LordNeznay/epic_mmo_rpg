@@ -32,20 +32,19 @@ public class SignInServlet extends HttpServlet {
         String sesseionId = null;
         if(session != null) {
             sesseionId = session.getId();
-        }else
+        } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
+        }
 
 
         if((accountService != null) && (sesseionId != null)) {
             Map<String, Object> pageVariables = new HashMap<>();
             if (accountService.getSessions(sesseionId) == null) {
-                pageVariables.put("loginStatus", "Enter login/password");
-                response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
+                pageVariables.put("loginStatus", "false");
             } else {
-                pageVariables.put("status", "ok");
-                response.getWriter().println(PageGenerator.getPage("exitform.html", pageVariables));
+                pageVariables.put("loginStatus", "true");
             }
+            response.getWriter().println(PageGenerator.getPage("loginStatus.json", pageVariables));
             response.setStatus(HttpServletResponse.SC_OK);
         }
     }
@@ -67,11 +66,11 @@ public class SignInServlet extends HttpServlet {
                 if (profile != null && profile.getPassword().equals(password)) {
                     String session = request.getSession().getId().toString();
                     accountService.addSessions(session, profile);
-                    pageVariables.put("status", "ok");
-                    response.getWriter().println(PageGenerator.getPage("exitform.html", pageVariables));
+                    pageVariables.put("errors", "null");
+                    response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
                 } else {
-                    pageVariables.put("loginStatus", "Wrong login/password");
-                    response.getWriter().println(PageGenerator.getPage("signinform.html", pageVariables));
+                    pageVariables.put("errors", "Wrong login/password");
+                    response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
                 }
                 response.setStatus(HttpServletResponse.SC_OK);
             }

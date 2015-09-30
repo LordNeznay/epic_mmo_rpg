@@ -25,13 +25,6 @@ public class SignUpServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws ServletException, IOException {
-
-        Map<String, Object> pageVariables = new HashMap<>();
-        response.getWriter().println(PageGenerator.getPage("signupform.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
-    }
-    @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
@@ -42,12 +35,12 @@ public class SignUpServlet extends HttpServlet {
             if(accountService != null) {
                 Map<String, Object> pageVariables = new HashMap<>();
                 if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-                    pageVariables.put("signUpStatus", "New user created");
+                    pageVariables.put("errors", "null");
                 } else {
-                    pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
+                    pageVariables.put("errors", "User with name '" + name + "' already exists");
                 }
 
-                response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
+                response.getWriter().println(PageGenerator.getPage("signupResult.json", pageVariables));
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         }else

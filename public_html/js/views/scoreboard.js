@@ -10,20 +10,21 @@ define([
 
         template: tmpl,
 		className: "scoreboard-view",
-        initialize: function () {
-		
+        
+		events: {
+            "click a": "hide"
         },
         render: function () {
-            $("#page").html( this.template() );
+            this.$el.html( this.template() );
         },
         show: function () {
-
+            this.render();
         },
         hide: function () {
-
+			this.$el.empty();
         }
 
     });
 
-    return new View();
+    return new View({el: $('.page')});
 });

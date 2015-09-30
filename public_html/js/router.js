@@ -27,19 +27,19 @@ define([
             '*default': 'defaultActions'
         },
         defaultActions: function () {
-            mainView.render();	//Вызываем функцию
+            mainView.show();	//Вызываем функцию
         },
         scoreboardAction: function () {
-            scoreboardView.render();
+            scoreboardView.show();
         },
         gameAction: function () {
-            gameView.render();
+            gameView.show();
         },
 		registrationAction: function(){
-			registrationView.render();
+			registrationView.show();
 		},
         loginAction: function () {
-            loginView.render();
+            loginView.show();
         }
     });
 
