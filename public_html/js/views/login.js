@@ -26,7 +26,7 @@ define([
                 url: "/api/v1/auth/signin",
 				dataType: 'json',
                 success: function(data){	
-					//В зависимости от статуса пользователя выбираем форму
+					//Г‚ Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г±ГІГ ГІГіГ±Г  ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї ГўГ»ГЎГЁГ°Г ГҐГ¬ ГґГ®Г°Г¬Гі
 					if(data.isLogin == 'true'){
 						$(".login-form").hide();
 						$(".unlogin-form").show();
@@ -41,24 +41,29 @@ define([
 			this.$el.empty();
         },
 		submitLogin: function(event){
-			var pView = this;	
-			$.ajax({
-				type: "POST",
-				data: $('.login-form__form').serialize(),
-                url: "/api/v1/auth/signin",
-				dataType: 'json',
-                success: function(data) {
-					if(data.errors == 'null'){
-						pView.show();
-					} else {
-						//Выводим ошибки
-						$(".login-form__errors").html(data.errors);
-					}
-                }
-            });
+            clearErrors();
+            if(validateForm())
+            {
+    			var pView = this;	
+    			$.ajax({
+    				type: "POST",
+    				data: $('.login-form__form').serialize(),
+                    url: "/api/v1/auth/signin",
+    				dataType: 'json',
+                    success: function(data) {
+    					if(data.errors == 'null'){
+    						pView.show();
+    					} else {
+    						//Г‚Г»ГўГ®Г¤ГЁГ¬ Г®ГёГЁГЎГЄГЁ
+    						$(".login-form__errors").html(data.errors);
+    					}
+                    }
+                });
+            }
 			return false;
 		},
 		submitUnlogin: function(event){
+            
 			var pView = this;
             $.ajax({
                 type: "POST",
@@ -66,11 +71,28 @@ define([
                 success: function(data){
                    pView.show();
 				}
-            });
+            });    
             return false;
 		}
 
     });
+
+    function validateForm(){
+        var userName = $("input[name=name]").val();
+        if (userName=='') {
+            $('.login-form__errors').text("Р’РІРµРґРёС‚Рµ РёРјСЏ!");
+            return false;
+        }
+        var userPassword = $("input[name=password]").val();
+        if (userPassword=='') {
+            $('.login-form__errors').text("Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ!");
+            return false;
+        }
+        return true;
+    }
+    function clearErrors(){
+        $('.login-form__errors').text("");
+    }
 
     return new View({el: $('.page')});
 });

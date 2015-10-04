@@ -5,6 +5,7 @@ define([
     Backbone,
     tmpl
 ){
+    
 
     var View = Backbone.View.extend({
 
@@ -20,7 +21,7 @@ define([
         },
         show: function () {
             this.render();
-			//Если пользователь авторизован, то перенаправить на логин
+			//Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, С‚Рѕ РїРµСЂРµРЅР°РїСЂР°РІРёС‚СЊ РЅР° Р»РѕРіРёРЅ
 			$.ajax({
                 type: "GET",
                 url: "/api/v1/auth/signin",
@@ -36,27 +37,48 @@ define([
 			this.$el.empty();
         },
 		submitSignup: function(){
-			var pView = this;	
-			var values = $('.signup-form__form').serialize();
-			$.ajax({
-				type: "POST",
-				data: values,
-                url: "/api/v1/auth/signup",
-				dataType: 'json',
-                success: function(data) {
-					if(data.errors == 'null'){
-						//Ошибок нет, значит авторизуем пользователя
-						$.post("/api/v1/auth/signin", values);
-						Backbone.history.navigate('login', true);
-					} else {
-						$(".signup-form__errors").html(data.errors);
-					}
-                }
-            });
+            clearErrors();
+            if(validateForm())
+            {
+    			var pView = this;
+    			var values = $('.signup-form__form').serialize();
+    			$.ajax({
+    				type: "POST",
+    				data: values,
+                    url: "/api/v1/auth/signup",
+    				dataType: 'json',
+                    success: function(data) {
+    					if(data.errors == 'null'){
+    						//РћС€РёР±РѕРє РЅРµС‚, Р·РЅР°С‡РёС‚ Р°РІС‚РѕСЂРёР·СѓРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    						$.post("/api/v1/auth/signin", values);
+    						Backbone.history.navigate('login', true);
+    					} else {
+    						$(".signup-form__errors").html(data.errors);
+    					}
+                    }
+                });
+            }
 			return false;
 		}
 
     });
+
+    function validateForm(){
+        var userName = $("input[name=name]").val();
+        if (userName=='') {
+            $('.signup-form__errors').text("Р’РІРµРґРёС‚Рµ РёРјСЏ!");
+            return false;
+        }
+        var userPassword = $("input[name=password]").val();
+        if (userPassword=='') {
+            $('.signup-form__errors').text("Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ!");
+            return false;
+        }
+        return true;
+    }
+    function clearErrors(){
+        $('.signup-form__errors').text("");
+    }
 
     return new View({el: $('.page')});
 });
