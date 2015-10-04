@@ -5,8 +5,10 @@ define([
 ){
 
     var Model = Backbone.Model.extend({
-    	name: "",
-    	score: 0
+		defaults: {
+			name: "",
+			score: 0
+		}
     });
 
     return Model;

@@ -26,7 +26,7 @@ define([
                 url: "/api/v1/auth/signin",
 				dataType: 'json',
                 success: function(data){	
-					//Â çàâèñèìîñòè îò ñòàòóñà ïîëüçîâàòåëÿ âûáèðàåì ôîðìó
+					//A caaeneiinoe io noaoona iieuciaaoaey auae?aai oi?io
 					if(data.isLogin == 'true'){
 						$(".login-form").hide();
 						$(".unlogin-form").show();
@@ -54,7 +54,7 @@ define([
     					if(data.errors == 'null'){
     						pView.show();
     					} else {
-    						//Âûâîäèì îøèáêè
+    						//Auaiaei ioeaee
     						$(".login-form__errors").html(data.errors);
     					}
                     }
@@ -80,12 +80,12 @@ define([
     function validateForm(){
         var userName = $("input[name=name]").val();
         if (userName=='') {
-            $('.login-form__errors').text("Введите имя!");
+            $('.login-form__errors').text("������� ���!");
             return false;
         }
         var userPassword = $("input[name=password]").val();
         if (userPassword=='') {
-            $('.login-form__errors').text("Введите пароль!");
+            $('.login-form__errors').text("������� ������!");
             return false;
         }
         return true;
