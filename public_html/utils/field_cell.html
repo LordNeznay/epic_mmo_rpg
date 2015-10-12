@@ -1,0 +1,7 @@
+<style> img { margin: 0px 0px 0px 0px;} </style>
+<% var i=-1; _.each(cells, function(cell, index, cells){ ++i; if(i==9){i=0;%>
+	<br>
+<% } %>
+	<!--<%- cell.gid %> - <%- cell.x %>:<%- cell.y %>______-->
+	<img src="/utils/<%- cell.gid %>.png">
+<% }); %>
