@@ -2,6 +2,6 @@
 <% var i=-1; _.each(cells, function(cell, index, cells){ ++i; if(i==9){i=0;%>
 	<br>
 <% } %>
-	<!--<%- cell.gid %> - <%- cell.x %>:<%- cell.y %>______-->
-	<img src="/res/<%- cell.gid %>.png">
+	<!--<%- cell.gid %> - <%- cell.get('x') %>:<%- cell.get('y') %>______-->
+	<img src="/res/<%- cell.get('gid') %>.png">
 <% }); %>

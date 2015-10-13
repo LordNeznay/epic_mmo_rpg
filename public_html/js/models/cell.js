@@ -5,9 +5,11 @@ define([
 ){
 
     var Model = Backbone.Model.extend({
+        gid: 0,
+        x: 0,
+        y: 0,
 		defaults: {
-			
-			gid: "",
+			gid: 0,
 			x: 0,
 			y: 0,
 		}
