@@ -10,6 +10,7 @@ define([
 		var map = $(data).find("map");
 		var width = map.attr('width');
 		var height = map.attr('height');
+		map = map.find("layer[name='Background']");
 				
 		var i = 0;
 		var j = 0;
@@ -36,7 +37,7 @@ define([
 	$.ajax({
         type: "GET",
 		datatype: "xml",
-        url: "/utils/tilemap.tmx",
+        url: "/res/tilemap.tmx",
         success: parse2,
 		async: false
     });
