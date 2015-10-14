@@ -1,7 +1,7 @@
 <style> img { margin: 0px 0px 0px 0px;} </style>
-<% var i=-1; _.each(cells, function(cell, index, cells){ ++i; if(i==9){i=0;%>
+<% var i=-1; _.each(cells, function(cell, index, cells){ ++i; if(i==15){i=0;%>
 	<br>
 <% } %>
 	<!--<%- cell.gid %> - <%- cell.get('x') %>:<%- cell.get('y') %>______-->
-	<img src="/res/<%- cell.get('gid') %>.png">
+	<img class="game-map__tile" src="/res/<%- cell.get('gid') %>.png">
 <% }); %>

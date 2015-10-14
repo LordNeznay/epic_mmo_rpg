@@ -20,7 +20,7 @@ define([
 		cellss: '',
         x: 9,
         y: 14,
-        w: 4,
+        w: 7,
         h: 4,
         widthMap: 0,
         heightMap: 0,
@@ -35,7 +35,7 @@ define([
             this.heightMap = height;
 			map = map.find("layer[name='Background']");
 					
-			var i = 0;
+			var i = -1;
 			var j = 0;
 			$(map).find("tile").each(function(){
 				++i;
@@ -93,7 +93,7 @@ define([
             this.cellss.forEach(function(element, i){
                 temp.push(element);
             });
-			$('.test-load-tilemap').html(Underscore.template(this.cellTemplate, {cells: temp}));
+			$('.game-map').html(Underscore.template(this.cellTemplate, {cells: temp}));
 		},
 		parse: function(data){
 			fullxml = $.parseXML(data);

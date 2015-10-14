@@ -38,3 +38,7 @@
 .highscores__list__player:hover{
 	border: 1px #000 dashed;
 }
+
+.game-map__tile{
+    margin: -2px -2px -2px -2px;
+}
