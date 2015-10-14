@@ -1,21 +1,21 @@
 define([
     'backbone',
-	'underscore',
+    'underscore',
     'tmpl/scoreboard',
-	'collections/scores'
+    'collections/scores'
 ], function(
     Backbone,
-	Underscore,
+    Underscore,
     tmpl,
-	playerCollection
+    playerCollection
 ){
 
     var View = Backbone.View.extend({
 
         template: tmpl,
-		className: "scoreboard-view",
+        className: "scoreboard-view",
         
-		initialize: function () {
+        initialize: function () {
             $.ajax({url: "utils/best_players.html",
                 context: this,
                 success: function(response) {
@@ -25,26 +25,26 @@ define([
             });
         },
 		
-		events: {
+        events: {
             "click a": "hide"
         },
         render: function () {
             this.$el.html( this.template() );
-			if (this.playerTemplate) {
-				this.showHighscore(); 
-			}
+            if (this.playerTemplate) {
+                this.showHighscore(); 
+            }
         },
         show: function () {
             this.render();
         },
         hide: function () {
-			this.$el.empty();
+            this.$el.empty();
         },
-		showHighscore: function(){
-			var players  = this.collection.toJSON();
+        showHighscore: function(){
+            var players  = this.collection.toJSON();
             var playersHtml = Underscore.template( this.playerTemplate, {players: players});
             $('.highscores__list').html(playersHtml);
-		}
+        }
 
     });
 

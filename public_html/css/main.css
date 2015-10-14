@@ -1,42 +1,38 @@
 .page {
-	width: 100%;
-	border: 1px dashed #000;
-	text-align: center;
-}
-
-.main-menu{
-
+    width: 100%;
+    border: 1px dashed #000;
+    text-align: center;
 }
 
 .main-menu__item,
 .back-button__button{
-	display: block;
-	border: 1px #000 solid;
-	background-color: #D5D5D5;
-	padding: 10px 15px 10px 15px;
+    display: block;
+    border: 1px #000 solid;
+    background-color: #D5D5D5;
+    padding: 10px 15px 10px 15px;
 }
 	
 .main-menu__item:hover,
 .back-button__button:hover{
-	background-color: #E5E5E5;
+    background-color: #E5E5E5;
 }
 
 .highscores__list{
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }
 
 .highscores__list__player{
-	display: block;
-	text-decoration: none;
-	background-color: #A5DDA5;
-	border: 1px #000 solid;
-	padding: 10px 15px 10px 15px;
-	margin: 0px 0px 0px 0px;
+    display: block;
+    text-decoration: none;
+    background-color: #A5DDA5;
+    border: 1px #000 solid;
+    padding: 10px 15px 10px 15px;
+    margin: 0px 0px 0px 0px;
 }
 
 .highscores__list__player:hover{
-	border: 1px #000 dashed;
+    border: 1px #000 dashed;
 }
 
 .game-map__tile{

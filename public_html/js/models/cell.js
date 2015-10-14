@@ -8,11 +8,11 @@ define([
         gid: 0,
         x: 0,
         y: 0,
-		defaults: {
-			gid: 0,
-			x: 0,
-			y: 0,
-		}
+        defaults: {
+            gid: 0,
+            x: 0,
+            y: 0,
+        }
     });
 
     return Model;

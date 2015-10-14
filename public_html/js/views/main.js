@@ -8,19 +8,19 @@ define([
 
     var View = Backbone.View.extend({
         template: tmpl,
-		className: "main-view",
+        className: "main-view",
 		
-		events: {
+        events: {
             "click a": "hide"
         },
         render: function () {
             this.$el.html( this.template() );
         },
         show: function () {
-			this.render();
+            this.render();
         },
         hide: function () {
-			this.$el.empty();
+            this.$el.empty();
         }
 
     });
