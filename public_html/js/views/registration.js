@@ -35,14 +35,10 @@
             if(validateForm()){
                 var pView = this;
                 var values = $('.signup-form__form').serialize();
-                $.ajax({
-                    type: "POST",
-                    data: values,
-                    url: "/api/v1/auth/signup",
-                    dataType: 'json',
+                this.player.registration(values, {
                     success: function(data) {
                         if(data.errors == 'null'){
-                            $.post("/api/v1/auth/signin", values);
+                            pView.player.login(values);
                             Backbone.history.navigate('login', true);
                         } else {
                             $(".signup-form__errors").html(data.errors);

@@ -19,35 +19,24 @@ define([
             "click a": "hide"
         },
         child_show: function () {
-            $.ajax({
-                type: "GET",
-                url: "/api/v1/auth/signin",
-                dataType: 'json',
-                success: function(data){	
-                    if(data.isLogin == 'true'){
-                        $(".login-form").hide();
-                        $(".unlogin-form").show();
-                    } else {
-                        $(".unlogin-form").hide();
-                        $(".login-form").show();
-                    }
-                }
-            });
+            this.player.status();
+            if(this.player.isLogin){
+                $(".login-form").hide();
+                $(".unlogin-form").show();
+            } else {
+                $(".unlogin-form").hide();
+                $(".login-form").show();
+            }
         },
         submitLogin: function(event){
             clearErrors();
             if(validateForm()){
                 var pView = this;	
-                $.ajax({
-                    type: "POST",
-                    data: $('.login-form__form').serialize(),
-                    url: "/api/v1/auth/signin",
-                    dataType: 'json',
-                    success: function(data) {
+                this.player.login($('.login-form__form').serialize(), {
+                    success: function(data){
                         if(data.errors == 'null'){
                             pView.show();
                         } else {
-                            //Auaiaei ioeaee
                             $(".login-form__errors").html(data.errors);
                         }
                     }
@@ -57,13 +46,11 @@ define([
         },
         submitUnlogin: function(event){
             var pView = this;
-            $.ajax({
-                type: "POST",
-                url: "/api/v1/auth/exit",
+            this.player.unlogin({
                 success: function(data){
                     pView.show();
                 }
-            });    
+            });
             return false;
         }
     });

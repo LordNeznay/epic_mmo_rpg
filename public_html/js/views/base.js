@@ -1,13 +1,17 @@
 define([
     'backbone',
+    'models/player'
 ], function(
-    Backbone
+    Backbone,
+    Player
 ){
 
     var Base = Backbone.View.extend({
         el: '.page',
+        player: new Player(),
         
-        initialize: function(options) {
+        initialize: function(options){
+            this.player.status();
             if(options.content) {
                 this.content = options.content;
             }
@@ -17,14 +21,15 @@ define([
             }
         },
         
-        render: function () {
+        render: function() {
             this.$el.append(this.template());
             if(this.child_render != undefined){
                 this.child_render();
             }
         },
 
-        show: function () {
+        show: function() {
+            this.player.status();
             this.trigger('show', this);
             if(this.child_show != undefined){
                 this.child_show();
@@ -32,7 +37,7 @@ define([
             $(this.content).show();           
         },
 
-        hide: function () {
+        hide: function() {
             $(this.content).hide();
         },
         
