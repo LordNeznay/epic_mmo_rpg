@@ -1,10 +1,15 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
     <fest:script>var json = {title: 'Scoreboard' };</fest:script>
-    <fest:include src="./base.xml" context="json"/>
-	<div class="highscores">
-		<ul class="highscores__list">
-			<!-- Тут будет вставлен список лучших -->
-		</ul>
-	</div>
-    <fest:include src="./backbutton.xml"/>	
+    
+    <div class="page-scoreboard default-hidden">
+        <fest:include src="./base.xml" context="json"/>
+    
+        <div class="highscores">
+            <ul class="highscores__list">
+                <!-- Тут будет вставлен список лучших -->
+            </ul>
+        </div>
+        <fest:include src="./backbutton.xml"/>
+    </div>
+    
 </fest:template>

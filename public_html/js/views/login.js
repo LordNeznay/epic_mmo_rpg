@@ -1,13 +1,15 @@
 define([
     'backbone',
-    'tmpl/login'
+    'tmpl/login',
+    'views/base'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    BaseView
 ){
 
-    var View = Backbone.View.extend({
-
+    var View = BaseView.extend({
+        name: 'login',
         template: tmpl,
         className: "login-view",
 
@@ -16,44 +18,25 @@ define([
             "submit .unlogin-form__form": "submitUnlogin",
             "click a": "hide"
         },
-        render: function () {
-            this.$el.html( this.template() );
-        },
-        show: function () {
-            this.render();
-            $.ajax({
-                type: "GET",
-                url: "/api/v1/auth/signin",
-                dataType: 'json',
-                success: function(data){	
-					//A caaeneiinoe io noaoona iieuciaaoaey auae?aai oi?io
-                    if(data.isLogin == 'true'){
-                        $(".login-form").hide();
-                        $(".unlogin-form").show();
-                    } else {
-                        $(".unlogin-form").hide();
-                        $(".login-form").show();
-                    }
-                }
-            });
-        },
-        hide: function () {
-            this.$el.empty();
+        child_show: function () {
+            this.player.status();
+            if(this.player.isLogin){
+                $(".login-form").hide();
+                $(".unlogin-form").show();
+            } else {
+                $(".unlogin-form").hide();
+                $(".login-form").show();
+            }
         },
         submitLogin: function(event){
             clearErrors();
             if(validateForm()){
                 var pView = this;	
-                $.ajax({
-                    type: "POST",
-                    data: $('.login-form__form').serialize(),
-                    url: "/api/v1/auth/signin",
-                    dataType: 'json',
-                    success: function(data) {
+                this.player.login($('.login-form__form').serialize(), {
+                    success: function(data){
                         if(data.errors == 'null'){
                             pView.show();
                         } else {
-                            //Auaiaei ioeaee
                             $(".login-form__errors").html(data.errors);
                         }
                     }
@@ -63,13 +46,11 @@ define([
         },
         submitUnlogin: function(event){
             var pView = this;
-            $.ajax({
-                type: "POST",
-                url: "/api/v1/auth/exit",
+            this.player.unlogin({
                 success: function(data){
                     pView.show();
                 }
-            });    
+            });
             return false;
         }
     });
@@ -91,5 +72,5 @@ define([
         $('.login-form__errors').text("");
     }
 
-    return new View({el: $('.page')});
+    return new View({content: '.page-login'});
 });

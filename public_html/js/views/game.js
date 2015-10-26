@@ -1,54 +1,58 @@
-define([
+﻿define([
     'backbone',
     'tmpl/game',
     'underscore',
+    'views/base',
     'models/cell'
 ], function(
     Backbone,
     tmpl,
     Underscore,
+    BaseView,
     CellModel
 ){
 
-    var View = Backbone.View.extend({
+    //Создание видимой части карты
+    var cells_b = [];
+    var cells_f = [];
+    var i = 0;
+    var j = 0;
+    for(i=0; i<15; ++i){
+        for(j=0; j<9; ++j){
+            cells_b.push(new CellModel({view_x: i, view_y: j, index_z: 1}));
+            cells_f.push(new CellModel({view_x: i, view_y: j, index_z: 10}));
+        }
+    }
+
+    var View = BaseView.extend({
+        name: 'game',
         template: tmpl,
         className: "game-view",
-        fullxml: "",
-        cellss: '',
-        x: 9,
-        y: 14,
-        w: 7,
-        h: 4,
+        tilemap_xml: "",
+        isMapLoad: false,
+        isMapParse: false,
+        cells_b: cells_b,
+        cells_f: cells_f,
+        view_point_x: 8,
+        view_point_y: 5,
         widthMap: 0,
         heightMap: 0,
 
-        test: function(){
+        child_init: function(){
+            _.bindAll(this, 'move');
+            $(document).bind('keypress', this.move);
             var that = this;
-            var cells = [];
-            var map = $(fullxml).find("map");
-            var width = map.attr('width');
-            var height = map.attr('height');
-            this.widthMap = width;
-            this.heightMap = height;
-            map = map.find("layer[name='Background']");
-					
-            var i = -1;
-            var j = 0;
-            $(map).find("tile").each(function(){
-                ++i;
-                if(i==width){
-                    i = 0;
-                    ++j;
-                }
-                if(i >= that.x-that.w && i <= that.x+that.w && j >= that.y-that.h && j <= that.y+that.h){
-                    var g = $(this).attr('gid');
-                    cells.push(new CellModel({gid: g, x: i, y: j}));
+            //Загружаем карту
+            $.ajax({
+                type: "GET",
+                datatype: "xml",
+                url: "/res/tilemap.tmx",
+                success: function(data){
+                    that.tilemap_xml = $.parseXML(data);
+                    that.isMapLoad = true;
                 }
             });
-            this.cellss = cells;
-            this.rend();
-        },
-        rend: function(){
+            //Загружаем шаблон ячейки
             $.ajax({url: "utils/field_cell.html",
                 context: this,
                 success: function(response) {
@@ -57,69 +61,122 @@ define([
                 }
             });
         },
-        initialize: function(){
-            _.bindAll(this, 'move');
-            $(document).bind('keypress', this.move);
-            $.ajax({
-                type: "GET",
-                datatype: "xml",
-                url: "/res/tilemap.tmx",
-                success: this.parse,
-                async: false
-            });
-            this.test();
-        },
         events: {
             "click a": "hide",
         },
-        render: function () {
-            this.$el.html( this.template() );
-            if(this.cellTemplate){
-                this.showGameField();
-            }
-        },
-        show: function () {
-            this.render();
-            console.log(this);
-        },
-        hide: function () {
-            this.$el.empty();
-        },
         showGameField: function(){
-            var temp = [];
-            this.cellss.forEach(function(element, i){
-                temp.push(element);
-            });
-            $('.game-map').html(Underscore.template(this.cellTemplate, {cells: temp}));
+            while(!this.isMapParse){
+                if(!this.isMapLoad) continue;
+                this.mapParse();
+            }
+            $('.game-map').html(Underscore.template(this.cellTemplate, {cells: cells_b})); 
+            $('.game-map').append(Underscore.template(this.cellTemplate, {cells: cells_f})); 
         },
-        parse: function(data){
-            fullxml = $.parseXML(data);
+        mapParse: function(){
+            var that = this;
+            var i = 0;
+            var j = 0; 
+            //Обновляем мировые координаты для отображаемых ячеек
+            that.cells_b.forEach(function(element, k){
+                that.cells_b[k].set('x', that.view_point_x -7 + i);
+                that.cells_b[k].set('y', that.view_point_y -4 + j);
+                that.cells_f[k].set('x', that.view_point_x -7 + i);
+                that.cells_f[k].set('y', that.view_point_y -4 + j);
+                ++j;
+                if(j>8){
+                    i++;
+                    j = 0;
+                }
+            });  
+            this.isMapParse = true;
+            var map = $(this.tilemap_xml).find("map");
+            var width = map.attr('width');
+            var height = map.attr('height');
+            this.widthMap = width;
+            this.heightMap = height;
+            var layerBackground = map.find("layer[name='Background']");
+            var layerFrontground = map.find("layer[name='Frontground']");
+
+            //Обновляем GID для заднего фона
+            i=0;j=0;
+            $(layerBackground).find("tile").each(function(){
+                if(i==width){
+                    i = 0;
+                    ++j;
+                }
+                //console.log(i);
+                if(i >= that.view_point_x-7 && i <= that.view_point_x+7 && j >= that.view_point_y-4 && j <= that.view_point_y+4){
+                    var g = $(this).attr('gid');
+                    that.cells_b.forEach(function(element, k){
+                        if(that.cells_b[k].get('x') === i && that.cells_b[k].get('y') === j){
+                            that.cells_b[k].set('gid', g);
+                        }
+                    });
+                }
+                ++i;
+            });
+            
+            //Обновляем GID для переднего фона
+            i=0;j=0;
+            $(layerFrontground).find("tile").each(function(){
+                if(i==width){
+                    i = 0;
+                    ++j;
+                }
+                //console.log(i);
+                if(i >= that.view_point_x-7 && i <= that.view_point_x+7 && j >= that.view_point_y-4 && j <= that.view_point_y+4){
+                    var g = $(this).attr('gid');
+                    g = g==0 ? '00' : g;
+                    that.cells_f.forEach(function(element, k){
+                        if(that.cells_f[k].get('x') === i && that.cells_f[k].get('y') === j){
+                            that.cells_f[k].set('gid', g);
+                        }
+                    });
+                }
+                ++i;
+            });
         },
         move: function(ev){
-            var sim = String.fromCharCode(ev.keyCode);
+            var sim = String.fromCharCode(ev.keyCode || ev.which || 0);
             var that = this;
-            console.log();
+            //console.log();
             switch(sim){
+                case 'ц':
                 case 'w':{
-                    that.y = (that.y - that.h == 0) ? that.y : that.y-1;
-                    that.test();
+                    if(that.view_point_y-1 >= 4){
+                        that.view_point_y--;
+                    }
+                    this.mapParse();
+                    this.showGameField();
                 }; break;
+                case 'ы':
                 case 's':{
-                    that.y = (that.y + that.h == that.heightMap-1) ? that.y : that.y+1;
-                    that.test();
+                    if(that.view_point_y+1 < that.heightMap - 4){
+                        that.view_point_y++;
+                    }
+                    this.mapParse();
+                    this.showGameField();
                 }; break;
+                case 'ф':
                 case 'a':{
-                    that.x = (that.x - that.w == 0) ? that.x : that.x-1;
-                    that.test();
+                    if(that.view_point_x-1 >= 7){
+                        that.view_point_x--;
+                    }
+                    this.mapParse();
+                    this.showGameField();
                 }; break;
+                case 'в':
                 case 'd':{
-                    that.x = (that.x + that.w == that.widthMap-1) ? that.x : that.x+1
-                    that.test();
+                    if(that.view_point_x+1 < that.widthMap - 7){
+                        that.view_point_x++;
+                    }
+                    this.mapParse();
+                    this.showGameField();
                 }; break;
             }
         }
 
     });
 
-    return new View({el: $('.page')});
+    return new View({content: '.page-game'});
 });
