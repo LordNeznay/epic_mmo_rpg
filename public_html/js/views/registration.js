@@ -1,14 +1,16 @@
-define([
+﻿define([
     'backbone',
-    'tmpl/registration'
+    'tmpl/registration',
+    'views/base'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    BaseView
 ){
     
 
-    var View = Backbone.View.extend({
-
+    var View = BaseView.extend({
+        name: 'registration',
         template: tmpl,
         className: "login-registration",
 
@@ -16,11 +18,7 @@ define([
             "submit .signup-form__form": "submitSignup",
             "click a": "hide"
         },
-        render: function () {
-            this.$el.html( this.template() );
-        },
-        show: function () {
-            this.render();
+        child_init: function () {
             $.ajax({
                 type: "GET",
                 url: "/api/v1/auth/signin",
@@ -31,9 +29,6 @@ define([
                     }
                 }
             });
-        },
-        hide: function () {
-            this.$el.empty();
         },
         submitSignup: function(){
             clearErrors();
@@ -62,12 +57,12 @@ define([
     function validateForm(){
         var userName = $("input[name=name]").val();
         if (userName=='') {
-            $('.signup-form__errors').text("вЂ“РўвЂ“в‰¤вЂ“ВµвЂ“С–вЂ“Р„вЂ”Р’вЂ“Вµ вЂ“Р„вЂ“Р‰вЂ”Рџ!");
+            $('.signup-form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
             return false;
         }
         var userPassword = $("input[name=password]").val();
         if (userPassword=='') {
-            $('.signup-form__errors').text("вЂ“РўвЂ“в‰¤вЂ“ВµвЂ“С–вЂ“Р„вЂ”Р’вЂ“Вµ вЂ“СљвЂ“в€ћвЂ”РђвЂ“РЉвЂ“С—вЂ”Рњ!");
+            $('.signup-form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
             return false;
         }
         return true;
@@ -76,5 +71,5 @@ define([
         $('.signup-form__errors').text("");
     }
 
-    return new View({el: $('.page')});
+    return new View({content: '.page-registration'});
 });

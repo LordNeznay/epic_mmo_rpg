@@ -1,0 +1,90 @@
+.game-map{
+    position: relative; 
+}
+
+.game-map__tile{
+    margin: -2px -2px -2px -2px;
+    position: absolute;
+}
+
+.index_z_1{
+    z-index: 1;
+}
+
+.index_z_10{
+    z-index: 10;
+}
+
+.cell-pos-y-0 {
+    top: 32px;
+}
+.cell-pos-y-1 {
+    top: 96px;
+}
+.cell-pos-y-2 {
+    top: 160px;
+}
+.cell-pos-y-3 {
+    top: 224px;
+}
+.cell-pos-y-4 {
+    top: 288px;
+}
+.cell-pos-y-5 {
+    top: 352px;
+}
+.cell-pos-y-6 {
+    top: 416px;
+}
+.cell-pos-y-7 {
+    top: 480px;
+}
+.cell-pos-y-8 {
+    top: 544px;
+}
+
+.cell-pos-x-0{
+    left: 32px;
+}
+.cell-pos-x-1{
+    left: 96px;
+}
+.cell-pos-x-2{
+    left: 160px;
+}
+.cell-pos-x-3{
+    left: 224px;
+}
+.cell-pos-x-4{
+    left: 288px;
+}
+.cell-pos-x-5{
+    left: 352px;
+}
+.cell-pos-x-6{
+    left: 416px;
+}
+.cell-pos-x-7{
+    left: 480px;
+}
+.cell-pos-x-8{
+    left: 544px;
+}
+.cell-pos-x-9{
+    left: 608px;
+}
+.cell-pos-x-10{
+    left: 672px;
+}
+.cell-pos-x-11{
+    left: 736px;
+}
+.cell-pos-x-12{
+    left: 800px;
+}
+.cell-pos-x-13{
+    left: 864px;
+}
+.cell-pos-x-14{
+    left: 928px;
+}

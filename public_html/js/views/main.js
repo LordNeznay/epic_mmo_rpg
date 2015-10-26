@@ -1,29 +1,22 @@
 define([
     'backbone',
-    'tmpl/main'
+    'tmpl/main',
+    'views/base'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    BaseView
 ){
 
-    var View = Backbone.View.extend({
+    var View = BaseView.extend({
         template: tmpl,
         className: "main-view",
 		
         events: {
             "click a": "hide"
         },
-        render: function () {
-            this.$el.html( this.template() );
-        },
-        show: function () {
-            this.render();
-        },
-        hide: function () {
-            this.$el.empty();
-        }
 
     });
 
-    return new View({el: $('.page')});
+    return new View({content: '.page-main'});
 });

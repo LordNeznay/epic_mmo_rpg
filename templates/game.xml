@@ -1,8 +1,10 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
     <fest:script>var json = {title: 'Game' };</fest:script>
-    <fest:include src="./base.xml" context="json"/>
-	
-    <div class="game-map"></div>
-	
-    <fest:include src="./backbutton.xml"/>	
+    
+    <div class="page-game default-hidden">
+        <fest:include src="./base.xml" context="json"/>
+        <div class="game-map"></div>
+        <fest:include src="./backbutton.xml"/>	
+	</div>
+    
 </fest:template>

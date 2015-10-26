@@ -1,13 +1,15 @@
 define([
     'backbone',
-    'tmpl/login'
+    'tmpl/login',
+    'views/base'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    BaseView
 ){
 
-    var View = Backbone.View.extend({
-
+    var View = BaseView.extend({
+        name: 'login',
         template: tmpl,
         className: "login-view",
 
@@ -16,17 +18,12 @@ define([
             "submit .unlogin-form__form": "submitUnlogin",
             "click a": "hide"
         },
-        render: function () {
-            this.$el.html( this.template() );
-        },
-        show: function () {
-            this.render();
+        child_show: function () {
             $.ajax({
                 type: "GET",
                 url: "/api/v1/auth/signin",
                 dataType: 'json',
                 success: function(data){	
-					//A caaeneiinoe io noaoona iieuciaaoaey auae?aai oi?io
                     if(data.isLogin == 'true'){
                         $(".login-form").hide();
                         $(".unlogin-form").show();
@@ -36,9 +33,6 @@ define([
                     }
                 }
             });
-        },
-        hide: function () {
-            this.$el.empty();
         },
         submitLogin: function(event){
             clearErrors();
@@ -91,5 +85,5 @@ define([
         $('.login-form__errors').text("");
     }
 
-    return new View({el: $('.page')});
+    return new View({content: '.page-login'});
 });

@@ -35,6 +35,6 @@
     border: 1px #000 dashed;
 }
 
-.game-map__tile{
-    margin: -2px -2px -2px -2px;
+.default-hidden{
+    display: none;
 }
