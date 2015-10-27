@@ -3,7 +3,6 @@ package utils;
 import  javax.xml.parsers.DocumentBuilderFactory;
 import  javax.xml.parsers.DocumentBuilder;
 
-import mechanics.MapCell;
 import mechanics.GameMap;
 import  org.w3c.dom.Document;
 

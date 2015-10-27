@@ -19,7 +19,7 @@
             "click a": "hide",
         },
         child_init: function(){
-            $.ajax({
+            /*$.ajax({
                 type: "GET",
                 datatype: "json",
                 url: "/res/tilemap.json",
@@ -27,7 +27,7 @@
                 success: function(data){
                     
                 }
-            });
+            });*/
         },
         child_render: function(){
             this.canvas =  document.getElementById("game-map__canvas");
@@ -45,6 +45,7 @@
                     }
                 }
             });
+            this.player.joinGame();
         }
     });
 

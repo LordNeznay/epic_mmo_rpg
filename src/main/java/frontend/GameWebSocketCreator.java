@@ -22,8 +22,9 @@ public class GameWebSocketCreator implements WebSocketCreator {
     public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
 
         String sessionId = req.getHttpServletRequest().getSession().getId();
-        UserProfile userProfile = accountService.getUser(sessionId);
-
-        return new GameWebSocket(userProfile, gameMechanics);
+        UserProfile userProfile = accountService.getSessions(sessionId);
+        GameWebSocket socket = new GameWebSocket(userProfile, gameMechanics);
+        userProfile.addSocket(socket);
+        return socket;
     }
 }

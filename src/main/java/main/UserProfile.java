@@ -1,5 +1,6 @@
 package main;
 
+import frontend.GameWebSocket;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,6 +10,8 @@ public class UserProfile {
     @NotNull private String login;
     @NotNull private String password;
     @NotNull private String email;
+
+    private GameWebSocket userSocket;
 
     public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
         this.login = login;
@@ -26,5 +29,13 @@ public class UserProfile {
 
     @NotNull public String getEmail() {
         return email;
+    }
+
+    public void addSocket(@NotNull GameWebSocket socket){
+        userSocket = socket;
+    }
+
+    public GameWebSocket getUserSocket() {
+        return userSocket;
     }
 }

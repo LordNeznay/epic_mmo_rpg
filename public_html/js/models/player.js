@@ -9,23 +9,50 @@ define([
             name: "",
             isLogin: false,
             score: 0,
-            ws: null
+            ws: null,
+            isOpenedSocket: false
         },
         socket_open: function(){
-            if(!isLogin) return;
-            
+            //if(!this.isLogin) return;
+            var that = this;
+
             this.ws = new WebSocket('ws://' + document.location.host + '/gameplay');
             this.ws.onopen = function (event) {
-
+                console.log("Socket was opened\n");
+                that.isOpenedSocket = true;
             }
             this.ws.onmessage = function (event) {
                 var data = JSON.parse(event.data);
+                console.log("Query was got:\n");
                 console.log(data);
             }
             this.ws.onclose = function (event) {
-
+                console.log("Socket was closed\n");
+                that.isOpenedSocket = false;
             }
         },
+        sendMessage: function(message){
+            if(this.isOpenedSocket){
+                console.log("Query " + message + " was sended\n");
+                this.ws.send(message);
+            } else {
+                console.log("Error: Socket was not opened!\n");
+            }
+        },
+        
+        joinGame: function(){
+            this.socket_open();
+            var that = this;
+
+            setTimeout(function(){
+                var message = '{"command": "join_game"}';
+                that.sendMessage(message);
+            }, 1000);
+        },
+        
+        
+        
+        
         status: function(callback){
             var that = this;
             $.ajax({

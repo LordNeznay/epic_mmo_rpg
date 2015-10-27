@@ -38,6 +38,9 @@ define([
         },
 
         hide: function() {
+            if(this.child_hide != undefined){
+                this.child_hide();
+            }
             $(this.content).hide();
         },
         

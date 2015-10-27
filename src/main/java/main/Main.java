@@ -19,7 +19,7 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
-    public static final int PORT = 8084;
+    public static final int PORT = 8080;
 
     public static void main(String[] args) throws Exception {
         int port = PORT;
