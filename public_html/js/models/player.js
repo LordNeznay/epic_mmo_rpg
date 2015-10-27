@@ -25,10 +25,17 @@ define([
                 var data = JSON.parse(event.data);
                 console.log("Query was got:\n");
                 console.log(data);
+                switch(data.type){
+                    case "startMap":{
+                        that.trigger("loadMap", data.map);
+                    }; break;
+                    default: break;
+                }
             }
             this.ws.onclose = function (event) {
                 console.log("Socket was closed\n");
                 that.isOpenedSocket = false;
+                Backbone.history.navigate('main', true);
             }
         },
         sendMessage: function(message){

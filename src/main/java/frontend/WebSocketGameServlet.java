@@ -12,7 +12,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 @WebServlet(name = "WebSocketGameServlet", urlPatterns = { "/gameplay" })
 public class WebSocketGameServlet extends WebSocketServlet {
-    private final static int IDLE_TIME = 60 * 1000;
+    private final static int IDLE_TIME = 3 * 60 * 1000;
     AccountService accountService;
     private GameMechanics gameMechanics;
 

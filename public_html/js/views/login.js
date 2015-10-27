@@ -56,7 +56,7 @@
     });
 
     function validateForm(){
-        
+        /*
         var userName = $("input[name=name]").val();
         if (userName=='') {
             $('.login-form__errors').text("Введите имя!");
@@ -66,7 +66,7 @@
         if (userPassword=='') {
             $('.login-form__errors').text("Введите пароль!");
             return false;
-        }
+        }*/
         return true;
     }
     function clearErrors(){

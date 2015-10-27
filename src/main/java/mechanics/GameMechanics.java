@@ -10,7 +10,7 @@ import main.UserProfile;
  * Created by uschsh on 26.10.15.
  */
 public class GameMechanics {
-    private static final int MIN_PLAYERS_FOR_START = 2;
+    private static final int MIN_PLAYERS_FOR_START = 1;
     private AccountService accountService;
     private Map<UserProfile, GameMap> usersMaps = new HashMap<UserProfile, GameMap>();
     private ArrayList<UserProfile> userQueue = new ArrayList<UserProfile>();
@@ -18,6 +18,13 @@ public class GameMechanics {
 
     public void addUser(UserProfile userProfile) {
         userQueue.add(userProfile);
+
+        gameMaps.forEach(map->{
+            if(map.isPlace()){
+                map.addUser(userProfile);
+                return;
+            }
+        });
 
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();

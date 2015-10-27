@@ -2,12 +2,14 @@
     'backbone',
     'tmpl/game',
     'underscore',
-    'views/base'
+    'views/base',
+    'views/surroundings'
 ], function(
     Backbone,
     tmpl,
     Underscore,
-    BaseView
+    BaseView,
+    Surroundings
 ){
 
 
@@ -15,27 +17,25 @@
         name: 'game',
         template: tmpl,
         className: "game-view",
+        
+        surroundings: new Surroundings(),
+        
         events: {
             "click a": "hide",
         },
-        child_init: function(){
-            /*$.ajax({
-                type: "GET",
-                datatype: "json",
-                url: "/res/tilemap.json",
-                async: false,
-                success: function(data){
-                    
-                }
-            });*/
-        },
         child_render: function(){
-            this.canvas =  document.getElementById("game-map__canvas");
-
-			gameField = this.canvas.getContext('2d');
+            var that = this;
+            that.surroundings.canvas =  document.getElementById("game-map__canvas");
+            that.surroundings.gameField = that.surroundings.canvas.getContext('2d');
             
-       		this.canvas.width  = 960;     
-            this.canvas.height = 576;
+            that.surroundings.canvas.width  = 960;     
+            that.surroundings.canvas.height = 576;
+            //this.surroundings.render();
+            this.surroundings.listenTo(this.player, "loadMap", function(_map){
+                that.surroundings.map = JSON.parse(_map);
+                that.surroundings.trigger("readyDraw");
+                //console.log(that.map);
+            });
         },
         child_show: function(){
             this.player.status({
