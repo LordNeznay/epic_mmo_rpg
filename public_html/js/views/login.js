@@ -1,4 +1,4 @@
-define([
+п»їdefine([
     'backbone',
     'tmpl/login',
     'views/base'
@@ -35,7 +35,7 @@ define([
                 this.player.login($('.login-form__form').serialize(), {
                     success: function(data){
                         if(data.errors == 'null'){
-                            pView.show();
+                            Backbone.history.navigate('main', true);
                         } else {
                             $(".login-form__errors").html(data.errors);
                         }
@@ -58,12 +58,12 @@ define([
     function validateForm(){
         var userName = $("input[name=name]").val();
         if (userName=='') {
-            $('.login-form__errors').text("Введите имя!");
+            $('.login-form__errors').text("Р’РІРµРґРёС‚Рµ РёРјСЏ!");
             return false;
         }
         var userPassword = $("input[name=password]").val();
         if (userPassword=='') {
-            $('.login-form__errors').text("Введите пароль!");
+            $('.login-form__errors').text("Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ!");
             return false;
         }
         return true;

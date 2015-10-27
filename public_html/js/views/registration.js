@@ -18,7 +18,7 @@
             "submit .signup-form__form": "submitSignup",
             "click a": "hide"
         },
-        child_init: function () {
+        child_show: function () {
             $.ajax({
                 type: "GET",
                 url: "/api/v1/auth/signin",

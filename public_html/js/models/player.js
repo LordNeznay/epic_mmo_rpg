@@ -8,7 +8,23 @@ define([
         defaults: {
             name: "",
             isLogin: false,
-            score: 0
+            score: 0,
+            ws: null
+        },
+        socket_open: function(){
+            if(!isLogin) return;
+            
+            this.ws = new WebSocket('ws://' + document.location.host + '/gameplay');
+            this.ws.onopen = function (event) {
+
+            }
+            this.ws.onmessage = function (event) {
+                var data = JSON.parse(event.data);
+                console.log(data);
+            }
+            this.ws.onclose = function (event) {
+
+            }
         },
         status: function(callback){
             var that = this;
@@ -71,6 +87,12 @@ define([
                     }
                 }
             });
+        },
+        
+        
+        getCoord: function(){
+            var message = '{"command": "getcoord"}';
+            ws.send(message);
         }
     });
 
