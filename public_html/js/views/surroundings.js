@@ -55,32 +55,24 @@ define([
             });
             
             setTimeout(function(){
-            //that.drawTile(1, -63, -32);
-
-            that.map.layers.forEach(function(layer){
-                if(!(layer.name == "Background" || layer.name == "Frontground")){
-                    return;
-                }
-                var dx = that.map.tilewidth;
-                var dy = that.map.tileheight;
-                var x = -dx;
-                var y = -dy;
-                layer.data.forEach(function(gid){
-                    that.drawTile(gid, x, y);
-                    x += dx;
-                    while(x >= (layer.width-1) * dx){
-                        x = -dx;
-                        y += dy;
+                that.map.layers.forEach(function(layer){
+                    if(!(layer.name == "Background" || layer.name == "Frontground")){
+                        return;
                     }
+                    var dx = that.map.tilewidth;
+                    var dy = that.map.tileheight;
+                    var x = -dx;
+                    var y = -dy;
+                    layer.data.forEach(function(gid){
+                        that.drawTile(gid, x, y);
+                        x += dx;
+                        while(x >= (layer.width-1) * dx){
+                            x = -dx;
+                            y += dy;
+                        }
+                    });
                 });
-            });
             }, 1000);
-            /*
-drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-// Первый параметр указывает на изображение
-// sx, sy, sWidth, sHeight указывают параметры фрагмента на изображение-источнике
-// dx, dy, dWidth, dHeight ответственны за координаты отрисовки фрагмента на холсте
-            */
         }
         
     });
