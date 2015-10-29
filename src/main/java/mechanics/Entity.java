@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
  * Created by Андрей on 27.10.2015.
  */
 public class Entity {
-    private int x = 10;
-    private int y = 10;
+    private int x = 2;
+    private int y = 2;
     private String command = "";
     private GameMap map = null;
 

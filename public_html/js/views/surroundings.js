@@ -66,7 +66,7 @@ define([
                     layer.data.forEach(function(gid){
                         that.drawTile(gid, x, y);
                         x += dx;
-                        while(x >= (layer.width-1) * dx){
+                        while(x >= (that.map.width-1) * dx){
                             x = -dx;
                             y += dy;
                         }
