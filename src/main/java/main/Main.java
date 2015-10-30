@@ -14,6 +14,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.Servlet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author v.chibrikov
@@ -64,6 +66,8 @@ public class Main {
         server.setHandler(handlers);
 
         server.start();
-        server.join();
+        //server.join();
+
+        gameMechanics.run();
     }
 }

@@ -34,13 +34,21 @@ public class GameMap {
             ++amountBluePlayers;
             userEntity.setCommand("CommandBlue");
         }
-        String temp = physMap.getArea(userEntity.getCoord());
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("type", "startMap");
-        jsonStart.put("map", temp);
 
+        entities.put(userProfile, userEntity);
+
+        JSONObject jsonStart = new JSONObject();
+        jsonStart.put("type", "user_was_joined");
         userProfile.getUserSocket().sendMessage(jsonStart.toString());
         return true;
+    }
+
+    public void sendPlayerViewArea(UserProfile userProfile){
+        String temp = getArea(userProfile);
+        JSONObject jsonStart = new JSONObject();
+        jsonStart.put("type", "viewArea");
+        jsonStart.put("map", temp);
+        userProfile.getUserSocket().sendMessage(jsonStart.toString());
     }
 
     public String getArea(UserProfile userProfile){
@@ -55,4 +63,27 @@ public class GameMap {
             return false;
         }
     }
+
+    public void removeUser(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
+        if(playerEntity.getCommand().equals("CommandRed")){
+            --amountRedPlayers;
+        } else {
+            --amountBluePlayers;
+        }
+    }
+
+    public void gameAction(UserProfile userProfile, String action, String params){
+        switch (action){
+            case "move":
+                entityMove(userProfile, params);
+                break;
+        }
+    }
+
+    public void entityMove(UserProfile userProfile, String params){
+        Entity playerEntity = entities.get(userProfile);
+        playerEntity.move(params);
+    }
+
 }

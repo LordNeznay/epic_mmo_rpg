@@ -10,8 +10,14 @@ define([
             isLogin: false,
             score: 0,
             ws: null,
-            isOpenedSocket: false
+            isOpenedSocket: false,
+            isInGame: false
         },
+        
+        initialize: function(){
+            this.on("joinGame", this.joinGame, this);
+        },
+        
         socket_open: function(){
             //if(!this.isLogin) return;
             var that = this;
@@ -20,13 +26,17 @@ define([
             this.ws.onopen = function (event) {
                 console.log("Socket was opened\n");
                 that.isOpenedSocket = true;
+                that.trigger("joinGame");
             }
             this.ws.onmessage = function (event) {
                 var data = JSON.parse(event.data);
                 console.log("Query was got:\n");
                 console.log(data);
                 switch(data.type){
-                    case "startMap":{
+                    case "user_was_joined":{
+                        that.isInGame = true;
+                    }; break;
+                    case "viewArea":{
                         that.trigger("loadMap", data.map);
                     }; break;
                     default: break;
@@ -47,16 +57,31 @@ define([
             }
         },
         
-        joinGame: function(){
+        startGame: function(){
             this.socket_open();
-            var that = this;
-
-            setTimeout(function(){
-                var message = '{"command": "join_game"}';
-                that.sendMessage(message);
-            }, 1000);
         },
         
+        joinGame: function(){
+            //alert("joinGame");
+            var that = this;
+            var message = '{"command": "join_game"}';
+            that.sendMessage(message);
+        },
+        
+        leaveGame: function(){
+            if(this.isInGame){
+                var message = '{"command": "leave_game"}';
+                this.sendMessage(message);
+                this.isInGame = false;
+            }
+        },
+        
+        move: function(params){
+            var message = '{"command": "action", "action" : "move", "direction" : "';
+            message += params;
+            message += '"}';
+            this.sendMessage(message);
+        },
         
         
         

@@ -1,4 +1,4 @@
-define([
+﻿define([
     'backbone',
     'tmpl/surroundings'
 ], function(
@@ -12,8 +12,10 @@ define([
         canvas: undefined,
         gameField: undefined,
         loadTilesets: 0,
+        amountTilesets: 0,
 
         initialize: function(){
+            this.on("mapIsLoad", this.loadingTilesets, this);
             this.on("readyDraw", this.drawMap, this);
         },
 
@@ -40,39 +42,47 @@ define([
             });
         },
         
-        drawMap: function(){
+        loadingTilesets: function(){
             var that = this;
-            var x = 0;
+            var amount = 0;
+            that.loadTilesets = 0;
             this.map.tilesets.forEach(function(tileset){
+                amount += 1;
                 var pic = new Image();
                 pic.src    = 'http://' + document.location.host + '/res/' + tileset.image;
                 pic.onload = function() { 
                     tileset.image = pic;
                     that.loadTilesets++;
-                    //that.gameField.drawImage(tileset.image, x, 0);
-                    x += tileset.imagewidth;
+                    that.trigger("readyDraw");
+                    //alert("x=" + amount);
                 }
             });
+            this.amountTilesets = amount;
+        },
+        
+        drawMap: function(){
+            //Если картинки не догружены, то выйти
+            //alert(this.loadTilesets);
+            if(this.amountTilesets != this.loadTilesets) return;
             
-            setTimeout(function(){
-                that.map.layers.forEach(function(layer){
-                    if(!(layer.name == "Background" || layer.name == "Frontground")){
-                        return;
+            var that = this;
+            that.map.layers.forEach(function(layer){
+                if(!(layer.name == "Background" || layer.name == "Frontground")){
+                    return;
+                }
+                var dx = that.map.tilewidth;
+                var dy = that.map.tileheight;
+                var x = -dx;
+                var y = -dy;
+                layer.data.forEach(function(gid){
+                    that.drawTile(gid, x, y);
+                    x += dx;
+                    while(x >= (that.map.width-1) * dx){
+                        x = -dx;
+                        y += dy;
                     }
-                    var dx = that.map.tilewidth;
-                    var dy = that.map.tileheight;
-                    var x = -dx;
-                    var y = -dy;
-                    layer.data.forEach(function(gid){
-                        that.drawTile(gid, x, y);
-                        x += dx;
-                        while(x >= (that.map.width-1) * dx){
-                            x = -dx;
-                            y += dy;
-                        }
-                    });
                 });
-            }, 1000);
+            });
         }
         
     });

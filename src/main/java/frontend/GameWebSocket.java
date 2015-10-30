@@ -47,6 +47,17 @@ public class GameWebSocket {
         switch (jsonStart.get("command").toString()){
             case "join_game":
                 gameMechanics.addUser(userProfile);
+                break;
+            case "leave_game":
+                gameMechanics.removeUser(userProfile);
+                break;
+            case "action":
+                switch(jsonStart.get("action").toString()){
+                    case "move":
+                        gameMechanics.movePlayer(userProfile, jsonStart.get("direction").toString());
+                        break;
+                }
+                break;
         }
     }
 
