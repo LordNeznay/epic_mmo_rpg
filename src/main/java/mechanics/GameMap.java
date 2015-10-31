@@ -11,9 +11,14 @@ import java.util.Map;
  * Created by uschsh on 26.10.15.
  */
 public class GameMap {
-    public static final int MAX_PLAYERS_IN_COMMAND = 1;
+    public static final int MAX_PLAYERS_IN_COMMAND = 2;
+    private static final int VIEW_WIDTH_2 = 8;
+    private static final int VIEW_HEIGHT_2 = 5;
+    private int mapWidth;
+    private int mapHeight;
 
     private Map<UserProfile, Entity> entities = new HashMap<UserProfile, Entity>();
+    private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
     private int amountBluePlayers = 0;
 
@@ -21,6 +26,15 @@ public class GameMap {
 
     public GameMap(){
         System.out.println("Создана новая карта");
+        Vec2d sizeMap = physMap.getSize();
+        mapWidth = (int) sizeMap.x;
+        mapHeight = (int) sizeMap.y;
+        entityLocation = new Entity[mapWidth][mapHeight];
+        for(int i=0; i<mapWidth; ++i){
+            for(int j=0; j<mapHeight; ++j){
+                entityLocation[i][j] = null;
+            }
+        }
     }
 
     public boolean addUser(UserProfile userProfile) {
@@ -28,8 +42,9 @@ public class GameMap {
             return false;
         }
         Entity userEntity = new Entity(this);
-        if(amountRedPlayers > amountBluePlayers){
-            ++amountBluePlayers;
+        entityLocation[(int)userEntity.getCoord().x][(int)userEntity.getCoord().y] = userEntity;
+        if(amountRedPlayers < amountBluePlayers){
+            ++amountRedPlayers;
             userEntity.setCommand("CommandRed");
         } else {
             ++amountBluePlayers;
@@ -45,11 +60,52 @@ public class GameMap {
     }
 
     public void sendPlayerViewArea(UserProfile userProfile){
-        String temp = getArea(userProfile);
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("type", "viewArea");
-        jsonStart.put("map", temp);
-        userProfile.getUserSocket().sendMessage(jsonStart.toString());
+        String viewArea = getArea(userProfile);
+        JSONObject request = new JSONObject();
+        request.put("type", "viewArea");
+        request.put("map", viewArea);
+        userProfile.getUserSocket().sendMessage( request.toString());
+    }
+
+    public void sendEntityInViewArea(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
+        Vec2d playerPosition = playerEntity.getCoord();
+        StringBuilder entityesInViewArea = new StringBuilder();
+        entityesInViewArea.append("{");
+
+        entityesInViewArea.append("\"player\": {\"x\":");
+        entityesInViewArea.append(VIEW_WIDTH_2);
+        entityesInViewArea.append(",\"y\": ");
+        entityesInViewArea.append(VIEW_HEIGHT_2);
+        entityesInViewArea.append(",\"image\": \"people.png\"},");
+
+        entityesInViewArea.append("\"entities\": [");
+        int amountEntity = 0;
+
+        int y = 0;
+        for(int j = (int)playerPosition.y - VIEW_HEIGHT_2; j <= playerPosition.y + VIEW_HEIGHT_2; ++j, ++y){
+            int x=0;
+            for(int i = (int)playerPosition.x - VIEW_WIDTH_2; i <= playerPosition.x + VIEW_WIDTH_2; ++i, ++x){
+                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
+                    if(entityLocation[i][j] == null || entityLocation[i][j] == playerEntity) continue;
+                    if(amountEntity!=0) {
+                        entityesInViewArea.append(", ");
+                    }
+                    entityesInViewArea.append("{\"x\":");
+                    entityesInViewArea.append(x);
+                    entityesInViewArea.append(",\"y\":");
+                    entityesInViewArea.append(y);
+                    entityesInViewArea.append(",\"image\": \"people.png\"}");
+                    ++amountEntity;
+                }
+            }
+        }
+        entityesInViewArea.append("]}");
+
+        JSONObject request = new JSONObject();
+        request.put("type", "entitiesInViewArea");
+        request.put("entities", entityesInViewArea.toString());
+        userProfile.getUserSocket().sendMessage( request.toString());
     }
 
     public String getArea(UserProfile userProfile){
@@ -84,10 +140,24 @@ public class GameMap {
 
     public void entityMove(UserProfile userProfile, String params){
         Entity playerEntity = entities.get(userProfile);
+        entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
         playerEntity.move(params);
+        entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = playerEntity;
     }
 
     public boolean isPassability(Vec2d cell){
-        return physMap.isPassability(cell);
+        boolean result = false;
+        if(cell.x >= 0 && cell.x < mapWidth && cell.y >= 0 && cell.y < mapHeight ) {
+            result = entityLocation[(int) cell.x][(int) cell.y] == null;
+        }
+        return result && physMap.isPassability(cell);
+    }
+
+    public void stepping(){
+        for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
+        {
+            sendPlayerViewArea(entry.getKey());
+            sendEntityInViewArea(entry.getKey());
+        }
     }
 }

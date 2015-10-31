@@ -20,18 +20,19 @@ public class GameMechanics {
     private ArrayList<GameMap> gameMaps = new ArrayList<GameMap>();
 
     public void addUser(UserProfile userProfile) {
-        if(usersMaps.containsKey(userProfile)){
+        if(usersMaps.containsKey(userProfile)) {
             return;
         }
-        userQueue.add(userProfile);
 
-        gameMaps.forEach(map->{
+        for(GameMap map : gameMaps){
             if(map.isPlace()){
                 map.addUser(userProfile);
+                usersMaps.put(userProfile, map);
                 return;
             }
-        });
+        }
 
+        userQueue.add(userProfile);
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
@@ -72,8 +73,8 @@ public class GameMechanics {
     }
 
     private void stepping(){
-        usersMaps.forEach((user, map)->{
-            map.sendPlayerViewArea(user);
+        gameMaps.forEach(map->{
+            map.stepping();
         });
     }
 

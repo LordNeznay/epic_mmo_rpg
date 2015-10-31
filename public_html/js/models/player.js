@@ -39,6 +39,9 @@ define([
                     case "viewArea":{
                         that.trigger("loadMap", data.map);
                     }; break;
+                    case "entitiesInViewArea":{
+                        that.trigger("loadEntities", data.entities);
+                    }; break;
                     default: break;
                 }
             }

@@ -39,6 +39,10 @@
                 that.surroundings.map = JSON.parse(_map);
                 that.surroundings.trigger("mapIsLoad");
             });
+            this.surroundings.listenTo(this.player, "loadEntities", function(entities){
+                that.surroundings.entities = JSON.parse(entities);
+                that.surroundings.trigger("entitiesIsLoad");
+            });
         },
         child_show: function(){
             this.player.status({

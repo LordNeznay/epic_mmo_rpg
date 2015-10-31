@@ -8,6 +8,7 @@
 
     var View = Backbone.View.extend({
         map: '',
+        entities: '',
         template: tmpl,
         canvas: undefined,
         gameField: undefined,
@@ -16,7 +17,8 @@
 
         initialize: function(){
             this.on("mapIsLoad", this.loadingTilesets, this);
-            this.on("readyDraw", this.drawMap, this);
+            this.on("entitiesIsLoad", this.drawEntities, this);
+            this.on("readyDrawMap", this.drawMap, this);
         },
 
         setMap: function(map){
@@ -53,11 +55,28 @@
                 pic.onload = function() { 
                     tileset.image = pic;
                     that.loadTilesets++;
-                    that.trigger("readyDraw");
+                    that.trigger("readyDrawMap");
                     //alert("x=" + amount);
                 }
             });
             this.amountTilesets = amount;
+        },
+        
+        drawEntities: function(){
+            var that = this;
+            this.entities.entities.forEach(function(entity){
+                var pic = new Image();
+                pic.src = 'http://' + document.location.host + '/res/' + entity.image;
+                pic.onload = function(){
+                    that.gameField.drawImage(pic, (entity.x-1) * 64, (entity.y-1) * 64);
+                }
+            });
+            
+            var pic = new Image();
+            pic.src = 'http://' + document.location.host + '/res/' + this.entities.player.image;
+            pic.onload = function(){
+                that.gameField.drawImage(pic, (that.entities.player.x-1) * 64, (that.entities.player.y-1) * 64);
+            }
         },
         
         drawMap: function(){

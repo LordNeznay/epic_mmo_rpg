@@ -169,4 +169,8 @@ public class PhysMapJson implements PhysMap {
         }
         return result;
     }
+
+    public Vec2d getSize(){
+        return new Vec2d(mapWidth, mapHeight);
+    }
 }
