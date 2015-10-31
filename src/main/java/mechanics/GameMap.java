@@ -70,16 +70,16 @@ public class GameMap {
     public void sendEntityInViewArea(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
         Vec2d playerPosition = playerEntity.getCoord();
-        StringBuilder entityesInViewArea = new StringBuilder();
-        entityesInViewArea.append("{");
+        StringBuilder entitiesInViewArea = new StringBuilder();
+        entitiesInViewArea.append("{");
 
-        entityesInViewArea.append("\"player\": {\"x\":");
-        entityesInViewArea.append(VIEW_WIDTH_2);
-        entityesInViewArea.append(",\"y\": ");
-        entityesInViewArea.append(VIEW_HEIGHT_2);
-        entityesInViewArea.append(",\"image\": \"people.png\"},");
+        entitiesInViewArea.append("\"player\": {\"x\":");
+        entitiesInViewArea.append(VIEW_WIDTH_2);
+        entitiesInViewArea.append(",\"y\": ");
+        entitiesInViewArea.append(VIEW_HEIGHT_2);
+        entitiesInViewArea.append(",\"image\": \"people.png\"},");
 
-        entityesInViewArea.append("\"entities\": [");
+        entitiesInViewArea.append("\"entities\": [");
         int amountEntity = 0;
 
         int y = 0;
@@ -89,22 +89,34 @@ public class GameMap {
                 if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
                     if(entityLocation[i][j] == null || entityLocation[i][j] == playerEntity) continue;
                     if(amountEntity!=0) {
-                        entityesInViewArea.append(", ");
+                        entitiesInViewArea.append(", ");
                     }
-                    entityesInViewArea.append("{\"x\":");
-                    entityesInViewArea.append(x);
-                    entityesInViewArea.append(",\"y\":");
-                    entityesInViewArea.append(y);
-                    entityesInViewArea.append(",\"image\": \"people.png\"}");
+                    entitiesInViewArea.append("{\"x\":");
+                    entitiesInViewArea.append(x);
+                    entitiesInViewArea.append(",\"y\":");
+                    entitiesInViewArea.append(y);
+                    entitiesInViewArea.append(",\"image\": \"");
+                    switch(entityLocation[i][j].getCommand()){
+                        case "CommandBlue":
+                            entitiesInViewArea.append("blue_people.png");
+                            break;
+                        case "CommandRed":
+                            entitiesInViewArea.append("red_people.png");
+                            break;
+                        default:
+                            entitiesInViewArea.append("people.png");
+                            break;
+                    }
+                    entitiesInViewArea.append("\"}");
                     ++amountEntity;
                 }
             }
         }
-        entityesInViewArea.append("]}");
+        entitiesInViewArea.append("]}");
 
         JSONObject request = new JSONObject();
         request.put("type", "entitiesInViewArea");
-        request.put("entities", entityesInViewArea.toString());
+        request.put("entities", entitiesInViewArea.toString());
         userProfile.getUserSocket().sendMessage( request.toString());
     }
 
