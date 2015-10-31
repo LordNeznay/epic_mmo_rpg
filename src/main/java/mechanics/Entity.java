@@ -31,16 +31,16 @@ public class Entity {
     public void move(String params){
         switch (params){
             case "up":
-                y -=1;
+                y = map.isPassability(new Vec2d(x, y-1)) ? y-1 : y;
                 break;
             case "down":
-                y +=1;
+                y = map.isPassability(new Vec2d(x, y+1)) ? y+1 : y;
                 break;
             case "left":
-                x -=1;
+                x = map.isPassability(new Vec2d(x-1, y)) ? x-1 : x;
                 break;
             case "right":
-                x +=1;
+                x = map.isPassability(new Vec2d(x+1, y)) ? x+1 : x;
                 break;
         }
     }

@@ -1,5 +1,6 @@
 package mechanics;
 
+import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 
@@ -86,4 +87,7 @@ public class GameMap {
         playerEntity.move(params);
     }
 
+    public boolean isPassability(Vec2d cell){
+        return physMap.isPassability(cell);
+    }
 }

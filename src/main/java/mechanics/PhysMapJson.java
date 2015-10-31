@@ -161,4 +161,12 @@ public class PhysMapJson implements PhysMap {
         resultString.append("}");
         return resultString.toString();
     }
+
+    public boolean isPassability(Vec2d cell){
+        boolean result = false;
+        if(cell.x >= 0 && cell.x < mapWidth && cell.y >= 0 && cell.y < mapHeight ) {
+            result = passabilityLayer[(int) cell.x][(int) cell.y];
+        }
+        return result;
+    }
 }
