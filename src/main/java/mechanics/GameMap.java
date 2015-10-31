@@ -168,6 +168,7 @@ public class GameMap {
     public void stepping(){
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
+            entry.getValue().stepping();
             sendPlayerViewArea(entry.getKey());
             sendEntityInViewArea(entry.getKey());
         }
