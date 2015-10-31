@@ -43,7 +43,7 @@ public class GameWebSocket {
             e.printStackTrace();
         }
 
-        System.out.println(jsonStart.get("command"));
+        //System.out.println(jsonStart.get("command"));
         switch (jsonStart.get("command").toString()){
             case "join_game":
                 gameMechanics.addUser(userProfile);

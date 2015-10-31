@@ -26,7 +26,7 @@
         drawTile: function(gid, x, y){
             var that = this;
             
-            if(gid == 0) return;
+            //if(gid == 0) return;
             that.map.tilesets.forEach(function(tileset){
                 if(tileset.firstgid <= gid && gid < tileset.firstgid + (tileset.imageheight*tileset.imagewidth/tileset.tileheight/tileset.tilewidth)){
                     var dgid = gid - tileset.firstgid;

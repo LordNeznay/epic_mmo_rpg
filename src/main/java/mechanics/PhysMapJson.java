@@ -39,7 +39,8 @@ public class PhysMapJson implements PhysMap {
         frontgroundLayer = new int[mapWidth][mapHeight];
 
         int impassableGid = getGidIsNotPassability((JSONArray)map.get("tilesets"));
-        tilesetsInfo = map.get("tilesets").toString();
+
+        //tilesetsInfo = map.get("tilesets").toString();
         getLayers((JSONArray)map.get("layers"), impassableGid);
     }
 
@@ -69,9 +70,13 @@ public class PhysMapJson implements PhysMap {
 
     private int getGidIsNotPassability(JSONArray tilesets){
         int isNotPassability = 0;
+        StringBuilder tilesetsBuilder = new StringBuilder();
+        tilesetsBuilder.append("[");
 
         for(Object tileset : tilesets){
             if(!((JSONObject) tileset).get("name").toString().equals("passability")){
+                tilesetsBuilder.append(((JSONObject)tileset).toJSONString());
+                tilesetsBuilder.append(", ");
                 continue;
             }
 
@@ -106,6 +111,10 @@ public class PhysMapJson implements PhysMap {
 
             }
         }
+
+        tilesetsBuilder.append("{ \"firstgid\":-1, \"image\":\"0.png\", \"imageheight\":64,\"imagewidth\":64, \"name\":\"zeroTile\", \"tileheight\":64, \"tilewidth\":64}");
+        tilesetsBuilder.append("]");
+        tilesetsInfo = tilesetsBuilder.toString();
         return  isNotPassability;
     }
 
@@ -120,10 +129,10 @@ public class PhysMapJson implements PhysMap {
 
         for(int j = (int)coord.y - VIEW_HEIGHT_2; j <= coord.y + VIEW_HEIGHT_2; ++j){
             for(int i = (int)coord.x - VIEW_WIDTH_2; i <= coord.x + VIEW_WIDTH_2; ++i){
-                if(i >= 0 && i <= mapWidth && j >= 0 && j <= mapHeight ) {
-                    resultString.append(backgroundLayer[i][j]);
+                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
+                    resultString.append(backgroundLayer[i][j] == 0 ? -1 : backgroundLayer[i][j]);
                 } else {
-                    resultString.append(0);
+                    resultString.append(-1);
                 }
                 resultString.append(", ");
             }
@@ -133,7 +142,7 @@ public class PhysMapJson implements PhysMap {
 
         for(int j = (int)coord.y - VIEW_HEIGHT_2; j <= coord.y + VIEW_HEIGHT_2; ++j){
             for(int i = (int)coord.x - VIEW_WIDTH_2; i <= coord.x + VIEW_WIDTH_2; ++i){
-                if(i >= 0 && i <= mapWidth && j >= 0 && j <= mapHeight ) {
+                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
                     resultString.append(frontgroundLayer[i][j]);
                 } else {
                     resultString.append(0);
