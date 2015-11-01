@@ -20,17 +20,24 @@ public class AccountService {
         return true;
     }
 
-    public void addSessions(String sessionId, UserProfile userProfile) {
-        sessions.put(sessionId, userProfile);
+    public boolean addSession(String sessionId, UserProfile userProfile) {
+        UserProfile user = users.get(userProfile.getLogin());
+
+        if(user != null) {
+            sessions.put(sessionId, userProfile);
+            return true;
+        } else
+            return false;
+
     }
 
     @Nullable
-    public UserProfile getUser(String userName) {
+    public UserProfile getUserByName(String userName) {
         return users.get(userName);
     }
 
     @Nullable
-    public UserProfile getSessions(String sessionId) {
+    public UserProfile getUserBySession(String sessionId) {
         return sessions.get(sessionId);
     }
 

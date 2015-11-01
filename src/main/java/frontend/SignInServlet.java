@@ -39,7 +39,7 @@ public class SignInServlet extends HttpServlet {
 
         if((accountService != null) && (sesseionId != null)) {
             Map<String, Object> pageVariables = new HashMap<>();
-            if (accountService.getSessions(sesseionId) == null) {
+            if (accountService.getUserBySession(sesseionId) == null) {
                 pageVariables.put("loginStatus", "false");
             } else {
                 pageVariables.put("loginStatus", "true");
@@ -60,12 +60,12 @@ public class SignInServlet extends HttpServlet {
 
             if(accountService != null) {
                 Map<String, Object> pageVariables = new HashMap<>();
-                UserProfile profile = accountService.getUser(name);
+                UserProfile profile = accountService.getUserByName(name);
 
 
                 if (profile != null && profile.getPassword().equals(password)) {
-                    String session = request.getSession().getId().toString();
-                    accountService.addSessions(session, profile);
+                    String session = request.getSession(true).getId();
+                    accountService.addSession(session, profile);
                     pageVariables.put("errors", "null");
                     response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
                 } else {

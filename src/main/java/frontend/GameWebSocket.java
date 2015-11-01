@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+
 /**
  * Created by uschsh on 25.10.15.
  */
@@ -38,50 +40,51 @@ public class GameWebSocket {
         JSONParser jsonPaser = new JSONParser();
         try {
             Object obj = jsonPaser.parse(data);
-            jsonStart = (JSONObject)obj;
+            jsonStart = (JSONObject) obj;
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        //System.out.println(jsonStart.get("command"));
-        switch (jsonStart.get("command").toString()){
-            case "join_game":
-                gameMechanics.addUser(userProfile);
-                break;
-            case "leave_game":
-                gameMechanics.removeUser(userProfile);
-                break;
-            case "action":
-                switch(jsonStart.get("action").toString()){
-                    case "move":
-                        gameMechanics.movePlayer(userProfile, jsonStart.get("direction").toString());
-                        break;
-                    case "flagCapture":
-                        gameMechanics.startFlagCapture(userProfile);
-                        break;
-                    case "setTarget":
-                        int x = 0; int y = 0;
-                        try{
-                            x = Integer.valueOf(jsonStart.get("x").toString());
-                            y = Integer.valueOf(jsonStart.get("y").toString());
-                            gameMechanics.setPlayerTarget(userProfile, x, y);
-                        }catch (NumberFormatException e) {
-                            System.err.println("Cannot parse game map!");
-                        }
-                        break;
-                    case "useAbility":
-                        gameMechanics.useAbility(userProfile, jsonStart.get("abilityName").toString());
-                        break;
-                }
-                break;
+        if (jsonStart != null) {
+            switch (jsonStart.get("command").toString()) {
+                case "join_game":
+                    gameMechanics.addUser(userProfile);
+                    break;
+                case "leave_game":
+                    gameMechanics.removeUser(userProfile);
+                    break;
+                case "action":
+                    switch (jsonStart.get("action").toString()) {
+                        case "move":
+                            gameMechanics.movePlayer(userProfile, jsonStart.get("direction").toString());
+                            break;
+                        case "flagCapture":
+                            gameMechanics.startFlagCapture(userProfile);
+                            break;
+                        case "setTarget":
+                            int x = 0;
+                            int y = 0;
+                            try {
+                                x = Integer.valueOf(jsonStart.get("x").toString());
+                                y = Integer.valueOf(jsonStart.get("y").toString());
+                                gameMechanics.setPlayerTarget(userProfile, x, y);
+                            } catch (NumberFormatException e) {
+                                System.err.println("Cannot parse game map!");
+                            }
+                            break;
+                        case "useAbility":
+                            gameMechanics.useAbility(userProfile, jsonStart.get("abilityName").toString());
+                            break;
+                    }
+                    break;
+            }
         }
     }
-
     public void sendMessage(String message){
         try {
             session.getRemote().sendString(message);
-        } catch (Exception e) {
-            System.out.print(e.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

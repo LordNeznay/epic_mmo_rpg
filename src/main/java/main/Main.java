@@ -21,7 +21,7 @@ import java.util.TimerTask;
  * @author v.chibrikov
  */
 public class Main {
-    public static final int PORT = 8080;
+    public static final int PORT = 8085;
 
     public static void main(String[] args) throws Exception {
         int port = PORT;
