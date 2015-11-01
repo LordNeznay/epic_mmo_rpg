@@ -85,4 +85,8 @@ public class GameMechanics {
     public void startFlagCapture(UserProfile userProfile){
         usersMaps.get(userProfile).startFlagCapture(userProfile);
     }
+
+    public void setPlayerTarget(UserProfile userProfile, int x, int y){
+        usersMaps.get(userProfile).setPlayerTarget(userProfile, x, y);
+    }
 }

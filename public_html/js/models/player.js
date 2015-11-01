@@ -92,6 +92,15 @@ define([
             this.sendMessage(message);
         },
         
+        setTarget: function(x, y){
+            var message = '{"command": "action", "action" : "setTarget", "x" : ';
+            message += x;
+            message += ', "y": ';
+            message += y;
+            message += '}';
+            this.sendMessage(message);
+        },
+        
         
         
         status: function(callback){

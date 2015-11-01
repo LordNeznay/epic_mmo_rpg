@@ -59,6 +59,16 @@ public class GameWebSocket {
                     case "flagCapture":
                         gameMechanics.startFlagCapture(userProfile);
                         break;
+                    case "setTarget":
+                        int x = 0; int y = 0;
+                        try{
+                            x = Integer.valueOf(jsonStart.get("x").toString());
+                            y = Integer.valueOf(jsonStart.get("y").toString());
+                            gameMechanics.setPlayerTarget(userProfile, x, y);
+                        }catch (NumberFormatException e) {
+                            System.err.println("Cannot parse game map!");
+                        }
+                        break;
                 }
                 break;
         }

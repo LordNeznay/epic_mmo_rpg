@@ -9,22 +9,56 @@ import org.jetbrains.annotations.NotNull;
 public class Entity {
     private static final int STEP_TIME = 100;
     private static final int MOVE_DELAY = 400;
-    private int x = 8;
-    private int y = 8;
+    private static Vec2d CommandsRedSpawnPoint = new Vec2d(0, 0);
+    private static Vec2d CommandsBlueSpawnPoint = new Vec2d(0, 0);
+    private int x = 0;
+    private int y = 0;
     private String command = "";
     private GameMap map = null;
     private int timeUntilMove = 0;
+    private Entity target = null;
 
     public Entity(@NotNull GameMap _map){
         map = _map;
+
+    }
+
+    public Entity getTarget() {
+        return target;
+    }
+
+    public void setTarget(Entity target) {
+        this.target = target;
+    }
+
+    public static void setCommandsRedSpawnPoint(Vec2d commandsRedSpawnPoint) {
+        CommandsRedSpawnPoint = commandsRedSpawnPoint;
+    }
+
+    public static void setCommandsBlueSpawnPoint(Vec2d commandsBlueSpawnPoint) {
+        CommandsBlueSpawnPoint = commandsBlueSpawnPoint;
     }
 
     public Vec2d getCoord(){
         return new Vec2d(x, y);
     }
 
+    private void goToSpawn(){
+        int lastX = x;
+        int lastY = y;
+        if(command.equals("CommandRed")){
+            x = (int)CommandsRedSpawnPoint.x;
+            y = (int)CommandsRedSpawnPoint.y;
+        } else {
+            x = (int)CommandsBlueSpawnPoint.x;
+            y = (int)CommandsBlueSpawnPoint.y;
+        }
+        map.updatePositionEntity(this, lastX, lastY);
+    }
+
     public void setCommand(String newCommand){
         command = newCommand;
+        goToSpawn();
     }
 
     public String getCommand() {

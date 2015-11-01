@@ -34,6 +34,10 @@
             
             that.surroundings.canvas.width  = 960;     
             that.surroundings.canvas.height = 576;
+            
+            that.surroundings.canvas.onclick = function(event){
+                that.onGameFieldClick(event);
+            };
 
             this.surroundings.listenTo(this.player, "loadMap", function(_map){
                 that.surroundings.map = JSON.parse(_map);
@@ -58,6 +62,11 @@
                 $(".captureTime").html(flagStatus.captureTime);
             });
         },
+        
+        onGameFieldClick: function(event){
+            this.player.setTarget(Math.floor(event.offsetX/64)+1, Math.floor(event.offsetY/64)+1);
+        },
+        
         child_show: function(){
             this.player.status({
                 success: function(data){

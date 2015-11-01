@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="64" tileheight="64" nextobjectid="12">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="64" tileheight="64" nextobjectid="14">
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64">
   <image source="tileset.png" width="128" height="256"/>
  </tileset>
@@ -19,7 +19,7 @@
  <tileset firstgid="11" name="test_object_layer" tilewidth="64" tileheight="64">
   <image source="test_object_layer.png" width="128" height="64"/>
  </tileset>
- <layer name="Passability" width="25" height="25">
+ <layer name="Passability" width="25" height="25" visible="0">
   <data>
    <tile gid="10"/>
    <tile gid="10"/>
@@ -676,7 +676,7 @@
    <tile gid="7"/>
    <tile gid="7"/>
    <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="8"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="4"/>
@@ -1248,7 +1248,7 @@
    <tile gid="4"/>
    <tile gid="2"/>
    <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="8"/>
    <tile gid="2"/>
    <tile gid="7"/>
    <tile gid="7"/>
@@ -1277,7 +1277,7 @@
    <tile gid="2"/>
   </data>
  </layer>
- <layer name="Frontground" width="25" height="25">
+ <layer name="Frontground" width="25" height="25" visible="0">
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1908,5 +1908,7 @@
  </layer>
  <objectgroup name="Objects">
   <object id="10" name="Flag" gid="5" x="768" y="832" width="64" height="64"/>
+  <object id="12" name="CommandsRedSpawnPoint" gid="5" x="64" y="128" width="64" height="64"/>
+  <object id="13" name="CommandsBlueSpawnPoint" gid="5" x="1472" y="1536" width="64" height="64"/>
  </objectgroup>
 </map>

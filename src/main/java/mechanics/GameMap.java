@@ -119,7 +119,19 @@ public class GameMap {
                     }
 
 
-                    if(entityLocation[i][j] == null || entityLocation[i][j] == playerEntity) continue;
+                    if(entityLocation[i][j] == null) continue;
+                    if(playerEntity.getTarget() == entityLocation[i][j]){
+                        if(amountEntity!=0) {
+                            entitiesInViewArea.append(", ");
+                        }
+                        entitiesInViewArea.append("{\"x\":");
+                        entitiesInViewArea.append(x);
+                        entitiesInViewArea.append(",\"y\":");
+                        entitiesInViewArea.append(y);
+                        entitiesInViewArea.append(",\"image\": \"target.png\"}");
+                        ++amountEntity;
+                    }
+                    if(entityLocation[i][j] == playerEntity) continue;
                     if(amountEntity!=0) {
                         entitiesInViewArea.append(", ");
                     }
@@ -223,6 +235,20 @@ public class GameMap {
         flag.stepping();
     }
 
+    private Vec2d getObjectsPosition(JSONObject obj){
+        int objX = 0; int objW = 0;
+        int objY = 0; int objH = 0;
+        try{
+            objX = Integer.valueOf(obj.get("x").toString());
+            objY = Integer.valueOf(obj.get("y").toString()) - 1;
+            objW = Integer.valueOf(obj.get("width").toString());
+            objH = Integer.valueOf(obj.get("height").toString());
+        }catch (NumberFormatException e) {
+            System.err.println("Cannot parse game map!");
+        }
+        return new Vec2d(objX / objW, objY / objH);
+    }
+
     private void parseObjectLayer(String objects){
         JSONArray mapObjects = null;
         JSONParser jsonPaser = new JSONParser();
@@ -234,25 +260,44 @@ public class GameMap {
         }
 
         for(Object object : mapObjects){
-            if(((JSONObject)object).get("name").toString().equals("Flag")){
-                int flagX = 0; int flagW = 0;
-                int flagY = 0; int flagH = 0;
-                try{
-                    flagX = Integer.valueOf(((JSONObject)object).get("x").toString());
-                    flagY = Integer.valueOf(((JSONObject)object).get("y").toString()) - 1;
-                    flagW = Integer.valueOf(((JSONObject)object).get("width").toString());
-                    flagH = Integer.valueOf(((JSONObject)object).get("height").toString());
-                }catch (NumberFormatException e) {
-                    System.err.println("Cannot parse game map!");
-                }
-                Vec2d flagPos = new Vec2d(flagX / flagW, flagY / flagH);
-                flag.setPosition(flagPos);
+            switch (((JSONObject)object).get("name").toString()){
+                case "Flag":
+                    flag.setPosition(getObjectsPosition((JSONObject)object));
+                    break;
+                case "CommandsRedSpawnPoint":
+                    Entity.setCommandsRedSpawnPoint(getObjectsPosition((JSONObject)object));
+                    break;
+                case "CommandsBlueSpawnPoint":
+                    Entity.setCommandsBlueSpawnPoint(getObjectsPosition((JSONObject)object));
+                    break;
             }
+        }
+    }
+
+    public void updatePositionEntity(Entity entity, int x, int y){
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            entityLocation[x][y] = null;
+        }
+        x = (int)entity.getCoord().x;
+        y = (int)entity.getCoord().y;
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            entityLocation[x][y] = entity;
         }
     }
 
     public void startFlagCapture(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
         flag.startCapture(playerEntity);
+    }
+
+    public void setPlayerTarget(UserProfile userProfile, int x, int y){
+        Entity playerEntity = entities.get(userProfile);
+        x = (int)playerEntity.getCoord().x - VIEW_WIDTH_2 + x;
+        y = (int)playerEntity.getCoord().y - VIEW_HEIGHT_2 + y;
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            if(entityLocation[x][y] != null){
+                playerEntity.setTarget(entityLocation[x][y]);
+            }
+        }
     }
 }
