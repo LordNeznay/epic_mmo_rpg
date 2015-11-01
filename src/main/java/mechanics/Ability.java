@@ -5,11 +5,11 @@ package mechanics;
  */
 public abstract class Ability {
     protected static final int STEP_TIME = 100;
-    protected int ROLLBACK = 0;
+    protected int COOLDOWN = 0;
     protected boolean CAN_ATTACK_TEAMMATE = false;
     protected boolean CAN_HEALING_OPPONENT = false;
     protected int RANGE = 1;
-    private int rollback = 0;
+    private int cooldown = 0;
 
     public int getRange(){
         return RANGE;
@@ -24,12 +24,12 @@ public abstract class Ability {
     }
 
     public void stepping(){
-        rollback -= STEP_TIME;
-        if(rollback < 0) rollback = 0;
+        cooldown -= STEP_TIME;
+        if(cooldown < 0) cooldown = 0;
     }
 
     public boolean isAvailable(){
-        if(rollback > 0){
+        if(cooldown > 0){
             return false;
         }
         return true;
@@ -47,7 +47,7 @@ public abstract class Ability {
             if(action == null){
                 return null;
             } else {
-                rollback = ROLLBACK;
+                cooldown = COOLDOWN;
                 return action;
             }
         }

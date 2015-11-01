@@ -109,6 +109,11 @@ define([
             this.sendMessage(message);
         },
         
+        ability2: function(){
+            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "OrdinaryHealing"}';
+            this.sendMessage(message);
+        },
+        
         
         
         status: function(callback){

@@ -2,6 +2,7 @@ package mechanics;
 
 import com.sun.javafx.collections.MappingChange;
 import com.sun.javafx.geom.Vec2d;
+import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,7 @@ public class Entity {
     public Entity(@NotNull GameMap _map){
         map = _map;
         abilities.put("OrdinaryHit", new OrdinaryHit());
+        abilities.put("OrdinaryHealing", new OrdinaryHealing());
     }
 
     public Entity getTarget() {
@@ -143,7 +145,7 @@ public class Entity {
                 return;
             }
         }
-        else if(ability instanceof HealingAbility) {
+        if(ability instanceof HealingAbility) {
             if (!ability.isCAN_HEALING_OPPONENT() && !target.getCommand().equals(command)) {
                 return;
             }

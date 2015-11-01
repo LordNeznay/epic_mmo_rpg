@@ -116,6 +116,9 @@
                 case '1':{
                     that.player.ability1();
                 }; break;
+                case '2':{
+                    that.player.ability2();
+                }; break;
             }
         }
     });
