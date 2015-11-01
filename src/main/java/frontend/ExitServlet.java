@@ -1,8 +1,6 @@
 package frontend;
 
 import main.AccountService;
-import main.UserProfile;
-import templater.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,9 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+
 /**
  * Created by uschsh on 21.09.15.
  */
@@ -35,7 +31,7 @@ public class ExitServlet extends HttpServlet {
         }else
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-        if((sesseionId != null) && (accountService != null) && (accountService.getSessions(sesseionId) != null)) {
+        if((sesseionId != null) && (accountService != null) && (accountService.getUserBySession(sesseionId) != null)) {
             accountService.removeUser(sesseionId);
         }
     }

@@ -38,8 +38,8 @@ public class AdminServlet extends HttpServlet {
 
         if(accountService !=null) {
             Map<String, Object> pageVariables = new HashMap<>();
-            pageVariables.put("auth_users", accountService.getAuthUsersNumber() + "");
-            pageVariables.put("reg_users", accountService.getRegUsersNumber() + "");
+            pageVariables.put("auth_users",Integer.toString(accountService.getAuthUsersNumber()));
+            pageVariables.put("reg_users", Integer.toString(accountService.getRegUsersNumber()));
 
             response.getWriter().println(PageGenerator.getPage("adminform.html", pageVariables));
             response.setStatus(HttpServletResponse.SC_OK);

@@ -36,32 +36,30 @@ public class GameMechanics {
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
-            for(int i = 0; i < userQueue.size(); i++) {
-                usersMaps.put(userQueue.get(i), gameMap);
-                gameMap.addUser(userQueue.get(i));
+            for (UserProfile anUserQueue : userQueue) {
+                usersMaps.put(anUserQueue, gameMap);
+                gameMap.addUser(anUserQueue);
             }
             userQueue.clear();
         }
     }
 
     public void removeUser(UserProfile userProfile){
-        GameMap mapWithUser;
         try {
-            mapWithUser = usersMaps.get(userProfile);
+            GameMap mapWithUser = usersMaps.get(userProfile);
             mapWithUser.removeUser(userProfile);
-        } catch(Exception e){
-
+        } catch(RuntimeException e){
+            e.printStackTrace();
         }
         usersMaps.remove(userProfile);
     }
 
     public void gameAction(UserProfile userProfile, String action, String params){
-        GameMap mapWithUser;
         try {
-            mapWithUser = usersMaps.get(userProfile);
+            GameMap mapWithUser = usersMaps.get(userProfile);
             mapWithUser.gameAction(userProfile, action, params);
-        } catch(Exception e){
-
+        } catch(RuntimeException e){
+            e.printStackTrace();
         }
     }
 
@@ -73,9 +71,7 @@ public class GameMechanics {
     }
 
     private void stepping(){
-        gameMaps.forEach(map->{
-            map.stepping();
-        });
+        gameMaps.forEach(GameMap::stepping);
     }
 
     public void movePlayer(UserProfile userProfile, String params){

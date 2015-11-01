@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+
 /**
  * Created by uschsh on 25.10.15.
  */
@@ -43,29 +45,30 @@ public class GameWebSocket {
             e.printStackTrace();
         }
 
-        //System.out.println(jsonStart.get("command"));
-        switch (jsonStart.get("command").toString()){
-            case "join_game":
-                gameMechanics.addUser(userProfile);
-                break;
-            case "leave_game":
-                gameMechanics.removeUser(userProfile);
-                break;
-            case "action":
-                switch(jsonStart.get("action").toString()){
-                    case "move":
+        if(jsonStart != null) {
+            switch (jsonStart.get("command").toString()) {
+                case "join_game":
+                    gameMechanics.addUser(userProfile);
+                    break;
+                case "leave_game":
+                    gameMechanics.removeUser(userProfile);
+                    break;
+                case "action":
+                    if(jsonStart.get("action").toString().equals("move"))
                         gameMechanics.movePlayer(userProfile, jsonStart.get("direction").toString());
-                        break;
-                }
-                break;
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
     public void sendMessage(String message){
         try {
             session.getRemote().sendString(message);
-        } catch (Exception e) {
-            System.out.print(e.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
