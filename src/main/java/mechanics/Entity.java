@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Entity {
     private static final int STEP_TIME = 100;
+    private static final int MOVE_DELAY = 400;
     private int x = 8;
     private int y = 8;
     private String command = "";
@@ -40,25 +41,25 @@ public class Entity {
             case "up":
                 if(map.isPassability(new Vec2d(x, y-1))) {
                     y = y - 1;
-                    timeUntilMove = 500;
+                    timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "down":
                 if(map.isPassability(new Vec2d(x, y+1))) {
                     y = y + 1;
-                    timeUntilMove = 500;
+                    timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "left":
                 if(map.isPassability(new Vec2d(x-1, y))) {
                     x = x - 1;
-                    timeUntilMove = 500;
+                    timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "right":
                 if(map.isPassability(new Vec2d(x+1, y))) {
                     x = x + 1;
-                    timeUntilMove = 500;
+                    timeUntilMove = MOVE_DELAY;
                 }
                 break;
         }

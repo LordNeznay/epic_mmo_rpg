@@ -56,6 +56,9 @@ public class GameWebSocket {
                     case "move":
                         gameMechanics.movePlayer(userProfile, jsonStart.get("direction").toString());
                         break;
+                    case "flagCapture":
+                        gameMechanics.startFlagCapture(userProfile);
+                        break;
                 }
                 break;
         }

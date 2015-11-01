@@ -43,6 +43,14 @@
                 that.surroundings.entities = JSON.parse(entities);
                 that.surroundings.trigger("entitiesIsLoad");
             });
+            this.player.on("availableActions", function(availableActions){
+                that.availableActions = JSON.parse(availableActions);
+                if(that.availableActions.length != 0){
+                    $(".pressZ").show(); 
+                } else {
+                    $(".pressZ").hide();
+                }
+            });
         },
         child_show: function(){
             this.player.status({
@@ -78,6 +86,12 @@
                 case 'в':
                 case 'd':{
                     that.player.move("right");
+                }; break;
+                case 'я':
+                case 'z':{
+                    if(that.availableActions.length != 0){
+                        that.player.startCapture();
+                    }
                 }; break;
             }
         }

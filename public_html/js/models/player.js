@@ -42,6 +42,9 @@ define([
                     case "entitiesInViewArea":{
                         that.trigger("loadEntities", data.entities);
                     }; break;
+                    case "availableActions":{
+                        that.trigger("availableActions", data.availableActions);
+                    }; break;                   
                     default: break;
                 }
             }
@@ -151,6 +154,11 @@ define([
             });
         },
         
+        startCapture: function(){
+            var message = '{"command": "action", "action" : "flagCapture"}';
+            this.sendMessage(message);
+            //alert(message);
+        },
         
         getCoord: function(){
             var message = '{"command": "getcoord"}';

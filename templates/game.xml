@@ -6,8 +6,8 @@
         <div class="game-map">
             <canvas id="game-map__canvas" style="border: 1px #000 solid;"></canvas>
         </div>
-        <div class="game-log">
-            <textarea class="game-log__textarea" style="width:99%;"></textarea>
+        <div class="game-action">
+            <img class="game-action__img pressZ" src="/res/button_z.png"></img>
         </div>
         <fest:include src="./backbutton.xml"/>	
 	</div>

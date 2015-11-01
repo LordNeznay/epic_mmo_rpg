@@ -22,6 +22,7 @@ public class PhysMapJson implements PhysMap {
     private int[][] backgroundLayer;
     private int[][] frontgroundLayer;
     private String tilesetsInfo = "";
+    private String objectLayer = "";
 
     public PhysMapJson(){
         JSONObject map = MapReader.ReadMap("public_html/res/tilemap.json");
@@ -40,14 +41,17 @@ public class PhysMapJson implements PhysMap {
 
         int impassableGid = getGidIsNotPassability((JSONArray)map.get("tilesets"));
 
-        //tilesetsInfo = map.get("tilesets").toString();
         getLayers((JSONArray)map.get("layers"), impassableGid);
     }
 
     private void getLayers(JSONArray layers, int impassableGid){
         for(Object layer : layers){
-            JSONArray layerData = (JSONArray)((JSONObject) layer).get("data");
             String layerName = ((JSONObject)layer).get("name").toString();
+            if(layerName.equals("Objects")){
+                objectLayer = ((JSONObject)layer).get("objects").toString();
+                continue;
+            }
+            JSONArray layerData = (JSONArray)((JSONObject) layer).get("data");
             int x = 0;
             int y = 0;
             for(Object gid : layerData){
@@ -173,4 +177,9 @@ public class PhysMapJson implements PhysMap {
     public Vec2d getSize(){
         return new Vec2d(mapWidth, mapHeight);
     }
+
+    public String getObjectLayer() {
+        return objectLayer;
+    }
+
 }
