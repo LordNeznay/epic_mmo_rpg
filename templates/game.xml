@@ -3,11 +3,19 @@
     
     <div class="page-game default-hidden">
         <fest:include src="./base.xml" context="json"/>
+        <div class="game-info">
+            <span class="game-info-status-player"></span> : 
+            <span class="game-info-status-players-target"></span>
+        </div>
         <div class="game-map">
             <canvas id="game-map__canvas" style="border: 1px #000 solid;"></canvas>
         </div>
-        <div class="game-log">
-            <textarea class="game-log__textarea" style="width:99%;"></textarea>
+        <div class="game-info">
+            <img class="game-info__img pressZ" src="/res/button_z.png"></img>
+            <table class="game-info-status-flags">
+                <tr><td>Red</td><td>_</td><td>Blue</td></tr>
+                <tr><td class="pointsRed"></td><td class="captureTime"></td><td class="pointsBlue"></td></tr>
+            </table>
         </div>
         <fest:include src="./backbutton.xml"/>	
 	</div>

@@ -2,8 +2,12 @@ package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,14 +18,15 @@ public class GameMap {
     public static final int MAX_PLAYERS_IN_COMMAND = 2;
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
+    private static final int POINTS_TO_WIN = 500;
     private int mapWidth;
     private int mapHeight;
 
     private Map<UserProfile, Entity> entities = new HashMap<UserProfile, Entity>();
+    private Flag flag = new Flag();
     private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
     private int amountBluePlayers = 0;
-
     private PhysMapJson physMap = new PhysMapJson();
 
     public GameMap(){
@@ -35,6 +40,8 @@ public class GameMap {
                 entityLocation[i][j] = null;
             }
         }
+
+        parseObjectLayer(physMap.getObjectLayer());
     }
 
     public boolean addUser(UserProfile userProfile) {
@@ -87,7 +94,44 @@ public class GameMap {
             int x=0;
             for(int i = (int)playerPosition.x - VIEW_WIDTH_2; i <= playerPosition.x + VIEW_WIDTH_2; ++i, ++x){
                 if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
-                    if(entityLocation[i][j] == null || entityLocation[i][j] == playerEntity) continue;
+                    if((int)flag.getPosition().x == i && (int)flag.getPosition().y == j){
+                        if(amountEntity!=0) {
+                            entitiesInViewArea.append(", ");
+                        }
+                        entitiesInViewArea.append("{\"x\":");
+                        entitiesInViewArea.append(x);
+                        entitiesInViewArea.append(",\"y\":");
+                        entitiesInViewArea.append(y);
+                        entitiesInViewArea.append(",\"image\": \"");
+                        switch(flag.getOwner()){
+                            case "CommandBlue":
+                                entitiesInViewArea.append("blue_flag.png");
+                                break;
+                            case "CommandRed":
+                                entitiesInViewArea.append("red_flag.png");
+                                break;
+                            default:
+                                entitiesInViewArea.append("flag.png");
+                                break;
+                        }
+                        entitiesInViewArea.append("\"}");
+                        ++amountEntity;
+                    }
+
+
+                    if(entityLocation[i][j] == null) continue;
+                    if(playerEntity.getTarget() == entityLocation[i][j]){
+                        if(amountEntity!=0) {
+                            entitiesInViewArea.append(", ");
+                        }
+                        entitiesInViewArea.append("{\"x\":");
+                        entitiesInViewArea.append(x);
+                        entitiesInViewArea.append(",\"y\":");
+                        entitiesInViewArea.append(y);
+                        entitiesInViewArea.append(",\"image\": \"target.png\"}");
+                        ++amountEntity;
+                    }
+                    if(entityLocation[i][j] == playerEntity) continue;
                     if(amountEntity!=0) {
                         entitiesInViewArea.append(", ");
                     }
@@ -165,12 +209,119 @@ public class GameMap {
         return result && physMap.isPassability(cell);
     }
 
+    private void sendAvailableActions(UserProfile userProfile){
+        StringBuilder availableActions = new StringBuilder();
+        availableActions.append("[");
+        if(flag.isMayInteract(entities.get(userProfile))){
+            availableActions.append("\"flag\"");
+        }
+        availableActions.append("]");
+
+        JSONObject request = new JSONObject();
+        request.put("type", "availableActions");
+        request.put("availableActions", availableActions.toString());
+        userProfile.getUserSocket().sendMessage( request.toString());
+    }
+
     public void stepping(){
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
             entry.getValue().stepping();
             sendPlayerViewArea(entry.getKey());
             sendEntityInViewArea(entry.getKey());
+            sendAvailableActions(entry.getKey());
+            sendEntityStatus(entry.getKey());
+            flag.sendStatus(entry.getKey());
         }
+        flag.stepping();
+    }
+
+    private Vec2d getObjectsPosition(JSONObject obj){
+        int objX = 0; int objW = 0;
+        int objY = 0; int objH = 0;
+        try{
+            objX = Integer.valueOf(obj.get("x").toString());
+            objY = Integer.valueOf(obj.get("y").toString()) - 1;
+            objW = Integer.valueOf(obj.get("width").toString());
+            objH = Integer.valueOf(obj.get("height").toString());
+        }catch (NumberFormatException e) {
+            System.err.println("Cannot parse game map!");
+        }
+        return new Vec2d(objX / objW, objY / objH);
+    }
+
+    private void parseObjectLayer(String objects){
+        JSONArray mapObjects = null;
+        JSONParser jsonPaser = new JSONParser();
+        try {
+            Object obj = jsonPaser.parse(objects);
+            mapObjects = (JSONArray)obj;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        for(Object object : mapObjects){
+            switch (((JSONObject)object).get("name").toString()){
+                case "Flag":
+                    flag.setPosition(getObjectsPosition((JSONObject)object));
+                    break;
+                case "CommandsRedSpawnPoint":
+                    Entity.setCommandsRedSpawnPoint(getObjectsPosition((JSONObject)object));
+                    break;
+                case "CommandsBlueSpawnPoint":
+                    Entity.setCommandsBlueSpawnPoint(getObjectsPosition((JSONObject)object));
+                    break;
+            }
+        }
+    }
+
+    public void updatePositionEntity(Entity entity, int x, int y){
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            entityLocation[x][y] = null;
+        }
+        x = (int)entity.getCoord().x;
+        y = (int)entity.getCoord().y;
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            entityLocation[x][y] = entity;
+        }
+    }
+
+    public void startFlagCapture(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
+        flag.startCapture(playerEntity);
+    }
+
+    public void setPlayerTarget(UserProfile userProfile, int x, int y){
+        Entity playerEntity = entities.get(userProfile);
+        x = (int)playerEntity.getCoord().x - VIEW_WIDTH_2 + x;
+        y = (int)playerEntity.getCoord().y - VIEW_HEIGHT_2 + y;
+        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+            if(entityLocation[x][y] != null){
+                playerEntity.setTarget(entityLocation[x][y]);
+            }
+        }
+    }
+
+    public void useAbility(UserProfile userProfile, String abilityName){
+        Entity playerEntity = entities.get(userProfile);
+        playerEntity.useAbility(abilityName);
+    }
+
+    private void sendEntityStatus(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
+        StringBuilder entityStatus = new StringBuilder();
+        entityStatus.append("{");
+        entityStatus.append("\"hitPoints\":");
+        entityStatus.append(playerEntity.getHitPoints());
+        if(playerEntity.isHaveTarget()) {
+            entityStatus.append(", \"targetsHitPoints\":");
+            entityStatus.append(playerEntity.getTargetsHitPoints());
+        }
+        entityStatus.append("}");
+
+        JSONObject request = new JSONObject();
+        request.put("type", "entityStatus");
+        request.put("entityStatus", entityStatus.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 }

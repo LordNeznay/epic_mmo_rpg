@@ -34,6 +34,10 @@
             
             that.surroundings.canvas.width  = 960;     
             that.surroundings.canvas.height = 576;
+            
+            that.surroundings.canvas.onclick = function(event){
+                that.onGameFieldClick(event);
+            };
 
             this.surroundings.listenTo(this.player, "loadMap", function(_map){
                 that.surroundings.map = JSON.parse(_map);
@@ -43,7 +47,31 @@
                 that.surroundings.entities = JSON.parse(entities);
                 that.surroundings.trigger("entitiesIsLoad");
             });
+            this.player.on("availableActions", function(availableActions){
+                that.availableActions = JSON.parse(availableActions);
+                if(that.availableActions.length != 0){
+                    $(".pressZ").show(); 
+                } else {
+                    $(".pressZ").hide();
+                }
+            });
+            this.player.on("flagStatus", function(flagStatus){
+                flagStatus = JSON.parse(flagStatus);
+                $(".pointsRed").html(flagStatus.commandRed);
+                $(".pointsBlue").html(flagStatus.commandBlue);
+                $(".captureTime").html(flagStatus.captureTime);
+            });
+            this.player.on("entityStatus", function(entityStatus){
+                entityStatus = JSON.parse(entityStatus);
+                $(".game-info-status-player").html(entityStatus.hitPoints);
+                $(".game-info-status-players-target").html(entityStatus.targetsHitPoints);
+            });
         },
+        
+        onGameFieldClick: function(event){
+            this.player.setTarget(Math.floor(event.offsetX/64)+1, Math.floor(event.offsetY/64)+1);
+        },
+        
         child_show: function(){
             this.player.status({
                 success: function(data){
@@ -78,6 +106,15 @@
                 case 'в':
                 case 'd':{
                     that.player.move("right");
+                }; break;
+                case 'я':
+                case 'z':{
+                    if(that.availableActions.length != 0){
+                        that.player.startCapture();
+                    }
+                }; break;
+                case '1':{
+                    that.player.ability1();
                 }; break;
             }
         }

@@ -77,4 +77,16 @@ public class GameMechanics {
     public void movePlayer(UserProfile userProfile, String params){
         usersMaps.get(userProfile).entityMove(userProfile, params);
     }
+
+    public void startFlagCapture(UserProfile userProfile){
+        usersMaps.get(userProfile).startFlagCapture(userProfile);
+    }
+
+    public void setPlayerTarget(UserProfile userProfile, int x, int y){
+        usersMaps.get(userProfile).setPlayerTarget(userProfile, x, y);
+    }
+
+    public void useAbility(UserProfile userProfile, String abilityName){
+        usersMaps.get(userProfile).useAbility(userProfile, abilityName);
+    }
 }

@@ -42,6 +42,15 @@ define([
                     case "entitiesInViewArea":{
                         that.trigger("loadEntities", data.entities);
                     }; break;
+                    case "availableActions":{
+                        that.trigger("availableActions", data.availableActions);
+                    }; break;       
+                    case "flagStatus":{
+                        that.trigger("flagStatus", data.flagStatus);
+                    }; break; 
+                    case "entityStatus":{
+                        that.trigger("entityStatus", data.entityStatus);
+                    }; break;                     
                     default: break;
                 }
             }
@@ -83,6 +92,20 @@ define([
             var message = '{"command": "action", "action" : "move", "direction" : "';
             message += params;
             message += '"}';
+            this.sendMessage(message);
+        },
+        
+        setTarget: function(x, y){
+            var message = '{"command": "action", "action" : "setTarget", "x" : ';
+            message += x;
+            message += ', "y": ';
+            message += y;
+            message += '}';
+            this.sendMessage(message);
+        },
+        
+        ability1: function(){
+            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "OrdinaryHit"}';
             this.sendMessage(message);
         },
         
@@ -151,6 +174,11 @@ define([
             });
         },
         
+        startCapture: function(){
+            var message = '{"command": "action", "action" : "flagCapture"}';
+            this.sendMessage(message);
+            //alert(message);
+        },
         
         getCoord: function(){
             var message = '{"command": "getcoord"}';
