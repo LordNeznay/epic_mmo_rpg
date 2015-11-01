@@ -89,4 +89,8 @@ public class GameMechanics {
     public void setPlayerTarget(UserProfile userProfile, int x, int y){
         usersMaps.get(userProfile).setPlayerTarget(userProfile, x, y);
     }
+
+    public void useAbility(UserProfile userProfile, String abilityName){
+        usersMaps.get(userProfile).useAbility(userProfile, abilityName);
+    }
 }

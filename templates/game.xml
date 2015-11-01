@@ -3,6 +3,10 @@
     
     <div class="page-game default-hidden">
         <fest:include src="./base.xml" context="json"/>
+        <div class="game-info">
+            <span class="game-info-status-player"></span> : 
+            <span class="game-info-status-players-target"></span>
+        </div>
         <div class="game-map">
             <canvas id="game-map__canvas" style="border: 1px #000 solid;"></canvas>
         </div>

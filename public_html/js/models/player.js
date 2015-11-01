@@ -47,7 +47,10 @@ define([
                     }; break;       
                     case "flagStatus":{
                         that.trigger("flagStatus", data.flagStatus);
-                    }; break;  
+                    }; break; 
+                    case "entityStatus":{
+                        that.trigger("entityStatus", data.entityStatus);
+                    }; break;                     
                     default: break;
                 }
             }
@@ -98,6 +101,11 @@ define([
             message += ', "y": ';
             message += y;
             message += '}';
+            this.sendMessage(message);
+        },
+        
+        ability1: function(){
+            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "OrdinaryHit"}';
             this.sendMessage(message);
         },
         

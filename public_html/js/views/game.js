@@ -61,6 +61,11 @@
                 $(".pointsBlue").html(flagStatus.commandBlue);
                 $(".captureTime").html(flagStatus.captureTime);
             });
+            this.player.on("entityStatus", function(entityStatus){
+                entityStatus = JSON.parse(entityStatus);
+                $(".game-info-status-player").html(entityStatus.hitPoints);
+                $(".game-info-status-players-target").html(entityStatus.targetsHitPoints);
+            });
         },
         
         onGameFieldClick: function(event){
@@ -107,6 +112,9 @@
                     if(that.availableActions.length != 0){
                         that.player.startCapture();
                     }
+                }; break;
+                case '1':{
+                    that.player.ability1();
                 }; break;
             }
         }

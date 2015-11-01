@@ -69,6 +69,9 @@ public class GameWebSocket {
                             System.err.println("Cannot parse game map!");
                         }
                         break;
+                    case "useAbility":
+                        gameMechanics.useAbility(userProfile, jsonStart.get("abilityName").toString());
+                        break;
                 }
                 break;
         }

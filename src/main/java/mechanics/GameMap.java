@@ -230,6 +230,7 @@ public class GameMap {
             sendPlayerViewArea(entry.getKey());
             sendEntityInViewArea(entry.getKey());
             sendAvailableActions(entry.getKey());
+            sendEntityStatus(entry.getKey());
             flag.sendStatus(entry.getKey());
         }
         flag.stepping();
@@ -299,5 +300,28 @@ public class GameMap {
                 playerEntity.setTarget(entityLocation[x][y]);
             }
         }
+    }
+
+    public void useAbility(UserProfile userProfile, String abilityName){
+        Entity playerEntity = entities.get(userProfile);
+        playerEntity.useAbility(abilityName);
+    }
+
+    private void sendEntityStatus(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
+        StringBuilder entityStatus = new StringBuilder();
+        entityStatus.append("{");
+        entityStatus.append("\"hitPoints\":");
+        entityStatus.append(playerEntity.getHitPoints());
+        if(playerEntity.isHaveTarget()) {
+            entityStatus.append(", \"targetsHitPoints\":");
+            entityStatus.append(playerEntity.getTargetsHitPoints());
+        }
+        entityStatus.append("}");
+
+        JSONObject request = new JSONObject();
+        request.put("type", "entityStatus");
+        request.put("entityStatus", entityStatus.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 }
