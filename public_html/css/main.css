@@ -38,3 +38,11 @@
 .default-hidden{
     display: none;
 }
+
+.game-info-status-flags{
+    border: solid 1px #000;
+}
+
+.game-info-status-flags td{
+    width: 30px;
+}

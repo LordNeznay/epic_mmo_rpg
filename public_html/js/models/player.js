@@ -44,7 +44,10 @@ define([
                     }; break;
                     case "availableActions":{
                         that.trigger("availableActions", data.availableActions);
-                    }; break;                   
+                    }; break;       
+                    case "flagStatus":{
+                        that.trigger("flagStatus", data.flagStatus);
+                    }; break;  
                     default: break;
                 }
             }

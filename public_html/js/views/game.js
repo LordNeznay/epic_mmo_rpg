@@ -51,6 +51,12 @@
                     $(".pressZ").hide();
                 }
             });
+            this.player.on("flagStatus", function(flagStatus){
+                flagStatus = JSON.parse(flagStatus);
+                $(".pointsRed").html(flagStatus.commandRed);
+                $(".pointsBlue").html(flagStatus.commandBlue);
+                $(".captureTime").html(flagStatus.captureTime);
+            });
         },
         child_show: function(){
             this.player.status({
