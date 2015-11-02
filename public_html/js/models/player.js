@@ -50,7 +50,10 @@ define([
                     }; break; 
                     case "entityStatus":{
                         that.trigger("entityStatus", data.entityStatus);
-                    }; break;                     
+                    }; break;     
+                    case "abilityStatus":{
+                        that.trigger("abilityStatus", data.abilityStatus);
+                    }; break;   
                     default: break;
                 }
             }
@@ -104,13 +107,8 @@ define([
             this.sendMessage(message);
         },
         
-        ability1: function(){
-            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "OrdinaryHit"}';
-            this.sendMessage(message);
-        },
-        
-        ability2: function(){
-            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "OrdinaryHealing"}';
+        ability: function(name){
+            var message = '{"command": "action", "action" : "useAbility", "abilityName" : "' + name + '"}';
             this.sendMessage(message);
         },
         

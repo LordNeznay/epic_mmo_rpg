@@ -66,6 +66,17 @@
                 $(".game-info-status-player").html(entityStatus.hitPoints);
                 $(".game-info-status-players-target").html(entityStatus.targetsHitPoints);
             });
+            this.player.on("abilityStatus", function(abilityStatus){
+                abilityStatus = JSON.parse(abilityStatus);
+                abilityStatus.forEach(function(ability, i){
+                    ++i;
+                    if(i == 10) i = 0;
+                    if(i == 11) return;
+                    
+                    $(".ability" + i + "-name").html(ability.name);
+                    $(".ability" + i + "-time").html(ability.time);
+                });
+            });
         },
         
         onGameFieldClick: function(event){
@@ -113,12 +124,20 @@
                         that.player.startCapture();
                     }
                 }; break;
-                case '1':{
-                    that.player.ability1();
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':{
+                    var abilityName = $(".ability" + sim + "-name").html();
+                    that.player.ability(abilityName);
                 }; break;
-                case '2':{
-                    that.player.ability2();
-                }; break;
+
             }
         }
     });

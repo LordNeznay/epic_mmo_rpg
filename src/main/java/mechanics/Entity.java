@@ -2,9 +2,11 @@ package mechanics;
 
 import com.sun.javafx.collections.MappingChange;
 import com.sun.javafx.geom.Vec2d;
+import main.UserProfile;
 import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,12 +79,30 @@ public class Entity {
         return command;
     }
 
-    public void stepping(){
+    public void stepping(UserProfile userProfile){
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
+
+        StringBuilder abilityStatus = new StringBuilder();
+        abilityStatus.append("[");
+        int amountAbility = 0;
         for (Map.Entry<String, Ability> entry : abilities.entrySet())
         {
+            if(amountAbility != 0){
+                abilityStatus.append(",");
+            }
+            abilityStatus.append("{\"name\": \"");
+            abilityStatus.append(entry.getKey());
+            abilityStatus.append("\", \"time\": ");
+            abilityStatus.append((double)entry.getValue().getCooldown() / 1000);
             entry.getValue().stepping();
+            abilityStatus.append("}");
+            ++amountAbility;
         }
+        abilityStatus.append("]");
+        JSONObject request = new JSONObject();
+        request.put("type", "abilityStatus");
+        request.put("abilityStatus", abilityStatus.toString());
+        userProfile.getUserSocket().sendMessage( request.toString());
     }
 
     public void move(String params){
@@ -139,6 +159,7 @@ public class Entity {
         } catch (Exception e){
             return;
         }
+        if(ability == null) return;
 
         if(ability instanceof AttackAbility) {
             if (!ability.isCAN_ATTACK_TEAMMATE() && target.getCommand().equals(command)) {

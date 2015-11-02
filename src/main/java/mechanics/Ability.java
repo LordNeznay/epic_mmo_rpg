@@ -11,6 +11,10 @@ public abstract class Ability {
     protected int RANGE = 1;
     private int cooldown = 0;
 
+    public int getCooldown(){
+        return cooldown;
+    }
+
     public int getRange(){
         return RANGE;
     }

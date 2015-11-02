@@ -46,3 +46,13 @@
 .game-info-status-flags td{
     width: 30px;
 }
+
+.game-info__ability-status{
+    border: 1px #000 solid;
+}
+
+.game-info__ability-status td{
+    border-left: 1px solid #000;
+    min-width: 95px;
+    max-width: 95px;
+}

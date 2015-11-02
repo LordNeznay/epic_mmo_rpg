@@ -184,6 +184,14 @@ public class GameMap {
         } else {
             --amountBluePlayers;
         }
+        entities.remove(userProfile);
+        entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
+        for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
+        {
+            if(entry.getValue().getTarget() == playerEntity){
+                entry.getValue().setTarget(null);
+            }
+        }
     }
 
     public void gameAction(UserProfile userProfile, String action, String params){
@@ -226,7 +234,7 @@ public class GameMap {
     public void stepping(){
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
-            entry.getValue().stepping();
+            entry.getValue().stepping(entry.getKey());
             sendPlayerViewArea(entry.getKey());
             sendEntityInViewArea(entry.getKey());
             sendAvailableActions(entry.getKey());
