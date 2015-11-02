@@ -1,11 +1,11 @@
 package mechanics;
 
-import com.sun.javafx.collections.MappingChange;
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -19,8 +19,8 @@ public class Entity {
     private static final int STEP_TIME = 100;
     private static final int MOVE_DELAY = 200;
     private static final int ABILITY_DELAY = 1000;
-    private static Vec2d CommandsRedSpawnPoint = new Vec2d(0, 0);
-    private static Vec2d CommandsBlueSpawnPoint = new Vec2d(0, 0);
+    private static Vec2d s_commandsRedSpawnPoint = new Vec2d(0, 0);
+    private static Vec2d s_commandsBlueSpawnPoint = new Vec2d(0, 0);
     private int hitPoints = MAX_HIT_POINTS;
     private int x = 0;
     private int y = 0;
@@ -33,24 +33,24 @@ public class Entity {
 
     public Entity(@NotNull GameMap _map){
         map = _map;
-        abilities.put("OrdinaryHit", new OrdinaryHit());
         abilities.put("OrdinaryHealing", new OrdinaryHealing());
+        abilities.put("OrdinaryHit", new OrdinaryHit());
     }
 
     public Entity getTarget() {
         return target;
     }
 
-    public void setTarget(Entity target) {
+    public void setTarget(@Nullable Entity target) {
         this.target = target;
     }
 
     public static void setCommandsRedSpawnPoint(Vec2d commandsRedSpawnPoint) {
-        CommandsRedSpawnPoint = commandsRedSpawnPoint;
+        s_commandsRedSpawnPoint = commandsRedSpawnPoint;
     }
 
     public static void setCommandsBlueSpawnPoint(Vec2d commandsBlueSpawnPoint) {
-        CommandsBlueSpawnPoint = commandsBlueSpawnPoint;
+        s_commandsBlueSpawnPoint = commandsBlueSpawnPoint;
     }
 
     public Vec2d getCoord(){
@@ -61,11 +61,11 @@ public class Entity {
         int lastX = x;
         int lastY = y;
         if(command.equals("CommandRed")){
-            x = (int)CommandsRedSpawnPoint.x;
-            y = (int)CommandsRedSpawnPoint.y;
+            x = (int) s_commandsRedSpawnPoint.x;
+            y = (int) s_commandsRedSpawnPoint.y;
         } else {
-            x = (int)CommandsBlueSpawnPoint.x;
-            y = (int)CommandsBlueSpawnPoint.y;
+            x = (int) s_commandsBlueSpawnPoint.x;
+            y = (int) s_commandsBlueSpawnPoint.y;
         }
         map.updatePositionEntity(this, lastX, lastY);
     }
@@ -83,26 +83,26 @@ public class Entity {
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
 
         StringBuilder abilityStatus = new StringBuilder();
-        abilityStatus.append("[");
+        abilityStatus.append('[');
         int amountAbility = 0;
         for (Map.Entry<String, Ability> entry : abilities.entrySet())
         {
             if(amountAbility != 0){
-                abilityStatus.append(",");
+                abilityStatus.append(',');
             }
             abilityStatus.append("{\"name\": \"");
             abilityStatus.append(entry.getKey());
             abilityStatus.append("\", \"time\": ");
             abilityStatus.append((double)entry.getValue().getCooldown() / 1000);
             entry.getValue().stepping();
-            abilityStatus.append("}");
+            abilityStatus.append('}');
             ++amountAbility;
         }
-        abilityStatus.append("]");
+        abilityStatus.append(']');
         JSONObject request = new JSONObject();
         request.put("type", "abilityStatus");
         request.put("abilityStatus", abilityStatus.toString());
-        userProfile.getUserSocket().sendMessage( request.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 
     public void move(String params){
@@ -132,6 +132,7 @@ public class Entity {
                     timeUntilMove = MOVE_DELAY;
                 }
                 break;
+            default: break;
         }
     }
 
@@ -153,21 +154,21 @@ public class Entity {
 
     public void useAbility(String abilityName){
         if(target == null) return;
-        Ability ability = null;
+        Ability ability;
         try{
             ability = abilities.get(abilityName);
-        } catch (Exception e){
+        } catch (RuntimeException e){
             return;
         }
         if(ability == null) return;
 
         if(ability instanceof AttackAbility) {
-            if (!ability.isCAN_ATTACK_TEAMMATE() && target.getCommand().equals(command)) {
+            if (!ability.isCAN_ATTACK_TEAMMATE() && target.command.equals(command)) {
                 return;
             }
         }
         if(ability instanceof HealingAbility) {
-            if (!ability.isCAN_HEALING_OPPONENT() && !target.getCommand().equals(command)) {
+            if (!ability.isCAN_HEALING_OPPONENT() && !target.command.equals(command)) {
                 return;
             }
         }
@@ -187,14 +188,13 @@ public class Entity {
     }
 
     public boolean isHaveTarget(){
-        if(target == null){
-            return false;
-        }
-        return true;
+        return target != null;
     }
 
     public int getTargetsHitPoints(){
-        if(target!=null) return target.getHitPoints();
+        if(target!=null) {
+            return target.hitPoints;
+        }
         return 0;
     }
 }

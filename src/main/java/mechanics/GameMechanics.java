@@ -14,7 +14,6 @@ import utils.TimeHelper;
 public class GameMechanics {
     private static final int STEP_TIME = 100;
     private static final int MIN_PLAYERS_FOR_START = 1;
-    private AccountService accountService;
     private Map<UserProfile, GameMap> usersMaps = new HashMap<UserProfile, GameMap>();
     private ArrayList<UserProfile> userQueue = new ArrayList<UserProfile>();
     private ArrayList<GameMap> gameMaps = new ArrayList<GameMap>();

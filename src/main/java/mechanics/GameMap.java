@@ -61,7 +61,9 @@ public class GameMap {
         entities.put(userProfile, userEntity);
 
         JSONObject jsonStart = new JSONObject();
+
         jsonStart.put("type", "user_was_joined");
+
         userProfile.getUserSocket().sendMessage(jsonStart.toString());
         return true;
     }
@@ -71,14 +73,14 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "viewArea");
         request.put("map", viewArea);
-        userProfile.getUserSocket().sendMessage( request.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 
     public void sendEntityInViewArea(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
         Vec2d playerPosition = playerEntity.getCoord();
         StringBuilder entitiesInViewArea = new StringBuilder();
-        entitiesInViewArea.append("{");
+        entitiesInViewArea.append('{');
 
         entitiesInViewArea.append("\"player\": {\"x\":");
         entitiesInViewArea.append(VIEW_WIDTH_2);
@@ -120,7 +122,7 @@ public class GameMap {
 
 
                     if(entityLocation[i][j] == null) continue;
-                    if(playerEntity.getTarget() == entityLocation[i][j]){
+                    if(playerEntity.getTarget().equals(entityLocation[i][j])){
                         if(amountEntity!=0) {
                             entitiesInViewArea.append(", ");
                         }
@@ -131,7 +133,7 @@ public class GameMap {
                         entitiesInViewArea.append(",\"image\": \"target.png\"}");
                         ++amountEntity;
                     }
-                    if(entityLocation[i][j] == playerEntity) continue;
+                    if(entityLocation[i][j].equals(playerEntity)) continue;
                     if(amountEntity!=0) {
                         entitiesInViewArea.append(", ");
                     }
@@ -161,7 +163,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "entitiesInViewArea");
         request.put("entities", entitiesInViewArea.toString());
-        userProfile.getUserSocket().sendMessage( request.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 
     public String getArea(UserProfile userProfile){
@@ -170,11 +172,7 @@ public class GameMap {
     }
 
     public boolean isPlace(){
-        if(amountRedPlayers < MAX_PLAYERS_IN_COMMAND || amountBluePlayers < MAX_PLAYERS_IN_COMMAND){
-            return true;
-        } else {
-            return false;
-        }
+        return (amountRedPlayers < MAX_PLAYERS_IN_COMMAND || amountBluePlayers < MAX_PLAYERS_IN_COMMAND);
     }
 
     public void removeUser(UserProfile userProfile){
@@ -188,7 +186,7 @@ public class GameMap {
         entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
-            if(entry.getValue().getTarget() == playerEntity){
+            if(entry.getValue().getTarget().equals(playerEntity)){
                 entry.getValue().setTarget(null);
             }
         }
@@ -199,6 +197,7 @@ public class GameMap {
             case "move":
                 entityMove(userProfile, params);
                 break;
+            default: break;
         }
     }
 
@@ -219,16 +218,16 @@ public class GameMap {
 
     private void sendAvailableActions(UserProfile userProfile){
         StringBuilder availableActions = new StringBuilder();
-        availableActions.append("[");
+        availableActions.append('[');
         if(flag.isMayInteract(entities.get(userProfile))){
             availableActions.append("\"flag\"");
         }
-        availableActions.append("]");
+        availableActions.append(']');
 
         JSONObject request = new JSONObject();
         request.put("type", "availableActions");
         request.put("availableActions", availableActions.toString());
-        userProfile.getUserSocket().sendMessage( request.toString());
+        userProfile.getUserSocket().sendMessage(request.toString());
     }
 
     public void stepping(){
@@ -268,6 +267,7 @@ public class GameMap {
             e.printStackTrace();
         }
 
+        assert mapObjects != null;
         for(Object object : mapObjects){
             switch (((JSONObject)object).get("name").toString()){
                 case "Flag":
@@ -279,6 +279,7 @@ public class GameMap {
                 case "CommandsBlueSpawnPoint":
                     Entity.setCommandsBlueSpawnPoint(getObjectsPosition((JSONObject)object));
                     break;
+                default: break;
             }
         }
     }
@@ -318,14 +319,14 @@ public class GameMap {
     private void sendEntityStatus(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
         StringBuilder entityStatus = new StringBuilder();
-        entityStatus.append("{");
+        entityStatus.append('{');
         entityStatus.append("\"hitPoints\":");
         entityStatus.append(playerEntity.getHitPoints());
         if(playerEntity.isHaveTarget()) {
             entityStatus.append(", \"targetsHitPoints\":");
             entityStatus.append(playerEntity.getTargetsHitPoints());
         }
-        entityStatus.append("}");
+        entityStatus.append('}');
 
         JSONObject request = new JSONObject();
         request.put("type", "entityStatus");

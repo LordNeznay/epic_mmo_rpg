@@ -1,5 +1,7 @@
 package mechanics;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by Андрей on 01.11.2015.
  */
@@ -39,10 +41,12 @@ public abstract class Ability {
         return true;
     }
 
+    @Nullable
     protected AbilityAction getAction(){
         return null;
     }
 
+    @Nullable
     public final AbilityAction use(){
         if(!isAvailable()){
             return null;
