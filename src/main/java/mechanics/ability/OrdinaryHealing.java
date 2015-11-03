@@ -10,8 +10,8 @@ import mechanics.abilityAction.OrdinaryHealingAction;
  */
 public class OrdinaryHealing extends Ability implements HealingAbility {
     public OrdinaryHealing(){
-        COOLDOWN = 1000;
-        RANGE = 3;
+        cooldown = 1000;
+        range = 3;
     }
 
     @Override

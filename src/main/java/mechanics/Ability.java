@@ -7,35 +7,35 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class Ability {
     protected static final int STEP_TIME = 100;
-    protected int COOLDOWN = 0;
-    protected boolean CAN_ATTACK_TEAMMATE = false;
-    protected boolean CAN_HEALING_OPPONENT = false;
-    protected int RANGE = 1;
-    private int cooldown = 0;
+    protected int cooldown = 0;
+    protected boolean can_attack_temmate = false;
+    protected boolean can_healing_opponent = false;
+    protected int range = 1;
+    private int currentCooldown = 0;
 
-    public int getCooldown(){
-        return cooldown;
+    public int getCurrentCooldown(){
+        return currentCooldown;
     }
 
     public int getRange(){
-        return RANGE;
+        return range;
     }
 
-    public boolean isCAN_ATTACK_TEAMMATE() {
-        return CAN_ATTACK_TEAMMATE;
+    public boolean isCanAttackTemmate() {
+        return can_attack_temmate;
     }
 
-    public boolean isCAN_HEALING_OPPONENT() {
-        return CAN_HEALING_OPPONENT;
+    public boolean isCanHealingOpponent() {
+        return can_healing_opponent;
     }
 
     public void stepping(){
-        cooldown -= STEP_TIME;
-        if(cooldown < 0) cooldown = 0;
+        currentCooldown -= STEP_TIME;
+        if(currentCooldown < 0) currentCooldown = 0;
     }
 
     public boolean isAvailable(){
-        return cooldown <= 0;
+        return currentCooldown <= 0;
     }
 
     @Nullable
@@ -52,7 +52,7 @@ public abstract class Ability {
             if(action == null){
                 return null;
             } else {
-                cooldown = COOLDOWN;
+                currentCooldown = cooldown;
                 return action;
             }
         }

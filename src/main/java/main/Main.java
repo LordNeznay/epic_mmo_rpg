@@ -15,8 +15,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import utils.Repairer;
 
 import javax.servlet.Servlet;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @author v.chibrikov

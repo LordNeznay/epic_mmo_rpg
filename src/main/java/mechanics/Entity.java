@@ -100,7 +100,7 @@ public class Entity {
             abilityStatus.append("{\"name\": \"");
             abilityStatus.append(entry.getKey());
             abilityStatus.append("\", \"time\": ");
-            int abilityCooldown = entry.getValue().getCooldown();
+            int abilityCooldown = entry.getValue().getCurrentCooldown();
             if(abilityDelay != 0 && abilityCooldown<= abilityDelay) {
                 abilityCooldown = abilityDelay;
             }
@@ -168,12 +168,12 @@ public class Entity {
 
     private boolean isMayUseAbility(Ability ability){
         if(ability instanceof AttackAbility) {
-            if (!ability.isCAN_ATTACK_TEAMMATE() && target.command.equals(command)) {
+            if (!ability.isCanAttackTemmate() && target.command.equals(command)) {
                 return false;
             }
         }
         if(ability instanceof HealingAbility) {
-            if (!ability.isCAN_HEALING_OPPONENT() && !target.command.equals(command)) {
+            if (!ability.isCanHealingOpponent() && !target.command.equals(command)) {
                 return false;
             }
         }

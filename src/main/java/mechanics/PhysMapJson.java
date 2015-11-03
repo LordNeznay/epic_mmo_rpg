@@ -5,9 +5,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import utils.MapReader;
 
-import java.io.File;
-import java.util.Scanner;
-
 /**
  * Created by Андрей on 27.10.2015.
  */
@@ -25,7 +22,7 @@ public class PhysMapJson implements PhysMap {
     private String objectLayer = "";
 
     public PhysMapJson(){
-        JSONObject map = MapReader.ReadMap("public_html/res/tilemap.json");
+        JSONObject map = MapReader.readMap("public_html/res/tilemap.json");
         try{
             mapWidth = Integer.valueOf(map.get("width").toString());
             mapHeight = Integer.valueOf(map.get("height").toString());
@@ -55,13 +52,12 @@ public class PhysMapJson implements PhysMap {
             int x = 0;
             int y = 0;
             for(Object gid : layerData){
-                gid = (Long)gid;
                 if(layerName.equals("Background")){
                     backgroundLayer[x][y] = ((Long) gid).intValue();
                 } else if(layerName.equals("Frontground")){
                     frontgroundLayer[x][y] = ((Long) gid).intValue();
                 } else if(layerName.equals("Passability")){
-                    passabilityLayer[x][y] = (((Long) gid).intValue()==0 || ((Long) gid).intValue()==impassableGid) ? false : true;
+                    passabilityLayer[x][y] = (!(((Long) gid).intValue() == 0 || ((Long) gid).intValue() == impassableGid));
                 }
                 ++x;
                 if(x == mapWidth){
@@ -73,10 +69,10 @@ public class PhysMapJson implements PhysMap {
     }
 
     private int getGidIsNotPassability(JSONArray tilesets){
-        int isNotPassability = 0;
         StringBuilder tilesetsBuilder = new StringBuilder();
-        tilesetsBuilder.append("[");
+        tilesetsBuilder.append('[');
 
+        int isNotPassability = 0;
         for(Object tileset : tilesets){
             if(!((JSONObject) tileset).get("name").toString().equals("passability")){
                 tilesetsBuilder.append(((JSONObject)tileset).toJSONString());
@@ -133,7 +129,7 @@ public class PhysMapJson implements PhysMap {
 
         for(int j = (int)coord.y - VIEW_HEIGHT_2; j <= coord.y + VIEW_HEIGHT_2; ++j){
             for(int i = (int)coord.x - VIEW_WIDTH_2; i <= coord.x + VIEW_WIDTH_2; ++i){
-                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
+                if(isPositionCorrect(j, i)) {
                     resultString.append(backgroundLayer[i][j] == 0 ? -1 : backgroundLayer[i][j]);
                 } else {
                     resultString.append(-1);
@@ -146,7 +142,7 @@ public class PhysMapJson implements PhysMap {
 
         for(int j = (int)coord.y - VIEW_HEIGHT_2; j <= coord.y + VIEW_HEIGHT_2; ++j){
             for(int i = (int)coord.x - VIEW_WIDTH_2; i <= coord.x + VIEW_WIDTH_2; ++i){
-                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
+                if(isPositionCorrect(j, i)) {
                     resultString.append(frontgroundLayer[i][j]);
                 } else {
                     resultString.append(0);
@@ -162,13 +158,17 @@ public class PhysMapJson implements PhysMap {
         resultString.append(tileWidth);
         resultString.append(", \"tilesets\":");
         resultString.append(tilesetsInfo);
-        resultString.append("}");
+        resultString.append('}');
         return resultString.toString();
+    }
+
+    private boolean isPositionCorrect(int j, int i) {
+        return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
     }
 
     public boolean isPassability(Vec2d cell){
         boolean result = false;
-        if(cell.x >= 0 && cell.x < mapWidth && cell.y >= 0 && cell.y < mapHeight ) {
+        if(isPositionCorrect((int)cell.x, (int)cell.y) ) {
             result = passabilityLayer[(int) cell.x][(int) cell.y];
         }
         return result;

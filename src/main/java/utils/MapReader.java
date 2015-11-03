@@ -4,12 +4,14 @@ import  javax.xml.parsers.DocumentBuilderFactory;
 import  javax.xml.parsers.DocumentBuilder;
 
 import mechanics.GameMap;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import  org.w3c.dom.Document;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,23 +19,27 @@ import java.util.Scanner;
  * Created by uschsh on 26.10.15.
  */
 public class MapReader {
-    public static JSONObject ReadMap(String fileName) {
+    @Nullable
+    public static JSONObject readMap(String fileName) {
         Scanner file = null;
         try {
             file = new Scanner(new File(fileName));
-        } catch(Exception e){
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(RuntimeException e){
             System.out.print(e.toString());
         }
-        String data = "";
+        assert file != null;
+        StringBuilder data = new StringBuilder();
         while(file.hasNext())
         {
-            data+=file.nextLine();
+            data.append(file.nextLine());
         }
 
         JSONObject gameMap = null;
         JSONParser jsonPaser = new JSONParser();
         try {
-            Object obj = jsonPaser.parse(data);
+            Object obj = jsonPaser.parse(data.toString());
             gameMap = (JSONObject)obj;
         } catch (ParseException e) {
             e.printStackTrace();

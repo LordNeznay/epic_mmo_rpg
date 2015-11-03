@@ -11,8 +11,8 @@ import mechanics.abilityAction.OrdinaryHitAction;
 public final class OrdinaryHit extends Ability implements AttackAbility{
 
     public OrdinaryHit(){
-        COOLDOWN = 1000;
-        RANGE = 1;
+        cooldown = 1000;
+        range = 1;
     }
 
     @Override
