@@ -2,6 +2,7 @@ package main;
 
 import frontend.GameWebSocket;
 import org.jetbrains.annotations.NotNull;
+import utils.Repairer;
 
 /**
  * Created by v.chibrikov on 13.09.2014.
@@ -35,7 +36,12 @@ public class UserProfile {
         userSocket = socket;
     }
 
-    public GameWebSocket getUserSocket() {
-        return userSocket;
+    public void sendMessage(String message){
+        try{
+            userSocket.sendMessage(message);
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(this);
+            userSocket = null;
+        }
     }
 }

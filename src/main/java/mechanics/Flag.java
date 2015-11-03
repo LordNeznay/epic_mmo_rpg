@@ -35,6 +35,36 @@ public class Flag {
         return position;
     }
 
+    public int getMaxPoints(){
+        return commandBluePoints > commandRedPoints ? commandBluePoints : commandRedPoints;
+    }
+
+    public String getResult(){
+        if(commandRedPoints > commandBluePoints){
+            return getResult(false, "CommandRed");
+        } else {
+            return getResult(false, "CommandBlue");
+        }
+    }
+
+    public String getResult(boolean isTechnicalWin, String winner){
+        StringBuilder result = new StringBuilder();
+        result.append("{\"CommandRed\": ");
+        result.append(commandRedPoints);
+        result.append(", \"CommandBlue\": ");
+        result.append(commandBluePoints);
+        result.append(", \"winner\": \"");
+        result.append(winner);
+        result.append("\", \"isTechnical\": ");
+        if(isTechnicalWin){
+            result.append("true");
+        } else {
+            result.append("false");
+        }
+        result.append('}');
+        return result.toString();
+    }
+
     public boolean startCapture(Entity invaderEntity){
         Vec2d entityPosition = invaderEntity.getCoord();
         if(!isMayInteract(invaderEntity)){
@@ -105,6 +135,6 @@ public class Flag {
         JSONObject request = new JSONObject();
         request.put("type", "flagStatus");
         request.put("flagStatus", flagStatus.toString());
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 }

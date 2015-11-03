@@ -4,6 +4,7 @@ import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
+import org.eclipse.jetty.server.Authentication;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
@@ -81,7 +82,10 @@ public class Entity {
 
     public void stepping(UserProfile userProfile){
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
+        sendAbilityStatus(userProfile);
+    }
 
+    private void sendAbilityStatus(UserProfile userProfile){
         StringBuilder abilityStatus = new StringBuilder();
         abilityStatus.append('[');
         int amountAbility = 0;
@@ -102,7 +106,7 @@ public class Entity {
         JSONObject request = new JSONObject();
         request.put("type", "abilityStatus");
         request.put("abilityStatus", abilityStatus.toString());
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 
     public void move(String params){

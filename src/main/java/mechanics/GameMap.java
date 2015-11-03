@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Repairer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public class GameMap {
     public static final int MAX_PLAYERS_IN_COMMAND = 2;
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
-    private static final int POINTS_TO_WIN = 500;
+    private static final int POINTS_TO_WIN = 10;
+    private boolean isEnd = false;
     private int mapWidth;
     private int mapHeight;
 
@@ -28,6 +30,10 @@ public class GameMap {
     private int amountRedPlayers = 0;
     private int amountBluePlayers = 0;
     private PhysMapJson physMap = new PhysMapJson();
+
+    public boolean getEnd(){
+        return isEnd;
+    }
 
     public GameMap(){
         System.out.println("Создана новая карта");
@@ -42,6 +48,16 @@ public class GameMap {
         }
 
         parseObjectLayer(physMap.getObjectLayer());
+    }
+
+    public String  getResult(){
+        if(amountBluePlayers == 0) {
+            return flag.getResult(true, "CommandRed");
+        }
+        if(amountRedPlayers == 0) {
+            return flag.getResult(true, "CommandBlue");
+        }
+        return flag.getResult();
     }
 
     public boolean addUser(UserProfile userProfile) {
@@ -60,11 +76,11 @@ public class GameMap {
 
         entities.put(userProfile, userEntity);
 
-        JSONObject jsonStart = new JSONObject();
+        JSONObject request = new JSONObject();
 
-        jsonStart.put("type", "user_was_joined");
+        request.put("type", "user_was_joined");
 
-        userProfile.getUserSocket().sendMessage(jsonStart.toString());
+        userProfile.sendMessage(request.toString());
         return true;
     }
 
@@ -73,7 +89,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "viewArea");
         request.put("map", viewArea);
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 
     public void sendEntityInViewArea(UserProfile userProfile){
@@ -122,7 +138,7 @@ public class GameMap {
 
 
                     if(entityLocation[i][j] == null) continue;
-                    if(playerEntity.getTarget().equals(entityLocation[i][j])){
+                    if(playerEntity.getTarget() == entityLocation[i][j]){
                         if(amountEntity!=0) {
                             entitiesInViewArea.append(", ");
                         }
@@ -163,7 +179,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "entitiesInViewArea");
         request.put("entities", entitiesInViewArea.toString());
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 
     public String getArea(UserProfile userProfile){
@@ -177,6 +193,7 @@ public class GameMap {
 
     public void removeUser(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
+        if(playerEntity == null) return;
         if(playerEntity.getCommand().equals("CommandRed")){
             --amountRedPlayers;
         } else {
@@ -227,7 +244,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "availableActions");
         request.put("availableActions", availableActions.toString());
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 
     public void stepping(){
@@ -241,6 +258,22 @@ public class GameMap {
             flag.sendStatus(entry.getKey());
         }
         flag.stepping();
+        if(flag.getMaxPoints() == POINTS_TO_WIN){
+            isEnd = true;
+        }
+        if(amountBluePlayers == 0 || amountRedPlayers == 0){
+            isEnd = true;
+        }
+    }
+
+    public String getUserCommand(UserProfile userProfile){
+        try {
+            Entity userEntity = entities.get(userProfile);
+            return userEntity.getCommand();
+        } catch(RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+        }
+        return "none";
     }
 
     private Vec2d getObjectsPosition(JSONObject obj){
@@ -331,6 +364,6 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "entityStatus");
         request.put("entityStatus", entityStatus.toString());
-        userProfile.getUserSocket().sendMessage(request.toString());
+        userProfile.sendMessage(request.toString());
     }
 }

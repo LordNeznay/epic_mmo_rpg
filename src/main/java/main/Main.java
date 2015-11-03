@@ -12,6 +12,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import utils.Repairer;
 
 import javax.servlet.Servlet;
 import java.util.Timer;
@@ -35,6 +36,7 @@ public class Main {
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
         GameMechanics gameMechanics = new GameMechanics();
+        Repairer.getInstance().setGameMechanics(gameMechanics);
 
         AccountService accountService = new AccountService();
         accountService.addUser("admin", new UserProfile("admin", "admin", ""));

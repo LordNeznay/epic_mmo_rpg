@@ -62,11 +62,9 @@ public class GameWebSocket {
                             gameMechanics.startFlagCapture(userProfile);
                             break;
                         case "setTarget":
-                            int x = 0;
-                            int y = 0;
                             try {
-                                x = Integer.valueOf(jsonStart.get("x").toString());
-                                y = Integer.valueOf(jsonStart.get("y").toString());
+                                int x = Integer.valueOf(jsonStart.get("x").toString());
+                                int y = Integer.valueOf(jsonStart.get("y").toString());
                                 gameMechanics.setPlayerTarget(userProfile, x, y);
                             } catch (NumberFormatException e) {
                                 System.err.println("Cannot parse game map!");
@@ -75,8 +73,10 @@ public class GameWebSocket {
                         case "useAbility":
                             gameMechanics.useAbility(userProfile, jsonStart.get("abilityName").toString());
                             break;
+                        default: break;
                     }
                     break;
+                default: break;
             }
         }
     }

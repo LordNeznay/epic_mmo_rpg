@@ -2,18 +2,23 @@ package mechanics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
+import utils.Repairer;
 import utils.TimeHelper;
+
+import javax.jws.soap.SOAPBinding;
 
 /**
  * Created by uschsh on 26.10.15.
  */
 public class GameMechanics {
     private static final int STEP_TIME = 100;
-    private static final int MIN_PLAYERS_FOR_START = 1;
+    private static final int MIN_PLAYERS_FOR_START = 2;
     private Map<UserProfile, GameMap> usersMaps = new HashMap<UserProfile, GameMap>();
     private ArrayList<UserProfile> userQueue = new ArrayList<UserProfile>();
     private ArrayList<GameMap> gameMaps = new ArrayList<GameMap>();
@@ -31,7 +36,11 @@ public class GameMechanics {
             }
         }
 
+        if(userQueue.contains(userProfile)){
+            return;
+        }
         userQueue.add(userProfile);
+        userProfile.sendMessage("{\"type\": \"Wait_start\"}");
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
@@ -46,11 +55,12 @@ public class GameMechanics {
     public void removeUser(UserProfile userProfile){
         try {
             GameMap mapWithUser = usersMaps.get(userProfile);
+            if(mapWithUser == null) return;
             mapWithUser.removeUser(userProfile);
+            usersMaps.remove(userProfile);
         } catch(RuntimeException e){
             e.printStackTrace();
         }
-        usersMaps.remove(userProfile);
     }
 
     public void gameAction(UserProfile userProfile, String action, String params){
@@ -69,23 +79,80 @@ public class GameMechanics {
         }
     }
 
+    private void closeMap(GameMap map){
+        String result = map.getResult();
+        for (Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet())
+        {
+            if(map.equals(entry.getValue())){
+                JSONObject request = new JSONObject();
+                request.put("type", "gameResult");
+                request.put("gameResult", result);
+                request.put("playerCommand", map.getUserCommand(entry.getKey()));
+                entry.getKey().sendMessage(request.toString());
+            }
+        }
+        removeMap(map);
+    }
+
+    public void removeMap(GameMap map){
+        ArrayList<UserProfile> usersForRemove = new ArrayList<UserProfile>();
+        for (Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet())
+        {
+            if(map.equals(entry.getValue())){
+                usersForRemove.add(entry.getKey());
+            }
+        }
+        for(UserProfile user : usersForRemove){
+            usersMaps.remove(user);
+        }
+        usersForRemove.clear();
+        gameMaps.remove(map);
+    }
+
     private void stepping(){
-        gameMaps.forEach(GameMap::stepping);
+        ArrayList<GameMap> mapsForClose = new ArrayList<GameMap>();
+        for(GameMap map : gameMaps){
+            map.stepping();
+            if(map.getEnd()){
+                mapsForClose.add(map);
+            }
+        }
+
+        for(GameMap map : mapsForClose){
+            closeMap(map);
+        }
+        mapsForClose.clear();
     }
 
     public void movePlayer(UserProfile userProfile, String params){
-        usersMaps.get(userProfile).entityMove(userProfile, params);
+        try {
+            usersMaps.get(userProfile).entityMove(userProfile, params);
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+        }
     }
 
     public void startFlagCapture(UserProfile userProfile){
-        usersMaps.get(userProfile).startFlagCapture(userProfile);
+        try {
+            usersMaps.get(userProfile).startFlagCapture(userProfile);
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+        }
     }
 
     public void setPlayerTarget(UserProfile userProfile, int x, int y){
-        usersMaps.get(userProfile).setPlayerTarget(userProfile, x, y);
+        try {
+            usersMaps.get(userProfile).setPlayerTarget(userProfile, x, y);
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+        }
     }
 
     public void useAbility(UserProfile userProfile, String abilityName){
-        usersMaps.get(userProfile).useAbility(userProfile, abilityName);
+        try {
+            usersMaps.get(userProfile).useAbility(userProfile, abilityName);
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+        }
     }
 }

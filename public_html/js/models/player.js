@@ -11,7 +11,9 @@ define([
             score: 0,
             ws: null,
             isOpenedSocket: false,
-            isInGame: false
+            isInGame: false,
+            isWait: true,
+            isGameComplite: false
         },
         
         initialize: function(){
@@ -33,9 +35,20 @@ define([
                 console.log("Query was got:\n");
                 console.log(data);
                 switch(data.type){
+                    case "Wait_start":{
+                        that.isGameComplite = false;
+                        that.isWait = true;
+                        that.trigger("isWait:change");
+                    }; break;
                     case "user_was_joined":{
                         that.isInGame = true;
+                        that.isWait = false;
+                        that.trigger("isWait:change");
                     }; break;
+                    case "gameResult":{
+                        that.isGameComplite = true;
+                        that.trigger("gameResult", data.gameResult, data.playerCommand);
+                    }; break; 
                     case "viewArea":{
                         that.trigger("loadMap", data.map);
                     }; break;

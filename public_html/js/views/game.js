@@ -39,6 +39,17 @@
                 that.onGameFieldClick(event);
             };
 
+            this.player.on("isWait:change", function(){
+                if(that.player.isWait){
+                    $(".game-info").hide();
+                    that.clear_canvas();                  
+                    $(".game-result").hide();
+                } else {
+                    $(".game-info").show();
+                    $(".game-result").hide();
+                }
+            });
+            
             this.surroundings.listenTo(this.player, "loadMap", function(_map){
                 that.surroundings.map = JSON.parse(_map);
                 that.surroundings.trigger("mapIsLoad");
@@ -66,6 +77,23 @@
                 $(".game-info-status-player").html(entityStatus.hitPoints);
                 $(".game-info-status-players-target").html(entityStatus.targetsHitPoints);
             });
+            this.player.on("gameResult", function(result, playerCommand){
+                result = JSON.parse(result);
+                $(".game-result__result-blue").html(result.CommandBlue);
+                $(".game-result__result-red").html(result.CommandRed);
+                $(".game-result__result-winner").html(result.winner);
+                if(result.isTechnical){
+                    $(".game-result__winner-status").html("Техническая победа");
+                }
+                $(".game-result__player-team").html(playerCommand); 
+                if(result.winner === playerCommand){
+                    $(".game-result__player-result").html("You win!"); 
+                } else {
+                    $(".game-result__player-result").html("You lose!"); 
+                }
+                $(".game-info").hide();
+                $(".game-result").show(); 
+            });
             this.player.on("abilityStatus", function(abilityStatus){
                 abilityStatus = JSON.parse(abilityStatus);
                 abilityStatus.forEach(function(ability, i){
@@ -80,7 +108,18 @@
         },
         
         onGameFieldClick: function(event){
+            if(this.player.isWait || this.player.isGameComplite){
+                return;
+            }
             this.player.setTarget(Math.floor(event.offsetX/64)+1, Math.floor(event.offsetY/64)+1);
+        },
+        
+        clear_canvas: function(){
+            var that = this;
+            that.surroundings.canvas.width  = 1;     
+            that.surroundings.canvas.height = 1;
+            that.surroundings.canvas.width  = 960;     
+            that.surroundings.canvas.height = 576;
         },
         
         child_show: function(){
@@ -98,6 +137,9 @@
         },
         
         playerMove: function(ev){
+            if(this.player.isWait || this.player.isGameComplite){
+                return;
+            }
             var sim = String.fromCharCode(ev.keyCode || ev.which || 0);
             var that = this;
             //console.log();
