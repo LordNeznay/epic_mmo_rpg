@@ -19,9 +19,9 @@ import javax.jws.soap.SOAPBinding;
 public class GameMechanics {
     private static final int STEP_TIME = 100;
     private static final int MIN_PLAYERS_FOR_START = 2;
-    private Map<UserProfile, GameMap> usersMaps = new HashMap<UserProfile, GameMap>();
-    private ArrayList<UserProfile> userQueue = new ArrayList<UserProfile>();
-    private ArrayList<GameMap> gameMaps = new ArrayList<GameMap>();
+    private Map<UserProfile, GameMap> usersMaps = new HashMap<>();
+    private ArrayList<UserProfile> userQueue = new ArrayList<>();
+    private ArrayList<GameMap> gameMaps = new ArrayList<>();
 
     public void addUser(UserProfile userProfile) {
         if(usersMaps.containsKey(userProfile)) {
@@ -63,15 +63,6 @@ public class GameMechanics {
         }
     }
 
-    public void gameAction(UserProfile userProfile, String action, String params){
-        try {
-            GameMap mapWithUser = usersMaps.get(userProfile);
-            mapWithUser.gameAction(userProfile, action, params);
-        } catch(RuntimeException e){
-            e.printStackTrace();
-        }
-    }
-
     public void run() {
         while (true) {
             stepping();
@@ -81,36 +72,31 @@ public class GameMechanics {
 
     private void closeMap(GameMap map){
         String result = map.getResult();
-        for (Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet())
-        {
-            if(map.equals(entry.getValue())){
-                JSONObject request = new JSONObject();
-                request.put("type", "gameResult");
-                request.put("gameResult", result);
-                request.put("playerCommand", map.getUserCommand(entry.getKey()));
-                entry.getKey().sendMessage(request.toString());
-            }
-        }
+        usersMaps.entrySet().stream().filter(entry -> map.equals(entry.getValue())).forEach(entry -> {
+            JSONObject request = new JSONObject();
+            request.put("type", "gameResult");
+            request.put("gameResult", result);
+            request.put("playerCommand", map.getUserCommand(entry.getKey()));
+            entry.getKey().sendMessage(request.toString());
+        });
         removeMap(map);
     }
 
     public void removeMap(GameMap map){
-        ArrayList<UserProfile> usersForRemove = new ArrayList<UserProfile>();
+        ArrayList<UserProfile> usersForRemove = new ArrayList<>();
         for (Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet())
         {
             if(map.equals(entry.getValue())){
                 usersForRemove.add(entry.getKey());
             }
         }
-        for(UserProfile user : usersForRemove){
-            usersMaps.remove(user);
-        }
+        usersForRemove.forEach(usersMaps::remove);
         usersForRemove.clear();
         gameMaps.remove(map);
     }
 
     private void stepping(){
-        ArrayList<GameMap> mapsForClose = new ArrayList<GameMap>();
+        ArrayList<GameMap> mapsForClose = new ArrayList<>();
         for(GameMap map : gameMaps){
             map.stepping();
             if(map.getEnd()){
@@ -118,9 +104,7 @@ public class GameMechanics {
             }
         }
 
-        for(GameMap map : mapsForClose){
-            closeMap(map);
-        }
+        mapsForClose.forEach(this::closeMap);
         mapsForClose.clear();
     }
 

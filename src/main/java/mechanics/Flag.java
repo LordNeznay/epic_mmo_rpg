@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
  * Created by Андрей on 01.11.2015.
  */
 public class Flag {
+    private static final double ONE_SECOND = 1000.0;
     private String owner = "none";
     private Entity invader = null;
     private static final int STEP_TIME = 100;
@@ -21,10 +22,7 @@ public class Flag {
 
     public boolean isMayInteract(Entity entity){
         Vec2d entityPosition = entity.getCoord();
-        if(entityPosition.x - position.x < -1 || entityPosition.x - position.x > 1 || entityPosition.y - position.y < -1 || entityPosition.y - position.y > 1){
-            return false;
-        }
-        return true;
+        return !(entityPosition.x - position.x < -1 || entityPosition.x - position.x > 1 || entityPosition.y - position.y < -1 || entityPosition.y - position.y > 1);
     }
 
     public String getOwner() {
@@ -66,7 +64,6 @@ public class Flag {
     }
 
     public boolean startCapture(Entity invaderEntity){
-        Vec2d entityPosition = invaderEntity.getCoord();
         if(!isMayInteract(invaderEntity)){
             return false;
         }
@@ -128,7 +125,7 @@ public class Flag {
             }
         } else {
             flagStatus.append(invader.getCommand().equals("CommandRed") ? "R" : "B");
-            flagStatus.append((double)delayCapture / 1000.0);
+            flagStatus.append((double)delayCapture / ONE_SECOND);
         }
         flagStatus.append("\"}");
 

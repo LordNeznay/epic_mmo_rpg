@@ -4,7 +4,6 @@ import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
-import org.eclipse.jetty.server.Authentication;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
@@ -29,7 +28,7 @@ public class Entity {
     private GameMap map = null;
     private int timeUntilMove = 0;
     private Entity target = null;
-    private Map<String, Ability> abilities = new HashMap<String, Ability>();
+    private Map<String, Ability> abilities = new HashMap<>();
     private int abilityDelay = 0;
 
     public Entity(@NotNull GameMap _map){
@@ -156,6 +155,24 @@ public class Entity {
         }
     }
 
+    private boolean isDistanceInRangeAbility(Ability ability, Vec2d targetPosition, Vec2d startPosition){
+        return (int) Math.sqrt((targetPosition.x - startPosition.x) * (targetPosition.x - startPosition.x) + (targetPosition.y - startPosition.y) * (targetPosition.y - startPosition.y)) <= ability.getRange();
+    }
+
+    private boolean isMayUseAbility(Ability ability){
+        if(ability instanceof AttackAbility) {
+            if (!ability.isCAN_ATTACK_TEAMMATE() && target.command.equals(command)) {
+                return false;
+            }
+        }
+        if(ability instanceof HealingAbility) {
+            if (!ability.isCAN_HEALING_OPPONENT() && !target.command.equals(command)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void useAbility(String abilityName){
         if(target == null) return;
         Ability ability;
@@ -165,20 +182,10 @@ public class Entity {
             return;
         }
         if(ability == null) return;
-
-        if(ability instanceof AttackAbility) {
-            if (!ability.isCAN_ATTACK_TEAMMATE() && target.command.equals(command)) {
-                return;
-            }
+        if(!isMayUseAbility(ability)){
+            return;
         }
-        if(ability instanceof HealingAbility) {
-            if (!ability.isCAN_HEALING_OPPONENT() && !target.command.equals(command)) {
-                return;
-            }
-        }
-        Vec2d t = target.getCoord();
-        Vec2d p = getCoord();
-        if((int)Math.sqrt((t.x - p.x)*(t.x-p.x) + (t.y - p.y)*(t.y - p.y)) > ability.getRange()){
+        if(!isDistanceInRangeAbility(ability, target.getCoord(), getCoord())){
             return;
         }
         AbilityAction action = ability.use();

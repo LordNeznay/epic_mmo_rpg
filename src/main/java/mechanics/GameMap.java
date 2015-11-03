@@ -8,7 +8,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.Repairer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class GameMap {
     private int mapWidth;
     private int mapHeight;
 
-    private Map<UserProfile, Entity> entities = new HashMap<UserProfile, Entity>();
+    private Map<UserProfile, Entity> entities = new HashMap<>();
     private Flag flag = new Flag();
     private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
@@ -87,99 +86,111 @@ public class GameMap {
     public void sendPlayerViewArea(UserProfile userProfile){
         String viewArea = getArea(userProfile);
         JSONObject request = new JSONObject();
+
         request.put("type", "viewArea");
         request.put("map", viewArea);
         userProfile.sendMessage(request.toString());
     }
 
-    public void sendEntityInViewArea(UserProfile userProfile){
-        Entity playerEntity = entities.get(userProfile);
-        Vec2d playerPosition = playerEntity.getCoord();
-        StringBuilder entitiesInViewArea = new StringBuilder();
-        entitiesInViewArea.append('{');
+    private String getTargetJson(int viewX, int viewY){
+        return "{\"x\":" + viewX + ",\"y\":" + viewY + ",\"image\": \"target.png\"}";
+    }
 
-        entitiesInViewArea.append("\"player\": {\"x\":");
-        entitiesInViewArea.append(VIEW_WIDTH_2);
-        entitiesInViewArea.append(",\"y\": ");
-        entitiesInViewArea.append(VIEW_HEIGHT_2);
-        entitiesInViewArea.append(",\"image\": \"people.png\"},");
+    private String getFlagEntityJson(int viewX, int viewY){
+        StringBuilder result = new StringBuilder();
+        result.append("{\"x\":");
+        result.append(viewX);
+        result.append(",\"y\":");
+        result.append(viewY);
+        result.append(",\"image\": \"");
+        switch(flag.getOwner()){
+            case "CommandBlue":
+                result.append("blue_flag.png");
+                break;
+            case "CommandRed":
+                result.append("red_flag.png");
+                break;
+            default:
+                result.append("flag.png");
+                break;
+        }
+        result.append("\"}");
+        return result.toString();
+    }
 
-        entitiesInViewArea.append("\"entities\": [");
+    private String getEntityJson(int viewX, int viewY, int mapX, int mapY){
+        StringBuilder result = new StringBuilder();
+        result.append("{\"x\":");
+        result.append(viewX);
+        result.append(",\"y\":");
+        result.append(viewY);
+        result.append(",\"image\": \"");
+        switch(entityLocation[mapX][mapY].getCommand()){
+            case "CommandBlue":
+                result.append("blue_people.png");
+                break;
+            case "CommandRed":
+                result.append("red_people.png");
+                break;
+            default:
+                result.append("people.png");
+                break;
+        }
+        result.append("\"}");
+        return result.toString();
+    }
+
+    private String getAllEntityInViewAreaJson(Entity entity){
+        StringBuilder result = new StringBuilder();
         int amountEntity = 0;
-
         int y = 0;
-        for(int j = (int)playerPosition.y - VIEW_HEIGHT_2; j <= playerPosition.y + VIEW_HEIGHT_2; ++j, ++y){
+        for(int j = (int)entity.getCoord().y - VIEW_HEIGHT_2; j <= entity.getCoord().y + VIEW_HEIGHT_2; ++j, ++y){
             int x=0;
-            for(int i = (int)playerPosition.x - VIEW_WIDTH_2; i <= playerPosition.x + VIEW_WIDTH_2; ++i, ++x){
-                if(i >= 0 && i < mapWidth && j >= 0 && j < mapHeight ) {
+            for(int i = (int)entity.getCoord().x - VIEW_WIDTH_2; i <= entity.getCoord().x + VIEW_WIDTH_2; ++i, ++x){
+                if(isPositionCorrect(j, i)) {
                     if((int)flag.getPosition().x == i && (int)flag.getPosition().y == j){
                         if(amountEntity!=0) {
-                            entitiesInViewArea.append(", ");
+                            result.append(", ");
                         }
-                        entitiesInViewArea.append("{\"x\":");
-                        entitiesInViewArea.append(x);
-                        entitiesInViewArea.append(",\"y\":");
-                        entitiesInViewArea.append(y);
-                        entitiesInViewArea.append(",\"image\": \"");
-                        switch(flag.getOwner()){
-                            case "CommandBlue":
-                                entitiesInViewArea.append("blue_flag.png");
-                                break;
-                            case "CommandRed":
-                                entitiesInViewArea.append("red_flag.png");
-                                break;
-                            default:
-                                entitiesInViewArea.append("flag.png");
-                                break;
-                        }
-                        entitiesInViewArea.append("\"}");
+                        result.append(getFlagEntityJson(x, y));
                         ++amountEntity;
                     }
-
 
                     if(entityLocation[i][j] == null) continue;
-                    if(playerEntity.getTarget() == entityLocation[i][j]){
-                        if(amountEntity!=0) {
-                            entitiesInViewArea.append(", ");
+                    if(entity.getTarget() != null) {
+                        if (entity.getTarget().equals(entityLocation[i][j])) {
+                            if (amountEntity != 0) {
+                                result.append(", ");
+                            }
+                            result.append(getTargetJson(x, y));
+                            ++amountEntity;
                         }
-                        entitiesInViewArea.append("{\"x\":");
-                        entitiesInViewArea.append(x);
-                        entitiesInViewArea.append(",\"y\":");
-                        entitiesInViewArea.append(y);
-                        entitiesInViewArea.append(",\"image\": \"target.png\"}");
-                        ++amountEntity;
                     }
-                    if(entityLocation[i][j].equals(playerEntity)) continue;
+
+                    if(entityLocation[i][j].equals(entity)) continue;
                     if(amountEntity!=0) {
-                        entitiesInViewArea.append(", ");
+                        result.append(", ");
                     }
-                    entitiesInViewArea.append("{\"x\":");
-                    entitiesInViewArea.append(x);
-                    entitiesInViewArea.append(",\"y\":");
-                    entitiesInViewArea.append(y);
-                    entitiesInViewArea.append(",\"image\": \"");
-                    switch(entityLocation[i][j].getCommand()){
-                        case "CommandBlue":
-                            entitiesInViewArea.append("blue_people.png");
-                            break;
-                        case "CommandRed":
-                            entitiesInViewArea.append("red_people.png");
-                            break;
-                        default:
-                            entitiesInViewArea.append("people.png");
-                            break;
-                    }
-                    entitiesInViewArea.append("\"}");
+                    result.append(getEntityJson(x, y, i, j));
                     ++amountEntity;
                 }
             }
         }
-        entitiesInViewArea.append("]}");
+
+        return result.toString();
+    }
+
+    public void sendEntityInViewArea(UserProfile userProfile){
+        Entity playerEntity = entities.get(userProfile);
 
         JSONObject request = new JSONObject();
         request.put("type", "entitiesInViewArea");
-        request.put("entities", entitiesInViewArea.toString());
+        request.put("entities", '{' + "\"player\": {\"x\":" + VIEW_WIDTH_2 + ",\"y\": " + VIEW_HEIGHT_2 + ",\"image\": \"people.png\"}," + "\"entities\": [" + getAllEntityInViewAreaJson(playerEntity) + "]}");
         userProfile.sendMessage(request.toString());
+    }
+
+    private boolean isPositionCorrect(int j, int i) {
+        return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
     }
 
     public String getArea(UserProfile userProfile){
@@ -212,15 +223,6 @@ public class GameMap {
         }
     }
 
-    public void gameAction(UserProfile userProfile, String action, String params){
-        switch (action){
-            case "move":
-                entityMove(userProfile, params);
-                break;
-            default: break;
-        }
-    }
-
     public void entityMove(UserProfile userProfile, String params){
         Entity playerEntity = entities.get(userProfile);
         entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
@@ -230,7 +232,7 @@ public class GameMap {
 
     public boolean isPassability(Vec2d cell){
         boolean result = false;
-        if(cell.x >= 0 && cell.x < mapWidth && cell.y >= 0 && cell.y < mapHeight ) {
+        if(isPositionCorrect((int)cell.x, (int)cell.y) ) {
             result = entityLocation[(int) cell.x][(int) cell.y] == null;
         }
         return result && physMap.isPassability(cell);
@@ -321,12 +323,12 @@ public class GameMap {
     }
 
     public void updatePositionEntity(Entity entity, int x, int y){
-        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+        if(isPositionCorrect(y, x)){
             entityLocation[x][y] = null;
         }
         x = (int)entity.getCoord().x;
         y = (int)entity.getCoord().y;
-        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+        if(isPositionCorrect(y, x)){
             entityLocation[x][y] = entity;
         }
     }
@@ -340,7 +342,7 @@ public class GameMap {
         Entity playerEntity = entities.get(userProfile);
         x = (int)playerEntity.getCoord().x - VIEW_WIDTH_2 + x;
         y = (int)playerEntity.getCoord().y - VIEW_HEIGHT_2 + y;
-        if(x >= 0 && x < mapWidth && y >= 0 && y < mapHeight){
+        if(isPositionCorrect(y, x)){
             if(entityLocation[x][y] != null){
                 playerEntity.setTarget(entityLocation[x][y]);
             }
