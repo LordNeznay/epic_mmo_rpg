@@ -88,6 +88,7 @@ public class Entity {
         sendAbilityStatus(userProfile);
     }
 
+    @SuppressWarnings("unchecked")
     private void sendAbilityStatus(UserProfile userProfile){
         StringBuilder abilityStatus = new StringBuilder();
         abilityStatus.append('[');

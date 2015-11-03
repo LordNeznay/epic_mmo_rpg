@@ -2,16 +2,12 @@ package mechanics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import main.AccountService;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 import utils.Repairer;
 import utils.TimeHelper;
-
-import javax.jws.soap.SOAPBinding;
 
 /**
  * Created by uschsh on 26.10.15.
@@ -70,7 +66,8 @@ public class GameMechanics {
         }
     }
 
-    private void closeMap(GameMap map){
+    @SuppressWarnings("unchecked")
+    private void sendResultMap(GameMap map){
         String result = map.getResult();
         usersMaps.entrySet().stream().filter(entry -> map.equals(entry.getValue())).forEach(entry -> {
             JSONObject request = new JSONObject();
@@ -104,7 +101,7 @@ public class GameMechanics {
             }
         }
 
-        mapsForClose.forEach(this::closeMap);
+        mapsForClose.forEach(this::sendResultMap);
         mapsForClose.clear();
     }
 

@@ -23,6 +23,7 @@ public class PhysMapJson implements PhysMap {
 
     public PhysMapJson(){
         JSONObject map = MapReader.readMap("public_html/res/tilemap.json");
+        assert map != null;
         try{
             mapWidth = Integer.valueOf(map.get("width").toString());
             mapHeight = Integer.valueOf(map.get("height").toString());
@@ -52,12 +53,17 @@ public class PhysMapJson implements PhysMap {
             int x = 0;
             int y = 0;
             for(Object gid : layerData){
-                if(layerName.equals("Background")){
-                    backgroundLayer[x][y] = ((Long) gid).intValue();
-                } else if(layerName.equals("Frontground")){
-                    frontgroundLayer[x][y] = ((Long) gid).intValue();
-                } else if(layerName.equals("Passability")){
-                    passabilityLayer[x][y] = (!(((Long) gid).intValue() == 0 || ((Long) gid).intValue() == impassableGid));
+                switch (layerName) {
+                    case "Background":
+                        backgroundLayer[x][y] = ((Long) gid).intValue();
+                        break;
+                    case "Frontground":
+                        frontgroundLayer[x][y] = ((Long) gid).intValue();
+                        break;
+                    case "Passability":
+                        passabilityLayer[x][y] = (!(((Long) gid).intValue() == 0 || ((Long) gid).intValue() == impassableGid));
+                        break;
+                    default: break;
                 }
                 ++x;
                 if(x == mapWidth){
@@ -95,8 +101,8 @@ public class PhysMapJson implements PhysMap {
                 String isPassabilityString = "";
                 try {
                     isPassabilityString = ((JSONObject)tileproperties.get(String.valueOf(i))).get("isPassability").toString();
-                } catch (Exception e){
-
+                } catch (RuntimeException e){
+                    e.printStackTrace();
                 }
                 if(isPassabilityString.equals("false")){
                     try {
@@ -113,11 +119,12 @@ public class PhysMapJson implements PhysMap {
         }
 
         tilesetsBuilder.append("{ \"firstgid\":-1, \"image\":\"0.png\", \"imageheight\":64,\"imagewidth\":64, \"name\":\"zeroTile\", \"tileheight\":64, \"tilewidth\":64}");
-        tilesetsBuilder.append("]");
+        tilesetsBuilder.append(']');
         tilesetsInfo = tilesetsBuilder.toString();
         return  isNotPassability;
     }
 
+    @Override
     public String getArea(Vec2d coord){
 
         StringBuilder resultString = new StringBuilder();

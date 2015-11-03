@@ -112,6 +112,7 @@ public class Flag {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void sendStatus(UserProfile userProfile){
         StringBuilder flagStatus = new StringBuilder();
         flagStatus.append("{ \"commandRed\": ");

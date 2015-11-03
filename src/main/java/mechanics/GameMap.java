@@ -72,21 +72,23 @@ public class GameMap {
             ++amountBluePlayers;
             userEntity.setCommand("CommandBlue");
         }
-
         entities.put(userProfile, userEntity);
 
-        JSONObject request = new JSONObject();
-
-        request.put("type", "user_was_joined");
-
-        userProfile.sendMessage(request.toString());
+        sendConfirmation(userProfile);
         return true;
     }
 
+    @SuppressWarnings("unchecked")
+    private void sendConfirmation(UserProfile userProfile){
+        JSONObject request = new JSONObject();
+        request.put("type", "user_was_joined");
+        userProfile.sendMessage(request.toString());
+    }
+
+    @SuppressWarnings("unchecked")
     public void sendPlayerViewArea(UserProfile userProfile){
         String viewArea = getArea(userProfile);
         JSONObject request = new JSONObject();
-
         request.put("type", "viewArea");
         request.put("map", viewArea);
         userProfile.sendMessage(request.toString());
@@ -180,6 +182,7 @@ public class GameMap {
         return result.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public void sendEntityInViewArea(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
 
@@ -238,6 +241,7 @@ public class GameMap {
         return result && physMap.isPassability(cell);
     }
 
+    @SuppressWarnings("unchecked")
     private void sendAvailableActions(UserProfile userProfile){
         StringBuilder availableActions = new StringBuilder();
         availableActions.append('[');
@@ -354,6 +358,7 @@ public class GameMap {
         playerEntity.useAbility(abilityName);
     }
 
+    @SuppressWarnings("unchecked")
     private void sendEntityStatus(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
         StringBuilder entityStatus = new StringBuilder();
