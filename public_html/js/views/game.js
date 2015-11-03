@@ -84,6 +84,8 @@
                 $(".game-result__result-winner").html(result.winner);
                 if(result.isTechnical){
                     $(".game-result__winner-status").html("Техническая победа");
+                } else {
+                    $(".game-result__winner-status").html(" ");
                 }
                 $(".game-result__player-team").html(playerCommand); 
                 if(result.winner === playerCommand){

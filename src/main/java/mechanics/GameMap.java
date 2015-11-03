@@ -203,6 +203,9 @@ public class GameMap {
         entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
+            if(entry.getValue().getTarget() == null){
+                continue;
+            }
             if(entry.getValue().getTarget().equals(playerEntity)){
                 entry.getValue().setTarget(null);
             }
