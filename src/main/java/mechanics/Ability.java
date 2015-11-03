@@ -35,10 +35,7 @@ public abstract class Ability {
     }
 
     public boolean isAvailable(){
-        if(cooldown > 0){
-            return false;
-        }
-        return true;
+        return cooldown <= 0;
     }
 
     @Nullable

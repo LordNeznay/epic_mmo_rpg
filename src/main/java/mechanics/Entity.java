@@ -80,7 +80,11 @@ public class Entity {
     }
 
     public void stepping(UserProfile userProfile){
+        for (Map.Entry<String, Ability> entry : abilities.entrySet()) {
+            entry.getValue().stepping();
+        }
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
+        abilityDelay = abilityDelay > 0 ? abilityDelay-STEP_TIME : 0;
         sendAbilityStatus(userProfile);
     }
 
@@ -96,8 +100,11 @@ public class Entity {
             abilityStatus.append("{\"name\": \"");
             abilityStatus.append(entry.getKey());
             abilityStatus.append("\", \"time\": ");
-            abilityStatus.append((double)entry.getValue().getCooldown() / 1000);
-            entry.getValue().stepping();
+            int abilityCooldown = entry.getValue().getCooldown();
+            if(abilityDelay != 0 && abilityCooldown<= abilityDelay) {
+                abilityCooldown = abilityDelay;
+            }
+            abilityStatus.append((double) abilityCooldown/ 1000);
             abilityStatus.append('}');
             ++amountAbility;
         }
@@ -174,6 +181,9 @@ public class Entity {
     }
 
     public void useAbility(String abilityName){
+        if(abilityDelay != 0){
+            return;
+        }
         if(target == null) return;
         Ability ability;
         try{
@@ -191,6 +201,7 @@ public class Entity {
         AbilityAction action = ability.use();
         if(action != null) {
             target.affect(action);
+            abilityDelay = ABILITY_DELAY;
         }
     }
 
