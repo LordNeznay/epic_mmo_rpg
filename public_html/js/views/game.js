@@ -50,10 +50,19 @@
                 }
             });
             
-            this.surroundings.listenTo(this.player, "loadMap", function(_map){
-                that.surroundings.map = JSON.parse(_map);
+            this.surroundings.listenTo(this.player, "playerPosition", function(_pos){
+                _pos = JSON.parse(_pos);
+                that.surroundings.pos_x = _pos.x;
+                that.surroundings.pos_y = _pos.y;
+                that.surroundings.trigger("newPlayerPosition");
+            });
+            
+            $.get("/res/tilemap.json", " ", function(data){
+                //console.log(data);
+                that.surroundings.map = data;
                 that.surroundings.trigger("mapIsLoad");
             });
+            
             this.surroundings.listenTo(this.player, "loadEntities", function(entities){
                 that.surroundings.entities = JSON.parse(entities);
                 that.surroundings.trigger("entitiesIsLoad");

@@ -8,6 +8,8 @@
 
     var View = Backbone.View.extend({
         map: '',
+        pos_x: 0,
+        pos_y: 0,
         entities: '',
         template: tmpl,
         canvas: undefined,
@@ -17,6 +19,7 @@
 
         initialize: function(){
             this.on("mapIsLoad", this.loadingTilesets, this);
+            this.on("newPlayerPosition", this.redrawMap, this);
             this.on("entitiesIsLoad", this.drawEntities, this);
             this.on("readyDrawMap", this.drawMap, this);
         },
@@ -45,9 +48,21 @@
         },
         
         loadingTilesets: function(){
+            var dop_tileset = {
+                firstgid: -1,
+                image: "0.png",
+                imageheight: 64, 
+                imagewidth: 64, 
+                name: "zeroTile",
+                tileheight: 64, 
+                tilewidth: 64
+            }
+            this.map.tilesets.push(dop_tileset);
+            
             var that = this;
             var amount = 0;
             that.loadTilesets = 0;
+            //console.log(this.map);
             this.map.tilesets.forEach(function(tileset){
                 amount += 1;
                 var pic = new Image();
@@ -101,6 +116,36 @@
                         y += dy;
                     }
                 });
+            });
+        },
+        
+        getTileGID: function(x, y, layer){
+            if(x >= this.map.width || x < 0) return -1;
+            if(y >= this.map.height || y < 0) return -1;
+            return layer.data[y * this.map.width + x];
+        },
+        
+        redrawMap: function(){
+            //Если картинки не догружены, то выйти
+            //alert(this.loadTilesets);
+            console.log("x=" + this.pos_x + "  ;y=" + this.pos_y);
+            if(this.amountTilesets != this.loadTilesets) return;
+            var that = this;
+            
+
+            
+            that.map.layers.forEach(function(layer){
+                if(!(layer.name == "Background" || layer.name == "Frontground")){
+                    return;
+                }
+                var dx = that.map.tilewidth;
+                var dy = that.map.tileheight;
+                
+                for(var j = that.pos_y - 5; j <= that.pos_y + 5; ++j){
+                    for(var i = that.pos_x - 8; i <= that.pos_x + 8; ++i){
+                        that.drawTile(that.getTileGID(i, j, layer), (i - that.pos_x + 7)*dx, (j - that.pos_y + 4)*dy);
+                    }
+                }
             });
         }
         

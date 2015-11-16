@@ -32,8 +32,8 @@ define([
             }
             this.ws.onmessage = function (event) {
                 var data = JSON.parse(event.data);
-                console.log("Query was got:\n");
-                console.log(data);
+                //console.log("Query was got:\n");
+                //console.log(data);
                 switch(data.type){
                     case "Wait_start":{
                         that.isGameComplite = false;
@@ -51,6 +51,9 @@ define([
                     }; break; 
                     case "viewArea":{
                         that.trigger("loadMap", data.map);
+                    }; break;
+                    case "playerPosition":{
+                        that.trigger("playerPosition", data.pos);
                     }; break;
                     case "entitiesInViewArea":{
                         that.trigger("loadEntities", data.entities);
