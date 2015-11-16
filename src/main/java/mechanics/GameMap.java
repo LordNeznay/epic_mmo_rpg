@@ -87,14 +87,13 @@ public class GameMap {
 
     @SuppressWarnings("unchecked")
     public void sendPlayerViewArea(UserProfile userProfile){
-        /*
-        String viewArea = getArea(userProfile);
-        JSONObject request = new JSONObject();
-        request.put("type", "viewArea");
-        request.put("map", viewArea);
-        userProfile.sendMessage(request.toString());*/
-
-        Vec2d pos = entities.get(userProfile).getCoord();
+        Vec2d pos;
+        try {
+             pos = entities.get(userProfile).getCoord();
+        } catch (RuntimeException e){
+            Repairer.getInstance().repaireUser(userProfile);
+            return;
+        }
         JSONObject request = new JSONObject();
         request.put("type", "playerPosition");
         request.put("pos", "{\"x\":" + pos.x + ", \"y\":" + pos.y + '}');

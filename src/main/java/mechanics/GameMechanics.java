@@ -18,6 +18,7 @@ public class GameMechanics {
     private Map<UserProfile, GameMap> usersMaps = new HashMap<>();
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
     private ArrayList<GameMap> gameMaps = new ArrayList<>();
+    private boolean isGame = false;
 
     public void addUser(UserProfile userProfile) {
         if(usersMaps.containsKey(userProfile)) {
@@ -59,8 +60,17 @@ public class GameMechanics {
         }
     }
 
+    public void start(){
+        isGame = true;
+        this.run();
+    }
+
+    public void stop(){
+        isGame = false;
+    }
+
     public void run() {
-        while (true) {
+        while (isGame) {
             stepping();
             TimeHelper.sleep(STEP_TIME);
         }
