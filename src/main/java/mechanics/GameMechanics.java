@@ -20,6 +20,22 @@ public class GameMechanics {
     private ArrayList<GameMap> gameMaps = new ArrayList<>();
     private boolean isGame = false;
 
+    public int getMinPlayersForStart(){
+        return MIN_PLAYERS_FOR_START;
+    }
+
+    public int getAmountMap(){
+        return gameMaps.size();
+    }
+
+    public int getAmountPlayerInGame(){
+        return usersMaps.size();
+    }
+
+    public int getAmountPlayerInQueue(){
+        return userQueue.size();
+    }
+
     public void addUser(UserProfile userProfile) {
         if(usersMaps.containsKey(userProfile)) {
             return;
@@ -66,6 +82,7 @@ public class GameMechanics {
     }
 
     public void stop(){
+
         isGame = false;
     }
 

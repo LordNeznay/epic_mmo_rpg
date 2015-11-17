@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by uschsh on 26.10.15.
  */
 public class GameMap {
-    public static final int MAX_PLAYERS_IN_COMMAND = 2;
+    private static final int MAX_PLAYERS_IN_COMMAND = 2;
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
     private static final int POINTS_TO_WIN = 10;
@@ -32,6 +32,10 @@ public class GameMap {
 
     public boolean getEnd(){
         return isEnd;
+    }
+
+    public static int getMaxPlayersInCommand(){
+        return MAX_PLAYERS_IN_COMMAND;
     }
 
     public GameMap(){
@@ -200,11 +204,6 @@ public class GameMap {
 
     private boolean isPositionCorrect(int j, int i) {
         return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
-    }
-
-    public String getArea(UserProfile userProfile){
-        Entity entity = entities.get(userProfile);
-        return physMap.getArea(entity.getCoord());
     }
 
     public boolean isPlace(){
