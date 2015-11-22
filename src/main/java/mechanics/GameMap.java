@@ -38,6 +38,14 @@ public class GameMap {
         return MAX_PLAYERS_IN_COMMAND;
     }
 
+    public int getAmountRedPlayers(){
+        return amountRedPlayers;
+    }
+
+    public int getAmountBluePlayers(){
+        return amountBluePlayers;
+    }
+
     public GameMap(){
         System.out.println("Создана новая карта");
         Vec2d sizeMap = physMap.getSize();
@@ -53,7 +61,7 @@ public class GameMap {
         parseObjectLayer(physMap.getObjectLayer());
     }
 
-    public String  getResult(){
+    public String getResult(){
         if(amountBluePlayers == 0) {
             return flag.getResult(true, "CommandRed");
         }

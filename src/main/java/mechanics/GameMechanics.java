@@ -20,6 +20,10 @@ public class GameMechanics {
     private ArrayList<GameMap> gameMaps = new ArrayList<>();
     private boolean isGame = false;
 
+    public boolean isInGame(){
+        return isGame;
+    }
+
     public int getMinPlayersForStart(){
         return MIN_PLAYERS_FOR_START;
     }
