@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import resource.ResourceFactory;
 import utils.Repairer;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class GameMap {
     private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
     private int amountBluePlayers = 0;
-    private PhysMapJson physMap = new PhysMapJson();
+    private PhysMapJson physMap = (PhysMapJson)ResourceFactory.getInstance().getPhysMap("public_html/res/tilemap.json");
 
     public boolean getEnd(){
         return isEnd;

@@ -3,12 +3,13 @@ package mechanics;
 import com.sun.javafx.geom.Vec2d;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import resource.Resource;
 import utils.MapReader;
 
 /**
  * Created by Андрей on 27.10.2015.
  */
-public class PhysMapJson implements PhysMap {
+public class PhysMapJson implements PhysMap, Resource {
     private int mapWidth;
     private int mapHeight;
     private int tileWidth;
@@ -16,8 +17,9 @@ public class PhysMapJson implements PhysMap {
     private boolean[][] passabilityLayer;
     private String objectLayer = "";
 
-    public PhysMapJson(){
-        JSONObject map = MapReader.readMap("public_html/res/tilemap.json");
+    public PhysMapJson(String filename) {
+        //JSONObject map = MapReader.readMap("public_html/res/tilemap.json");
+        JSONObject map = MapReader.readMap(filename);
         assert map != null;
         try{
             mapWidth = Integer.valueOf(map.get("width").toString());
