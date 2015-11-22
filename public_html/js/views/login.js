@@ -11,11 +11,11 @@
     var View = BaseView.extend({
         name: 'login',
         template: tmpl,
-        className: "login-view",
+
 
         events: {
-            "submit .login-form__form": "submitLogin",
-            "submit .unlogin-form__form": "submitUnlogin",
+            "submit .form-login": "submitLogin",
+            "submit .form-unlogin": "submitUnlogin",
             "click a": "hide"
         },
         child_show: function () {
@@ -32,12 +32,12 @@
             clearErrors();
             if(validateForm()){
                 var pView = this;	
-                this.player.login($('.login-form__form').serialize(), {
+                this.player.login($('.form-login').serialize(), {
                     success: function(data){
                         if(data.errors == 'null'){
                             Backbone.history.navigate('main', true);
                         } else {
-                            $(".login-form__errors").html(data.errors);
+                            $(".form-login .form__errors").html(data.errors);
                         }
                     }
                 });
@@ -56,21 +56,20 @@
     });
 
     function validateForm(){
-        /*
-        var userName = $("input[name=name]").val();
+        var userName = $(".form-login input[name=name]").val();
         if (userName=='') {
-            $('.login-form__errors').text("Введите имя!");
+            $('.form-login .form__errors').text("Введите имя!");
             return false;
         }
-        var userPassword = $("input[name=password]").val();
+        var userPassword = $(".form-login input[name=password]").val();
         if (userPassword=='') {
-            $('.login-form__errors').text("Введите пароль!");
+            $('.form-login .form__errors').text("Введите пароль!");
             return false;
-        }*/
+        }
         return true;
     }
     function clearErrors(){
-        $('.login-form__errors').text("");
+        $('.form-login .form__errors').text("");
     }
 
     return new View({content: '.page-login'});

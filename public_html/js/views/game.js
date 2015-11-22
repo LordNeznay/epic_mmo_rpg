@@ -16,7 +16,6 @@
     var View = BaseView.extend({
         name: 'game',
         template: tmpl,
-        className: "game-view",
         
         surroundings: new Surroundings(),
         

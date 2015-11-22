@@ -1,7 +1,7 @@
 <fest:template xmlns:fest="http://fest.mail.ru">
     <fest:if test="json.back">
         <div id="back-button">
-            <a href="" class="back-button__button">Back</a>
+            <a href="#" class="back-button__button">Back</a>
         </div>
     </fest:if>
 </fest:template>

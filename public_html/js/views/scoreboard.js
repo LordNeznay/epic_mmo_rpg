@@ -15,7 +15,6 @@ define([
     var View = BaseView.extend({
         name: 'scoreboard',
         template: tmpl,
-        className: "scoreboard-view",
         
         child_init: function () {
             $.ajax({url: "utils/best_players.html",
