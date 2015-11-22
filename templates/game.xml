@@ -1,5 +1,5 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
-    <fest:script>var json = {title: 'Game' };</fest:script>
+    <fest:script>var json = {title: 'Game', 'back': true  };</fest:script>
     
     <div class="page-game default-hidden">
         <fest:include src="./base.xml" context="json"/>

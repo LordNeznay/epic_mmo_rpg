@@ -16,7 +16,7 @@ define([
     viewManager
 ){
 	var views = [mainView, gameView, scoreboardView, registrationView, loginView];
-    
+        
     var ViewManager = new viewManager(views);
 
     var Router = Backbone.Router.extend({

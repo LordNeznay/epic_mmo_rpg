@@ -12,10 +12,10 @@
     var View = BaseView.extend({
         name: 'registration',
         template: tmpl,
-        className: "login-registration",
+
 
         events: {
-            "submit .signup-form__form": "submitSignup",
+            "submit .form-registration": "submitSignup",
             "click a": "hide"
         },
         child_show: function () {
@@ -34,14 +34,14 @@
             clearErrors();
             if(validateForm()){
                 var pView = this;
-                var values = $('.signup-form__form').serialize();
+                var values = $('.form-registration').serialize();
                 this.player.registration(values, {
                     success: function(data) {
                         if(data.errors == 'null'){
                             pView.player.login(values);
                             Backbone.history.navigate('login', true);
                         } else {
-                            $(".signup-form__errors").html(data.errors);
+                            $(".form-registration .form__errors").html(data.errors);
                         }
                     }
                 });
@@ -51,20 +51,20 @@
     });
 
     function validateForm(){
-        var userName = $("input[name=name]").val();
+        var userName = $(".form-registration input[name=name]").val();
         if (userName=='') {
-            $('.signup-form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
+            $('.form-registration .form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
             return false;
         }
-        var userPassword = $("input[name=password]").val();
+        var userPassword = $(".form-registration input[name=password]").val();
         if (userPassword=='') {
-            $('.signup-form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
+            $('.form-registration .form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
             return false;
         }
         return true;
     }
     function clearErrors(){
-        $('.signup-form__errors').text("");
+        $('.form-registration .form__errors').text("");
     }
 
     return new View({content: '.page-registration'});

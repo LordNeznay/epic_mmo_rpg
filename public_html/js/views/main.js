@@ -10,7 +10,6 @@ define([
 
     var View = BaseView.extend({
         template: tmpl,
-        className: "main-view",
 		
         events: {
             "click a": "hide"
