@@ -127,12 +127,8 @@
         
         redrawMap: function(){
             //Если картинки не догружены, то выйти
-            //alert(this.loadTilesets);
-            console.log("x=" + this.pos_x + "  ;y=" + this.pos_y);
             if(this.amountTilesets != this.loadTilesets) return;
             var that = this;
-            
-
             
             that.map.layers.forEach(function(layer){
                 if(!(layer.name == "Background" || layer.name == "Frontground")){
