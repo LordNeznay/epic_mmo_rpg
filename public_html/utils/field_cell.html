@@ -1,5 +1,0 @@
-<style> img { margin: 0px 0px 0px 0px;} </style>
-<% _.each(cells, function(cell, index, cells){%>
-<img class="game-map__tile cell-pos-x-<%- cell.get('view_x') %> cell-pos-y-<%- cell.get('view_y') %> cell-gid-<%- cell.get('gid') %> index_z_<%- cell.get('index_z') %>" src="/res/<%- cell.get('gid') %>.png">
-<% }); %>
-

@@ -15,29 +15,17 @@ define([
     var View = BaseView.extend({
         name: 'scoreboard',
         template: tmpl,
-        
-        child_init: function () {
-            $.ajax({url: "utils/best_players.html",
-                context: this,
-                success: function(response) {
-                    this.playerTemplate = response;
-                    this.showHighscore();
-                }
-            });
-        },
 		
         events: {
             "click a": "hide"
         },
-        child_render: function () {
-            if (this.playerTemplate) {
-                this.showHighscore(); 
-            }
-        },
-        showHighscore: function(){
+        render: function () {
+            this.collection.add({
+                name: 'Новый игрок',
+                score : Math.floor(Math.random() * (5000))
+            });
             var players  = this.collection.toJSON();
-            var playersHtml = Underscore.template( this.playerTemplate, {players: players});
-            $('.highscores__list').html(playersHtml);
+            this.$el.append(this.template(players));
         }
 
     });

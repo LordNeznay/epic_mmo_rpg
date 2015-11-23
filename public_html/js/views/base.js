@@ -22,6 +22,7 @@ define([
         },
         
         render: function() {
+            $(this.options).remove();
             this.$el.append(this.template());
             if(this.child_render != undefined){
                 this.child_render();
