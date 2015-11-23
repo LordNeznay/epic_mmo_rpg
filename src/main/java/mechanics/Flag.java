@@ -3,6 +3,7 @@ package mechanics;
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import org.json.simple.JSONObject;
+import resource.Configuration;
 
 /**
  * Created by Андрей on 01.11.2015.
@@ -11,9 +12,9 @@ public class Flag {
     private static final double ONE_SECOND = 1000.0;
     private String owner = "none";
     private Entity invader = null;
-    private static final int STEP_TIME = 100;
-    private static final int DELAY_ONE_POINT = 1000;
-    private static final int CAPTURE_TIME = 5000;
+    private static final int STEP_TIME = Configuration.getInstance().getStepTime();
+    private static final int DELAY_ONE_POINT = Configuration.getInstance().getDelayOnePoint();
+    private static final int CAPTURE_TIME = Configuration.getInstance().getCaptureTime();
     private int delayCapture = 0;
     private int delayOnePoint = DELAY_ONE_POINT;
     private Vec2d position = new Vec2d(-10, -10);

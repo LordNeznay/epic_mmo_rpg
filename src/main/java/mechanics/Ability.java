@@ -1,12 +1,13 @@
 package mechanics;
 
 import org.jetbrains.annotations.Nullable;
+import resource.Configuration;
 
 /**
  * Created by Андрей on 01.11.2015.
  */
 public abstract class Ability {
-    protected static final int STEP_TIME = 100;
+    protected static final int STEP_TIME = Configuration.getInstance().getStepTime();
     protected int cooldown = 0;
     protected boolean can_attack_temmate = false;
     protected boolean can_healing_opponent = false;

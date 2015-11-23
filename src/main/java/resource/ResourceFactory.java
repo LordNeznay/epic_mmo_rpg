@@ -2,29 +2,29 @@ package resource;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.vfs2.VFS;
+
 import mechanics.PhysMapJson;
 
 /**
  * Created by uschsh on 22.11.15.
  */
 public final class ResourceFactory {
-    private static ResourceFactory instance;
-    private static Map<String, Resource> resourceMap = new HashMap();
+    private static ResourceFactory s_instance;
+    private static Map<String, Resource> s_resourceMap = new HashMap<>();
     private ResourceFactory() {}
 
     public static ResourceFactory getInstance() {
-        if (instance == null) {
-            instance = new ResourceFactory();
+        if (s_instance == null) {
+            s_instance = new ResourceFactory();
         }
-        return instance;
+        return s_instance;
     }
 
     public Resource getPhysMap(String filename) {
-        if(resourceMap.get(filename) == null)
+        if(s_resourceMap.get(filename) == null)
         {
-            resourceMap.put(filename, new PhysMapJson(filename));
+            s_resourceMap.put(filename, new PhysMapJson(filename));
         }
-        return resourceMap.get(filename);
+        return s_resourceMap.get(filename);
     }
 }
