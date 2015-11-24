@@ -22,11 +22,13 @@
         events: {
             "click a": "hide",
         },
-        child_init: function(){
+        initialize: function(){
+            View.__super__.initialize.call(this, {content: '.page-game'});
             _.bindAll(this, 'playerMove');
             $(document).bind('keypress', this.playerMove);
         },
-        child_render: function(){
+        render: function(){
+            View.__super__.render.call(this);
             var that = this;
             that.surroundings.canvas =  document.getElementById("game-map__canvas");
             that.surroundings.gameField = that.surroundings.canvas.getContext('2d');
@@ -132,7 +134,8 @@
             that.surroundings.canvas.height = 576;
         },
         
-        child_show: function(){
+        show: function(){
+            View.__super__.show.call(this);
             this.player.status({
                 success: function(data){
                     if(data.isLogin != 'true'){
@@ -142,8 +145,9 @@
             });
             this.player.startGame();
         },
-        child_hide: function(){
+        hide: function(){
             this.player.leaveGame();
+            View.__super__.hide.call(this);
         },
         
         playerMove: function(ev){

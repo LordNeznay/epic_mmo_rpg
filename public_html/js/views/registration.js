@@ -18,7 +18,8 @@
             "submit .form-registration": "submitSignup",
             "click a": "hide"
         },
-        child_show: function () {
+        show: function () {
+            View.__super__.show.call(this);
             $.ajax({
                 type: "GET",
                 url: "/api/v1/auth/signin",

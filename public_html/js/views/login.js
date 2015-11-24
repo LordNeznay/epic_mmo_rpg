@@ -18,7 +18,8 @@
             "submit .form-unlogin": "submitUnlogin",
             "click a": "hide"
         },
-        child_show: function () {
+        show: function () {
+            View.__super__.show.call(this);
             this.player.status();
             if(this.player.isLogin){
                 $(".login-form").hide();
@@ -35,7 +36,7 @@
                 this.player.login($('.form-login').serialize(), {
                     success: function(data){
                         if(data.errors == 'null'){
-                            Backbone.history.navigate('main', true);
+                            Backbone.history.navigate('', true);
                         } else {
                             $(".form-login .form__errors").html(data.errors);
                         }

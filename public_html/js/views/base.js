@@ -16,32 +16,20 @@ define([
                 this.content = options.content;
             }
             this.render();
-            if(this.child_init != undefined){
-                this.child_init();
-            }
         },
         
         render: function() {
             $(this.options).remove();
             this.$el.append(this.template());
-            if(this.child_render != undefined){
-                this.child_render();
-            }
         },
 
         show: function() {
             this.player.status();
             this.trigger('show', this);
-            if(this.child_show != undefined){
-                this.child_show();
-            }
             $(this.content).show();           
         },
 
         hide: function() {
-            if(this.child_hide != undefined){
-                this.child_hide();
-            }
             $(this.content).hide();
         },
         

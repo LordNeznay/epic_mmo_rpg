@@ -20,10 +20,7 @@ define([
             "click a": "hide"
         },
         render: function () {
-            this.collection.add({
-                name: 'Новый игрок',
-                score : Math.floor(Math.random() * (5000))
-            });
+            View.__super__.render.call(this);
             var players  = this.collection.toJSON();
             this.$el.append(this.template(players));
         }
