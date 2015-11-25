@@ -1,0 +1,25 @@
+{
+  "players": [
+  {
+    "player":"Dmitriy",
+    "score":4783
+  },
+  {
+    "player":"Elena",
+    "score":3434
+  },
+  {
+    "player":"Alexander",
+    "score":2323
+  },
+  {
+    "player":"Yaroslav",
+    "score":4545
+  },
+  {
+    "player":"Svyatoslav",
+    "score":5656
+  }
+  ]
+
+}
