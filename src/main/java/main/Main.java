@@ -1,10 +1,6 @@
 package main;
 
-import frontend.ExitServlet;
-import frontend.SignInServlet;
-import frontend.SignUpServlet;
-import frontend.AdminServlet;
-import frontend.WebSocketGameServlet;
+import frontend.*;
 import mechanics.GameMechanics;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -46,12 +42,14 @@ public class Main {
         Servlet exitServlet = new ExitServlet(accountService);
         Servlet adminServlet = new AdminServlet(accountService);
         Servlet gameServlet = new WebSocketGameServlet(accountService, gameMechanics);
+        Servlet topPlayersServlet = new TopPlayersServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(exitServlet), "/api/v1/auth/exit");
         context.addServlet(new ServletHolder(adminServlet), "/api/admin");
+        context.addServlet(new ServletHolder(topPlayersServlet), "/api/topplayers");
 
         context.addServlet(new ServletHolder(gameServlet), "/gameplay");
 
