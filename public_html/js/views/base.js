@@ -8,7 +8,7 @@ define([
 
     var Base = Backbone.View.extend({
         el: '.page',
-        player: new Player(),
+        player: Player,
         
         initialize: function(options){
             this.player.status();

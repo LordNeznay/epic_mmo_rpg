@@ -1,7 +1,9 @@
 define([
-    'backbone'
+    'backbone',
+    'sync/playerSync'
 ], function(
-    Backbone
+    Backbone,
+    playerSync
 ){
 
     var Model = Backbone.Model.extend({
@@ -76,7 +78,7 @@ define([
             this.ws.onclose = function (event) {
                 console.log("Socket was closed\n");
                 that.isOpenedSocket = false;
-                Backbone.history.navigate('main', true);
+                Backbone.history.navigate('', true);
             }
         },
         sendMessage: function(message){
@@ -127,72 +129,7 @@ define([
             var message = '{"command": "action", "action" : "useAbility", "abilityName" : "' + name + '"}';
             this.sendMessage(message);
         },
-        
-        
-        
-        status: function(callback){
-            var that = this;
-            $.ajax({
-                type: "GET",
-                url: "/api/v1/auth/signin",
-                dataType: 'json',
-                success: function(data){	
-                    if(data.isLogin == 'true'){
-                        that.isLogin = true;
-                    } else {
-                        that.isLogin = false;
-                    }
-                    if(callback != undefined && callback.success != undefined){
-                        return callback.success(data);
-                    }
-                }
-            });        
-        },
-        login: function(param, callback){
-            var that = this;
-            $.ajax({
-                type: "POST",
-                data: param,
-                url: "/api/v1/auth/signin",
-                dataType: 'json',
-                success: function(data){
-                    if(data.errors == 'null'){
-                        that.isLogin = true;
-                    }
-                    if(callback != undefined && callback.success != undefined){
-                        return callback.success(data);
-                    }
-                }
-            });
-        },
-        unlogin: function(callback){
-            var that = this;
-            $.ajax({
-                type: "POST",
-                url: "/api/v1/auth/exit",
-                success: function(data){
-                    that.isLogin = false;
-                    if(callback != undefined && callback.success != undefined){
-                        return callback.success(data);
-                    }
-                }
-            });    
-        },
-        registration: function(param, callback){
-            var that = this;
-            $.ajax({
-                type: "POST",
-                data: param,
-                url: "/api/v1/auth/signup",
-                dataType: 'json',
-                success: function(data) {
-                    if(callback != undefined && callback.success != undefined){
-                        return callback.success(data);
-                    }
-                }
-            });
-        },
-        
+                
         startCapture: function(){
             var message = '{"command": "action", "action" : "flagCapture"}';
             this.sendMessage(message);
@@ -202,8 +139,33 @@ define([
         getCoord: function(){
             var message = '{"command": "getcoord"}';
             ws.send(message);
+        },
+        
+        
+        
+        
+        
+        sync: playerSync,
+        
+        
+        status: function(callback){
+            this.sync('read', this, {callback: callback});
+        },
+        login: function(param, callback){
+            this.sync('update', this, {callback: callback, param: param});
+
+        },
+        unlogin: function(callback){
+            this.sync('delete', this, {callback: callback});  
+        },
+        registration: function(param, callback){
+            this.sync('singin', this, {callback: callback, param: param});
         }
+
     });
 
-    return Model;
+    var user = new Model();
+    user.fetch();
+
+    return user;
 });
