@@ -1,25 +1,22 @@
-{
-  "players": [
+[
   {
-    "player":"Dmitriy",
+    "name":"Dmitriy",
     "score":4783
   },
   {
-    "player":"Elena",
-    "score":3434
+    "name":"Elena",
+    "score":34341
   },
   {
-    "player":"Alexander",
+    "name":"Alexander",
     "score":2323
   },
   {
-    "player":"Yaroslav",
+    "name":"Yaroslav",
     "score":4545
   },
   {
-    "player":"Svyatoslav",
+    "name":"Svyatoslav",
     "score":5656
   }
-  ]
-
-}
+]

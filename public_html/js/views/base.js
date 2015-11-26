@@ -19,7 +19,6 @@ define([
         },
         
         render: function() {
-            $(this.options).remove();
             this.$el.append(this.template());
         },
 

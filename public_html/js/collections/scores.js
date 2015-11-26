@@ -1,12 +1,14 @@
 define([
     'backbone',
-    'models/score'
+    'models/score',
+    'sync/highscoresSync'
 ], function(
     Backbone,
-    PlayerModel
+    PlayerModel,
+    highscoresSync
 ){
 
-    var players = [
+    /*var players = [
         new PlayerModel({name:'Dmitriy', score: 4783}),
         new PlayerModel({name:'Elena', score: 6438}),
         new PlayerModel({name:'Alexander', score: 2085}),
@@ -17,7 +19,7 @@ define([
         new PlayerModel({name:'Catherine', score: 9952}),
         new PlayerModel({name:'Evdokia', score: 1059}),
         new PlayerModel({name:'Gleb', score: 3026})
-    ];
+    ];*/
 
     var Collection = Backbone.Collection.extend({
         model: PlayerModel,
@@ -27,8 +29,21 @@ define([
                 return playerA.get('name') < playerB.get('name') ? -1 : 1;
             }
             return scoreDiff;
-        }
+        },
+        
+        parse: function(data){
+            var that = this;
+            //data.forEach(function(one_player){
+            //    that.add(one_player);
+            //});
+            that.reset(data);
+            that.trigger('loadScoreboard', that.toJSON());
+        },
+        sync: highscoresSync
     });
 
-    return new Collection(players);
+    var collection = new Collection();
+    collection.fetch();
+    
+    return collection;
 });
