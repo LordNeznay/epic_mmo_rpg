@@ -49,6 +49,10 @@ module.exports = function (grunt) {
             sass: {
                 files: ['public_html/css/scss/*.scss'],
                 tasks: ['sass:dev'],
+            },
+            css: {
+                files: ['public_html/css/gen-css/*.css'],
+                tasks: ['concat:css'],
             }
         },
         concurrent: {
@@ -66,17 +70,21 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: 'public_html/css/scss',
-                    src: 'main.scss',
-                    dest: 'public_html/css',
+                    src: '*.scss',
+                    dest: 'public_html/css/gen-css',
                     ext: '.css'
                 }]
             }
         },
         
         concat: {
-            dist: {
+            map: {
                 src: ['src/main/resources/data/tilemap.json'],
                 dest: 'public_html/res/tilemap.json',
+            },
+            css: {
+                src: ['public_html/css/gen-css/*.css'],
+                dest: 'public_html/css/main.css',
             }
         }
     });
@@ -88,6 +96,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
 
-    grunt.registerTask('default', ['concat', 'sass:dev', 'concurrent']);
+    grunt.registerTask('default', ['sass:dev', 'concat',  'concurrent']);
 
 };
