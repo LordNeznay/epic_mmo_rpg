@@ -1,22 +1,11 @@
-<fest:template xmlns:fest="http://fest.mail.ru" context_name="players">
+<fest:template xmlns:fest="http://fest.mail.ru">
     <fest:script>var json = {title: 'Scoreboard', 'back': true };</fest:script>
     
     <div class="page-scoreboard default-hidden">
         <fest:include src="./base.xml" context="json"/>
     
-        <div align="center">
-            <ul class="highscores">
-                <fest:each iterate="players" index="i" value="player">
-                    <li class="highscores__player highscores-player">
-                        <div class="highscores-player__name">
-                            <fest:value>player.name</fest:value>
-                        </div>
-                        <div class="highscores-player__score">
-                            <fest:value>player.score</fest:value>
-                        </div>
-                    </li>
-                </fest:each>            
-            </ul>
+        <div align="center" id="list_highscores">
+
         </div>
         <fest:include src="./backbutton.xml"/>
     </div>

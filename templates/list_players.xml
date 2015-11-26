@@ -1,0 +1,14 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="players">
+    <ul class="highscores">
+        <fest:each iterate="players" index="i" value="player">
+            <li class="highscores__player highscores-player">
+                <div class="highscores-player__name">
+                    <fest:value>player.name</fest:value>
+                </div>
+                <div class="highscores-player__score">
+                    <fest:value>player.score</fest:value>
+                </div>
+            </li>
+        </fest:each>            
+    </ul>
+</fest:template>

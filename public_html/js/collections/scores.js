@@ -43,7 +43,7 @@ define([
     });
 
     var collection = new Collection();
-    collection.fetch();
+    //collection.fetch();
     
     return collection;
 });

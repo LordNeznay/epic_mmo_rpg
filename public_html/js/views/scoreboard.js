@@ -3,12 +3,14 @@ define([
     'underscore',
     'views/base',
     'tmpl/scoreboard',
+    'tmpl/list_players',
     'collections/scores'
 ], function(
     Backbone,
     Underscore,
     BaseView,
     tmpl,
+    tmpl_highscores,
     playerCollection
 ){
 
@@ -26,21 +28,18 @@ define([
         },
         
         render: function () {
-            //View.__super__.render.call(this);
+            View.__super__.render.call(this);
             var that = this;
 
             that.collection.on('loadScoreboard', function(players){
-                that.$el.append(that.template(players));
-                if(window.location.hash == '#scoreboard'){
-                    that.show();
-                }
+                that.$el.find('#list_highscores').html(tmpl_highscores(players));
             });
 
         },
-        //show: function(){
-            //View.__super__.show.call(this);
-            //this.collection.fetch();
-        //}
+        show: function(){
+            this.collection.fetch();
+            View.__super__.show.call(this);
+        }
 
     });
 
