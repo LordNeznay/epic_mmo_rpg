@@ -5,3 +5,8 @@ public_html/js/tmpl/
 #Игнорирование папки с байт-кодом
 target
 .idea/
+#Логи проверки покрытия тестов java
+coverage-error.log
+#Sass
+.sass-cache/
+public_html/css/*.map
