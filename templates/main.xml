@@ -3,11 +3,13 @@
 
     <div class="page-main"> 
         <fest:include src="./base.xml" context="json"/>
-        <div class="main-menu">
-            <a href="#game" class="main-menu__item"> Game </a>
-            <a href="#scoreboard" class="main-menu__item"> Scoreboard </a>
-            <a href="#login" class="main-menu__item"> Login </a>
-            <a href="#registration" class="main-menu__item"> Registration </a>
+        <div align="center">
+            <div class="main-menu">
+                <a href="#game" class="button main-menu__item"> Game </a>
+                <a href="#scoreboard" class="button main-menu__item"> Scoreboard </a>
+                <a href="#login" class="button main-menu__item"> Login </a>
+                <a href="#registration" class="button main-menu__item"> Registration </a>
+            </div>
         </div>
     </div>
 </fest:template>

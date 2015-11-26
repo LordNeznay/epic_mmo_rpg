@@ -3,18 +3,20 @@
     
     <div class="page-login default-hidden">
         <fest:include src="./base.xml" context="json"/>
-        <div class="login-form">
-            <form class="form form-login"  method="post" action="">
-                <p class="form__errors"> </p>
-                <p> <label><input type="text" name="name" class="form__input"/></label></p>
-                <p> <label><input type="password" name="password" class="form__input"/></label></p>
-                <p> <button class="form__submit">Login</button></p>
-            </form>
-        </div>
-        <div class="unlogin-form"  method="post" action="">
-            <form class="form form-unlogin">
-                <p><button class="form__submit">Exit</button></p>
-            </form>
+        <div align="center">
+            <div class="login-form">
+                <form class="form form-login"  method="post" action="">
+                    <p class="form__errors"> </p>
+                    <p> <label><input type="text" name="name" class="form__input"/></label></p>
+                    <p> <label><input type="password" name="password" class="form__input"/></label></p>
+                    <div class="button-wrapper"> <button class="button form__submit">Login</button></div>
+                </form>
+            </div>
+            <div class="unlogin-form"  method="post" action="">
+                <form class="form form-unlogin">
+                    <div class="button-wrapper"><button class="button form__submit">Exit</button></div>
+                </form>
+            </div>
         </div>
         <fest:include src="./backbutton.xml"/>
     </div>

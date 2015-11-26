@@ -4,13 +4,15 @@
     <div class="page-registration default-hidden">
         <fest:include src="./base.xml" context="json"/>
         
-        <div class="signup-from">
-            <form class="form form-registration"  method="post" action="">
-                <p class="form__errors"> </p>
-                <p> <label><input type="text" name="name"/></label></p>
-                <p> <label><input type="password" name="password"/></label></p>
-                <p><button class="form__submit">SignUp</button></p>
-            </form>
+        <div align="center">
+            <div class="signup-from">
+                <form class="form form-registration"  method="post" action="">
+                    <p class="form__errors"> </p>
+                    <p> <label><input type="text" name="name"/></label></p>
+                    <p> <label><input type="password" name="password"/></label></p>
+                    <div class="button-wrapper"><button class="button form__submit">SignUp</button></div>
+                </form>
+            </div>
         </div>
         <fest:include src="./backbutton.xml"/>
     </div>

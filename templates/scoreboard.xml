@@ -4,10 +4,16 @@
     <div class="page-scoreboard default-hidden">
         <fest:include src="./base.xml" context="json"/>
     
-        <div class="highscores">
-            <ul class="highscores__list">
+        <div align="center">
+            <ul class="highscores">
                 <fest:each iterate="players" index="i" value="player">
-                    <li class="highscores__list__player"><fest:value>player.name</fest:value><fest:space/><fest:value>player.score</fest:value>
+                    <li class="highscores__player highscores-player">
+                        <div class="highscores-player__name">
+                            <fest:value>player.name</fest:value>
+                        </div>
+                        <div class="highscores-player__score">
+                            <fest:value>player.score</fest:value>
+                        </div>
                     </li>
                 </fest:each>            
             </ul>

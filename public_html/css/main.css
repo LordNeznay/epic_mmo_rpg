@@ -1,38 +1,66 @@
-.page {
-  width: 100%;
-  border: 1px dashed #000;
-  text-align: center;
-}
-
-.main-menu__item,
-.back-button__button {
-  display: block;
-  border: 1px #000 solid;
-  background-color: #D5D5D5;
-  padding: 10px 15px 10px 15px;
-}
-
-.main-menu__item:hover,
-.back-button__button:hover {
-  background-color: #E5E5E5;
-}
-
-.highscores__list {
-  margin: 0px 0px 0px 0px;
-  padding: 0px 0px 0px 0px;
-}
-
-.highscores__list__player {
+.button {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #6E4B1F;
+  border: 1px solid #000;
   display: block;
   text-decoration: none;
-  background-color: #A5DDA5;
-  border: 1px #000 solid;
-  padding: 10px 15px 10px 15px;
-  margin: 0px 0px 0px 0px;
+  color: #F0D394;
+}
+.button:hover {
+  background-color: #98651E;
 }
 
-.highscores__list__player:hover {
-  border: 1px #000 dashed;
+button.button {
+  width: 250px;
+}
+
+.button-wrapper {
+  width: 250px;
+}
+
+.back-button {
+  padding-top: 15px;
+}
+
+/*# sourceMappingURL=button.css.map */
+
+
+
+/*# sourceMappingURL=config.css.map */
+
+
+
+/*# sourceMappingURL=highscore.css.map */
+
+.main-menu {
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.main-menu__item {
+  display: block;
+  margin-bottom: -1px;
+  padding: 8px 14px;
+  color: #F0D394;
+  text-decoration: none;
+  border: 1px solid #000;
+}
+
+/*# sourceMappingURL=main-menu.css.map */
+
+body {
+  background-color: #533710;
+  color: #F0D394;
+  font-family: Comic Sans, Comic Sans MS, cursive;
+}
+
+.page {
+  width: 100%;
+  text-align: center;
 }
 
 .default-hidden {
@@ -58,3 +86,61 @@
 }
 
 /*# sourceMappingURL=main.css.map */
+
+.page-title {
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #000;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.page-title__name {
+  font-size: x-large;
+}
+.page-title__page {
+  font-size: large;
+}
+
+/*# sourceMappingURL=page-title.css.map */
+
+.highscores {
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.highscores__player {
+  display: block;
+  margin-bottom: -1px;
+  padding: 8px 14px;
+  color: #F0D394;
+  background-color: #6E4B1F;
+  text-decoration: none;
+  border: 1px solid #000;
+}
+.highscores__player:hover {
+  background-color: #98651E;
+}
+.highscores:hover {
+  background-color: #98651E;
+}
+
+.highscores-player {
+  margin-bottom: -1px;
+  padding: 0;
+}
+.highscores-player__name {
+  padding: 8px 14px;
+  width: 156.5px;
+  display: inline-block;
+  text-align: left;
+  border-right: 1px solid #000;
+}
+.highscores-player__score {
+  padding: 8px 14px;
+  width: 34.5px;
+  display: inline-block;
+  text-align: left;
+}
+
+/*# sourceMappingURL=scoreboard.css.map */

@@ -1,7 +1,9 @@
 <fest:template xmlns:fest="http://fest.mail.ru">
     <fest:if test="json.back">
-        <div id="back-button">
-            <a href="#" class="back-button__button">Back</a>
+        <div align="center">
+            <div class="button-wrapper back-button">
+                <a href="#" class="button back-button__button">Back</a>
+            </div>
         </div>
     </fest:if>
 </fest:template>

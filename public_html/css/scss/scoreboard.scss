@@ -1,0 +1,51 @@
+@import 'config';
+
+$width-highscores-element: $width-button;
+$p-m-1: 8px;
+$p-m-2: 14px;
+$border: 1px;
+
+.highscores{
+    width: $width-highscores-element;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    
+    &__player{
+        display: block;
+        margin-bottom: -1px;
+        padding: $p-m-1 $p-m-2;
+        color: $color-light;
+        background-color: $color-dark-light;
+        text-decoration: none;
+        border: $border solid $border-color;
+        
+        &:hover{
+            background-color: $color-light-dark;
+        }
+    }
+    
+    &:hover{
+        background-color: $color-light-dark;
+    }
+}
+
+.highscores-player{   
+    margin-bottom: -1px;  
+    padding: 0;
+    
+    &__name{
+        padding: $p-m-1 $p-m-2;   
+        width: $width-highscores-element * 0.75 - $p-m-2 * 2 - 3*$border;
+        display: inline-block;
+        text-align: left;
+        border-right: $border solid $border-color;
+    }
+    
+    &__score{
+        padding: $p-m-1 $p-m-2;   
+        width: $width-highscores-element * 0.25 - $p-m-2 * 2;
+        display: inline-block;
+        text-align: left;
+    }
+}
