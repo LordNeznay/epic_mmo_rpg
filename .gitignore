@@ -10,3 +10,5 @@ coverage-error.log
 #Sass
 .sass-cache/
 public_html/css/*.map
+#’з что это, но там его быть не должно
+public_html/*.tml

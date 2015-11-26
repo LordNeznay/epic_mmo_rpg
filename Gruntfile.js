@@ -71,6 +71,13 @@ module.exports = function (grunt) {
                     ext: '.css'
                 }]
             }
+        },
+        
+        concat: {
+            dist: {
+                src: ['src/main/resources/data/tilemap.json'],
+                dest: 'public_html/res/tilemap.json',
+            }
         }
     });
 
@@ -79,7 +86,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-fest');
     grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
-    grunt.registerTask('default', ['sass:dev', 'concurrent']);
+    grunt.registerTask('default', ['concat', 'sass:dev', 'concurrent']);
 
 };
