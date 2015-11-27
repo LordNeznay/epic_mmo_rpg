@@ -1,9 +1,13 @@
 package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
+import main.UserProfile;
+import mechanics.ability.NoneEffectAbility;
+import mechanics.abilityAction.NoneEffectAction;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -12,31 +16,6 @@ import static org.mockito.Mockito.*;
  * Created by Андрей on 18.11.2015.
  */
 
-
-/*
-    Пример Виталика по доступу к приватным полям
-    static class A {
-        private String a;
-        @Override
-        public String toString() {
-            return a;
-        }
-    }
-
-    public static void main(String[] args) {
-        A a = new A();
-        try {
-            Field aF = A.class.getDeclaredField("a");
-            aF.setAccessible(true);
-            aF.set(a, "check");
-            System.out.println(a);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
- */
 public class EntityTest {
 
     @Test
@@ -92,4 +71,89 @@ public class EntityTest {
         entity.makeDamage(hitPoints + 10);
         assertEquals(entity.getHitPoints(), hitPoints);
     }
+
+    
+    @Test
+    public void testStepping() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException {
+        UserProfile userProfile = mock(UserProfile.class);
+
+        GameMap map = new GameMap();
+        Entity entity = new Entity(map);
+
+        Field abilityDelay = entity.getClass().getDeclaredField("abilityDelay");
+        abilityDelay.setAccessible(true);
+        abilityDelay.set(entity, 0);
+
+        Field moveDelay = entity.getClass().getDeclaredField("timeUntilMove");
+        moveDelay.setAccessible(true);
+        moveDelay.set(entity, 0);
+
+        Field step = entity.getClass().getDeclaredField("STEP_TIME");
+        step.setAccessible(true);
+        Integer STEP_TIME = step.getInt(entity);
+
+        entity = spy(entity);
+
+        entity.stepping(userProfile);
+        assertTrue(moveDelay.getInt(entity) <= 0 && abilityDelay.getInt(entity) <= 0);
+        verify(entity, times(1)).steppingAllAbility();
+
+        moveDelay.set(entity, STEP_TIME*3/2);
+        abilityDelay.set(entity, STEP_TIME*3/2);
+        entity.stepping(userProfile);
+        assertTrue(moveDelay.getInt(entity)+STEP_TIME == STEP_TIME*3/2 && abilityDelay.getInt(entity)+STEP_TIME == STEP_TIME*3/2);
+        verify(entity, times(2)).steppingAllAbility();
+
+        entity.stepping(userProfile);
+        assertTrue(moveDelay.getInt(entity) <= 0 && abilityDelay.getInt(entity) <= 0);
+        verify(entity, times(3)).steppingAllAbility();
+    }
+
+    @Test
+    public void testAffect() throws Exception {
+        GameMap map = new GameMap();
+        Entity entity = new Entity(map);
+        AbilityAction abilityAction = new NoneEffectAction();
+        AbilityAction spyAbilityAction = spy(abilityAction);
+
+        entity.affect(spyAbilityAction);
+        verify(spyAbilityAction, times(1)).run(entity);
+    }
+
+
+    @Test
+    public void testUseAbility() throws NoSuchFieldException, SecurityException, IllegalAccessException {
+        GameMap map = new GameMap();
+        Entity entity = new Entity(map);
+        Entity target = new Entity(map);
+        target = spy(target);
+
+        Field allAbilityCooldown = entity.getClass().getDeclaredField("abilityDelay");
+        allAbilityCooldown.setAccessible(true);
+        allAbilityCooldown.set(entity, 0);
+
+        Ability ability = spy(new NoneEffectAbility());
+        AbilityAction someAction = new NoneEffectAction();
+        when(ability.getAction()).thenReturn(someAction);
+
+
+        String abilityName = "VeryVeryUnicalAbilityName__ertymu,io.,bmuvyctbxrtcgyvhubinkiu,mbhyvntcbrfdexvrbtcnvymubi,";
+        entity.addAbility(abilityName, ability);
+
+
+
+        entity.setTarget(target);
+        entity.useAbility(abilityName);
+        verify(target, times(1)).affect(someAction);
+        assertTrue((Integer)allAbilityCooldown.get(entity) > 0);
+
+        allAbilityCooldown.set(entity, 0);
+        entity.useAbility(abilityName);
+        verify(target, times(2)).affect(someAction);
+
+        allAbilityCooldown.set(entity, 1);
+        entity.useAbility(abilityName);
+        verify(target, times(2)).affect(someAction);
+    }
+
 }

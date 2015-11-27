@@ -80,10 +80,14 @@ public class Entity {
         return command;
     }
 
-    public void stepping(UserProfile userProfile){
+    public void steppingAllAbility(){
         for (Map.Entry<String, Ability> entry : abilities.entrySet()) {
             entry.getValue().stepping();
         }
+    }
+
+    public void stepping(UserProfile userProfile){
+        steppingAllAbility();
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
         abilityDelay = abilityDelay > 0 ? abilityDelay-STEP_TIME : 0;
         sendAbilityStatus(userProfile);
@@ -149,8 +153,10 @@ public class Entity {
     }
 
 
-    public void affect(AbilityAction action){
-        action.run(this);
+    public void affect(@Nullable AbilityAction action){
+        if(action != null) {
+            action.run(this);
+        }
     }
 
     public void makeDamage(int damage){
@@ -187,13 +193,11 @@ public class Entity {
             return;
         }
         if(target == null) return;
-        Ability ability;
-        try{
-            ability = abilities.get(abilityName);
-        } catch (RuntimeException e){
+        if(!isAbilityExist(abilityName)){
             return;
         }
-        if(ability == null) return;
+        Ability ability = abilities.get(abilityName);
+
         if(!isMayUseAbility(ability)){
             return;
         }
@@ -205,6 +209,22 @@ public class Entity {
             target.affect(action);
             abilityDelay = ABILITY_DELAY;
         }
+    }
+
+    public void addAbility(String abilityName, Ability ability){
+        if(!isAbilityExist(abilityName)){
+            abilities.put(abilityName, ability);
+        }
+    }
+
+    public boolean isAbilityExist(String abilityName){
+        Ability ability;
+        try{
+            ability = abilities.get(abilityName);
+        } catch (RuntimeException e){
+            return false;
+        }
+        return ability != null;
     }
 
     public int getHitPoints(){
