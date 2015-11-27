@@ -33,9 +33,6 @@ define([
         
         parse: function(data){
             var that = this;
-            //data.forEach(function(one_player){
-            //    that.add(one_player);
-            //});
             that.reset(data);
             that.trigger('loadScoreboard', that.toJSON());
         },
@@ -43,7 +40,6 @@ define([
     });
 
     var collection = new Collection();
-    //collection.fetch();
     
     return collection;
 });
