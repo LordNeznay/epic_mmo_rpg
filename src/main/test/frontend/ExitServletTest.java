@@ -1,5 +1,6 @@
 package frontend;
 
+import dbservice.DBService;
 import main.AccountService;
 import main.UserProfile;
 import org.junit.Before;
@@ -26,8 +27,8 @@ public class ExitServletTest {
 
     private final UserProfile testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
     private final UserProfile testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
-
-    private final AccountService accountService = new AccountService();
+    private DBService dbService = mock(DBService.class);
+    private final AccountService accountService = new AccountService(dbService);
 
     @Before
     public void setUp() throws IOException {

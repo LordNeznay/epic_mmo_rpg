@@ -4,15 +4,15 @@ import mechanics.Ability;
 import mechanics.AbilityAction;
 import mechanics.HealingAbility;
 import mechanics.abilityAction.OrdinaryHealingAction;
-import resource.Configuration;
+import resource.ServerConfiguration;
 
 /**
  * Created by Андрей on 02.11.2015.
  */
 public class OrdinaryHealing extends Ability implements HealingAbility {
     public OrdinaryHealing(){
-        cooldown = Configuration.getInstance().getAbilityCooldown("OrdinaryHealing");
-        range = Configuration.getInstance().getAbilityRange("OrdinaryHealing");
+        cooldown = ServerConfiguration.getInstance().getAbilityCooldown("OrdinaryHealing");
+        range = ServerConfiguration.getInstance().getAbilityRange("OrdinaryHealing");
     }
 
     @Override

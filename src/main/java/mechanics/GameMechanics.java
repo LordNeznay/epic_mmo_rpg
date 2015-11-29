@@ -6,7 +6,7 @@ import java.util.Map;
 
 import main.UserProfile;
 import org.json.simple.JSONObject;
-import resource.Configuration;
+import resource.ServerConfiguration;
 import utils.Repairer;
 import utils.TimeHelper;
 
@@ -14,8 +14,8 @@ import utils.TimeHelper;
  * Created by uschsh on 26.10.15.
  */
 public class GameMechanics {
-    private static final int STEP_TIME = Configuration.getInstance().getStepTime();
-    private static final int MIN_PLAYERS_FOR_START = Configuration.getInstance().getPlayerToStart();
+    private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
+    private static final int MIN_PLAYERS_FOR_START = ServerConfiguration.getInstance().getPlayerToStart();
     private Map<UserProfile, GameMap> usersMaps = new HashMap<>();
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
     private ArrayList<GameMap> gameMaps = new ArrayList<>();

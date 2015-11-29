@@ -1,5 +1,7 @@
 package main;
 
+import dbservice.DBService;
+import dbservice.UserDataSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,21 +12,26 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class AccountService {
-    @NotNull private Map<String, UserProfile> users = new HashMap<>();
-    @NotNull private Map<String, UserProfile> sessions = new HashMap<>();
+   // @NotNull private Map<String, UserProfile> users = new HashMap<>();
+   // @NotNull private Map<String, UserProfile> sessions = new HashMap<>();
+    private DBService dbservice;
+
+    public AccountService(DBService dbservice) {
+        this.dbservice = dbservice;
+    }
 
     public boolean addUser(String userName, UserProfile userProfile) {
-        if (users.containsKey(userName))
+        if (dbservice.isAvailable(userName))
             return false;
-        users.put(userName, userProfile);
+        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0, ""));
         return true;
     }
 
     public boolean addSession(String sessionId, UserProfile userProfile) {
-        UserProfile user = users.get(userProfile.getLogin());
+        UserDataSet user = dbservice.getByName(userProfile.getLogin());
 
         if(user != null) {
-            sessions.put(sessionId, userProfile);
+            dbservice.setSession(userProfile.getLogin(), sessionId);
             return true;
         } else
             return false;
@@ -33,17 +40,22 @@ public class AccountService {
 
     @Nullable
     public UserProfile getUserByName(String userName) {
-        return users.get(userName);
+        UserDataSet dataSet = dbservice.getByName(userName);
+        return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
     }
 
     @Nullable
     public UserProfile getUserBySession(String sessionId) {
-        return sessions.get(sessionId);
+        UserDataSet dataSet = dbservice.getBySession(sessionId);
+        if (dataSet != null)
+            return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
+        else
+            return null;
     }
 
-    public void removeUser(String sessionId) { sessions.remove(sessionId); }
+    public void removeUser(String sessionId) { /*sessions.remove(sessionId);*/ }
 
-    public int getAuthUsersNumber() { return sessions.size(); }
+    public long getAuthUsersNumber() { return dbservice.getRegCount(); }
 
-    public int getRegUsersNumber() { return users.size(); }
+    public long getRegUsersNumber() { return dbservice.getRegCount(); }
 }

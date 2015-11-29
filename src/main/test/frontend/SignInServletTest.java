@@ -1,5 +1,6 @@
 package frontend;
 
+import dbservice.DBService;
 import main.AccountService;
 import main.UserProfile;
 import org.junit.Before;
@@ -24,7 +25,8 @@ public class SignInServletTest {
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpSession session = mock(HttpSession.class);
-    private final AccountService accountService = new AccountService();
+    private DBService dbService = mock(DBService.class);
+    private final AccountService accountService = new AccountService(dbService);
     private StringWriter stringWriter;
 
     @Before

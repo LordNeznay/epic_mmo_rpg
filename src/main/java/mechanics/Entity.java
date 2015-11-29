@@ -7,7 +7,7 @@ import mechanics.ability.OrdinaryHit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
-import resource.Configuration;
+import resource.ServerConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +16,10 @@ import java.util.Map;
  * Created by Андрей on 27.10.2015.
  */
 public class Entity {
-    private static final int MAX_HIT_POINTS = Configuration.getInstance().getMaxHitPoints();
-    private static final int STEP_TIME = Configuration.getInstance().getStepTime();
-    private static final int MOVE_DELAY = Configuration.getInstance().getMoveDelay();
-    private static final int ABILITY_DELAY = Configuration.getInstance().getAbilityDelay();
+    private static final int MAX_HIT_POINTS = ServerConfiguration.getInstance().getMaxHitPoints();
+    private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
+    private static final int MOVE_DELAY = ServerConfiguration.getInstance().getMoveDelay();
+    private static final int ABILITY_DELAY = ServerConfiguration.getInstance().getAbilityDelay();
     private static Vec2d s_commandsRedSpawnPoint = new Vec2d(0, 0);
     private static Vec2d s_commandsBlueSpawnPoint = new Vec2d(0, 0);
     private int hitPoints = MAX_HIT_POINTS;

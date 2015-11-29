@@ -10,17 +10,17 @@ import java.io.IOException;
 /**
  * Created by uschsh on 22.11.15.
  */
-public final class Configuration {
+public final class ServerConfiguration {
     private static final String CONF_DIR = "src/main/resources/cfg/";
     @NotNull private Map<String, String> serverProperties = new HashMap<>();
 
-    private static Configuration s_instance = new Configuration("config.properties");
+    private static ServerConfiguration s_instance = new ServerConfiguration("config.properties");
 
-    public static Configuration getInstance(){
+    public static ServerConfiguration getInstance(){
         return s_instance;
     }
 
-    private Configuration(String propertiesFile){
+    private ServerConfiguration(String propertiesFile){
         try (final FileInputStream fis = new FileInputStream(CONF_DIR + propertiesFile)) {
             final Properties properties = new Properties();
             properties.load(fis);
@@ -38,6 +38,14 @@ public final class Configuration {
             serverProperties.put("maxHitPoints", properties.getProperty("entity.maxHitPoints"));
             serverProperties.put("moveDelay", properties.getProperty("entity.moveDelay"));
             serverProperties.put("abilityDelay", properties.getProperty("entity.abilityDelay"));
+
+            serverProperties.put("dialect", properties.getProperty("hibernate.dialect"));
+            serverProperties.put("driver_class", properties.getProperty("hibernate.connection.driver_class"));
+            serverProperties.put("connection_url", properties.getProperty("hibernate.connection.url"));
+            serverProperties.put("connection_username", properties.getProperty("hibernate.connection.username"));
+            serverProperties.put("connection_password", properties.getProperty("hibernate.connection.password"));
+            serverProperties.put("show_sql", properties.getProperty("hibernate.show_sql"));
+            serverProperties.put("hbm2ddl_auto", properties.getProperty("hibernate.hbm2ddl.auto"));
 
             getAbilityConfig(properties, "OrdinaryHit");
             getAbilityConfig(properties, "OrdinaryHealing");
@@ -97,5 +105,33 @@ public final class Configuration {
 
     public int getAbilityDelay(){
         return Integer.parseInt(serverProperties.get("abilityDelay"));
+    }
+
+    public String getDialect(){
+        return serverProperties.get("dialect");
+    }
+
+    public String getDriverClass(){
+        return serverProperties.get("driver_class");
+    }
+
+    public String getConnectionUrl(){
+        return serverProperties.get("connection_url");
+    }
+
+    public String getConnectionUsername(){
+        return serverProperties.get("connection_username");
+    }
+
+    public String getConnectionPassword(){
+        return serverProperties.get("connection_password");
+    }
+
+    public String getShowSql(){
+        return serverProperties.get("show_sql");
+    }
+
+    public String getHbm2ddAuto(){
+        return serverProperties.get("hbm2ddl_auto");
     }
 }

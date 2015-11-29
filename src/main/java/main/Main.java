@@ -1,5 +1,6 @@
 package main;
 
+import dbservice.DBService;
 import frontend.*;
 import mechanics.GameMechanics;
 import org.eclipse.jetty.server.Handler;
@@ -8,7 +9,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import resource.Configuration;
+import resource.ServerConfiguration;
 import utils.Repairer;
 
 import javax.servlet.Servlet;
@@ -20,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        int port = Configuration.getInstance().getPort();
+        int port = ServerConfiguration.getInstance().getPort();
         if (args != null) {
             if (args.length == 1) {
                 String portString = args[0];
@@ -28,12 +29,14 @@ public class Main {
             }
         }
 
+        DBService dbservice = new DBService();
+
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
         GameMechanics gameMechanics = new GameMechanics();
         Repairer.getInstance().setGameMechanics(gameMechanics);
 
-        AccountService accountService = new AccountService();
+        AccountService accountService = new AccountService(dbservice);
         accountService.addUser("admin", new UserProfile("admin", "admin", ""));
         accountService.addUser("LordNeznay", new UserProfile("LordNeznay", "LordNeznay", ""));
 

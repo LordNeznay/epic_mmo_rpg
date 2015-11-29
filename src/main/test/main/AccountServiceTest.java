@@ -1,16 +1,18 @@
 package main;
 
+import dbservice.DBService;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by uschsh on 01.11.15.
  */
 public class AccountServiceTest {
-
-    private final AccountService accountService = new AccountService();
+    private DBService dbService = mock(DBService.class);
+    private final AccountService accountService = new AccountService(dbService);
 
     private final UserProfile testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
     private final UserProfile testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
