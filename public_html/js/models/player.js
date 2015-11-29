@@ -23,7 +23,7 @@ define([
         },
         
         socket_open: function(){
-            //if(!this.isLogin) return;
+            if(!this.isLogin) return;
             var that = this;
 
             this.ws = new WebSocket('ws://' + document.location.host + '/gameplay');
@@ -75,6 +75,11 @@ define([
                     default: break;
                 }
             }
+            this.ws.onerror = function(){
+                console.log("Socket was not opened\n");
+                that.isOpenedSocket = false;
+                Backbone.history.navigate('', true);
+            },
             this.ws.onclose = function (event) {
                 console.log("Socket was closed\n");
                 that.isOpenedSocket = false;
