@@ -17,7 +17,7 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
-
+    @SuppressWarnings({"OverlyBroadThrowsClause", "SpellCheckingInspection"})
     public static void main(String[] args) throws Exception {
 
         int port = Configuration.getInstance().getPort();

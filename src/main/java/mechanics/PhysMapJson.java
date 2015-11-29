@@ -17,18 +17,14 @@ public class PhysMapJson implements PhysMap, Resource {
     private boolean[][] passabilityLayer;
     private String objectLayer = "";
 
-    public PhysMapJson(String filename) {
-        //JSONObject map = MapReader.readMap("public_html/res/tilemap.json");
+    public PhysMapJson(String filename) throws NumberFormatException {
         JSONObject map = MapReader.readMap(filename);
         assert map != null;
-        try{
-            mapWidth = Integer.valueOf(map.get("width").toString());
-            mapHeight = Integer.valueOf(map.get("height").toString());
-            tileWidth = Integer.valueOf(map.get("tilewidth").toString());
-            tileHeight = Integer.valueOf(map.get("tileheight").toString());
-        }catch (NumberFormatException e) {
-            System.err.println("Cannot parse game map!");
-        }
+
+        mapWidth = Integer.valueOf(map.get("width").toString());
+        mapHeight = Integer.valueOf(map.get("height").toString());
+        tileWidth = Integer.valueOf(map.get("tilewidth").toString());
+        tileHeight = Integer.valueOf(map.get("tileheight").toString());
 
         passabilityLayer = new boolean[mapWidth][mapHeight];
 
@@ -63,40 +59,24 @@ public class PhysMapJson implements PhysMap, Resource {
         }
     }
 
-    private int getGidIsNotPassability(JSONArray tilesets){
+    private int getGidIsNotPassability(JSONArray tilesets) throws NumberFormatException{
         int isNotPassability = 0;
         for(Object tileset : tilesets){
             if(!((JSONObject) tileset).get("name").toString().equals("passability")){
                 continue;
             }
 
-            int tilesetWidth = 0;
-            int tilesetHeight = 0;
-            try{
-                tilesetWidth = Integer.valueOf(((JSONObject) tileset).get("imagewidth").toString());
-                tilesetHeight = Integer.valueOf(((JSONObject) tileset).get("imageheight").toString());
-            }catch (NumberFormatException e) {
-                System.err.println("Cannot parse game map!");
-            }
+            int tilesetWidth = Integer.valueOf(((JSONObject) tileset).get("imagewidth").toString());
+            int tilesetHeight = Integer.valueOf(((JSONObject) tileset).get("imageheight").toString());
 
             int amount = tilesetWidth/tileWidth * tilesetHeight/tileHeight;
             JSONObject tileproperties = (JSONObject) ((JSONObject) tileset).get("tileproperties");
             for(int i =0; i<amount; ++i){
-                String isPassabilityString = "";
-                try {
-                    isPassabilityString = ((JSONObject)tileproperties.get(String.valueOf(i))).get("isPassability").toString();
-                } catch (RuntimeException e){
-                    e.printStackTrace();
-                }
-                if(isPassabilityString.equals("false")){
-                    try {
-                        isNotPassability = Integer.valueOf(((JSONObject) tileset).get("firstgid").toString());
-                        isNotPassability += i;
-                    } catch (NumberFormatException e){
-                        isNotPassability = 0;
-                        System.err.println("Cannot parse game map!");
-                    }
+                String isPassabilityString = ((JSONObject)tileproperties.get(String.valueOf(i))).get("isPassability").toString();
 
+                if(isPassabilityString.equals("false")){
+                    isNotPassability = Integer.valueOf(((JSONObject) tileset).get("firstgid").toString());
+                    isNotPassability += i;
                 }
 
             }

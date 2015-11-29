@@ -118,7 +118,7 @@ public class Entity {
         JSONObject request = new JSONObject();
         request.put("type", "abilityStatus");
         request.put("abilityStatus", abilityStatus.toString());
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 
     public void move(String params){

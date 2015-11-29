@@ -134,6 +134,6 @@ public class Flag {
         JSONObject request = new JSONObject();
         request.put("type", "flagStatus");
         request.put("flagStatus", flagStatus.toString());
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 }

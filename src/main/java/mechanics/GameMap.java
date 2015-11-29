@@ -96,7 +96,7 @@ public class GameMap {
     private void sendConfirmation(UserProfile userProfile){
         JSONObject request = new JSONObject();
         request.put("type", "user_was_joined");
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 
     @SuppressWarnings("unchecked")
@@ -111,7 +111,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "playerPosition");
         request.put("pos", "{\"x\":" + pos.x + ", \"y\":" + pos.y + '}');
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 
     private String getTargetJson(int viewX, int viewY){
@@ -209,7 +209,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "entitiesInViewArea");
         request.put("entities", '{' + "\"player\": {\"x\":" + VIEW_WIDTH_2 + ",\"y\": " + VIEW_HEIGHT_2 + ",\"image\": \"people.png\"}," + "\"entities\": [" + getAllEntityInViewAreaJson(playerEntity) + "]}");
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 
     private boolean isPositionCorrect(int j, int i) {
@@ -268,7 +268,7 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "availableActions");
         request.put("availableActions", availableActions.toString());
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 
     public void stepping(){
@@ -309,7 +309,7 @@ public class GameMap {
             objW = Integer.valueOf(obj.get("width").toString());
             objH = Integer.valueOf(obj.get("height").toString());
         }catch (NumberFormatException e) {
-            System.err.println("Cannot parse game map!");
+            Repairer.getInstance().repaireGameMap(this);
         }
         return new Vec2d(objX / objW, objY / objH);
     }
@@ -321,7 +321,7 @@ public class GameMap {
             Object obj = jsonPaser.parse(objects);
             mapObjects = (JSONArray)obj;
         } catch (ParseException e) {
-            e.printStackTrace();
+            Repairer.getInstance().repaireGameMap(this);
         }
 
         assert mapObjects != null;
@@ -389,6 +389,6 @@ public class GameMap {
         JSONObject request = new JSONObject();
         request.put("type", "entityStatus");
         request.put("entityStatus", entityStatus.toString());
-        userProfile.sendMessage(request.toString());
+        userProfile.addMessageForSending(request.toString());
     }
 }

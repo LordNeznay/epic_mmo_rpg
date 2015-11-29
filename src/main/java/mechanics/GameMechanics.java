@@ -58,7 +58,7 @@ public class GameMechanics {
             return;
         }
         userQueue.add(userProfile);
-        userProfile.sendMessage("{\"type\": \"Wait_start\"}");
+        userProfile.addMessageForSending("{\"type\": \"Wait_start\"}");
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
@@ -71,14 +71,11 @@ public class GameMechanics {
     }
 
     public void removeUser(UserProfile userProfile){
-        try {
-            GameMap mapWithUser = usersMaps.get(userProfile);
-            if(mapWithUser == null) return;
-            mapWithUser.removeUser(userProfile);
-            usersMaps.remove(userProfile);
-        } catch(RuntimeException e){
-            e.printStackTrace();
-        }
+        GameMap mapWithUser = usersMaps.get(userProfile);
+        if(mapWithUser == null) return;
+        mapWithUser.removeUser(userProfile);
+        usersMaps.remove(userProfile);
+        userProfile.sendMessage();
     }
 
     public void start(){
@@ -106,7 +103,7 @@ public class GameMechanics {
             request.put("type", "gameResult");
             request.put("gameResult", result);
             request.put("playerCommand", map.getUserCommand(entry.getKey()));
-            entry.getKey().sendMessage(request.toString());
+            entry.getKey().addMessageForSending(request.toString());
         });
         removeMap(map);
     }
@@ -119,6 +116,7 @@ public class GameMechanics {
                 usersForRemove.add(entry.getKey());
             }
         }
+        usersForRemove.forEach(this::removeUser);
         usersForRemove.forEach(usersMaps::remove);
         usersForRemove.clear();
         gameMaps.remove(map);
@@ -132,9 +130,12 @@ public class GameMechanics {
                 mapsForClose.add(map);
             }
         }
-
         mapsForClose.forEach(this::sendResultMap);
         mapsForClose.clear();
+
+        for(Map.Entry<UserProfile, GameMap> entry: usersMaps.entrySet()){
+            entry.getKey().sendMessage();
+        }
     }
 
     public void movePlayer(UserProfile userProfile, String params){

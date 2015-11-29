@@ -33,47 +33,50 @@ define([
                 that.trigger("joinGame");
             }
             this.ws.onmessage = function (event) {
-                var data = JSON.parse(event.data);
+                var allData = JSON.parse(event.data);
                 //console.log("Query was got:\n");
-                //console.log(data);
-                switch(data.type){
-                    case "Wait_start":{
-                        that.isGameComplite = false;
-                        that.isWait = true;
-                        that.trigger("isWait:change");
-                    }; break;
-                    case "user_was_joined":{
-                        that.isInGame = true;
-                        that.isWait = false;
-                        that.trigger("isWait:change");
-                    }; break;
-                    case "gameResult":{
-                        that.isGameComplite = true;
-                        that.trigger("gameResult", data.gameResult, data.playerCommand);
-                    }; break; 
-                    case "viewArea":{
-                        that.trigger("loadMap", data.map);
-                    }; break;
-                    case "playerPosition":{
-                        that.trigger("playerPosition", data.pos);
-                    }; break;
-                    case "entitiesInViewArea":{
-                        that.trigger("loadEntities", data.entities);
-                    }; break;
-                    case "availableActions":{
-                        that.trigger("availableActions", data.availableActions);
-                    }; break;       
-                    case "flagStatus":{
-                        that.trigger("flagStatus", data.flagStatus);
-                    }; break; 
-                    case "entityStatus":{
-                        that.trigger("entityStatus", data.entityStatus);
-                    }; break;     
-                    case "abilityStatus":{
-                        that.trigger("abilityStatus", data.abilityStatus);
-                    }; break;   
-                    default: break;
-                }
+                console.log(allData);
+                allData.forEach(function(data){
+                    data = JSON.parse(data);
+                    switch(data.type){
+                        case "Wait_start":{
+                            that.isGameComplite = false;
+                            that.isWait = true;
+                            that.trigger("isWait:change");
+                        }; break;
+                        case "user_was_joined":{
+                            that.isInGame = true;
+                            that.isWait = false;
+                            that.trigger("isWait:change");
+                        }; break;
+                        case "gameResult":{
+                            that.isGameComplite = true;
+                            that.trigger("gameResult", data.gameResult, data.playerCommand);
+                        }; break; 
+                        case "viewArea":{
+                            that.trigger("loadMap", data.map);
+                        }; break;
+                        case "playerPosition":{
+                            that.trigger("playerPosition", data.pos);
+                        }; break;
+                        case "entitiesInViewArea":{
+                            that.trigger("loadEntities", data.entities);
+                        }; break;
+                        case "availableActions":{
+                            that.trigger("availableActions", data.availableActions);
+                        }; break;       
+                        case "flagStatus":{
+                            that.trigger("flagStatus", data.flagStatus);
+                        }; break; 
+                        case "entityStatus":{
+                            that.trigger("entityStatus", data.entityStatus);
+                        }; break;     
+                        case "abilityStatus":{
+                            that.trigger("abilityStatus", data.abilityStatus);
+                        }; break;   
+                        default: break;
+                    }
+                });
             }
             this.ws.onerror = function(){
                 console.log("Socket was not opened\n");

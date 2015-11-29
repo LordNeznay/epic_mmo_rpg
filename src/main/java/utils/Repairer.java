@@ -23,7 +23,7 @@ public final class Repairer {
         gameMechanics = _gameMechanics;
     }
 
-    public void repairGameMap(GameMap gameMap){
+    public void repaireGameMap(GameMap gameMap){
         gameMechanics.removeMap(gameMap);
         System.out.println("Game map was fixed!");
     }
