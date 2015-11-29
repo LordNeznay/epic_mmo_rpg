@@ -1,1 +1,18 @@
 @import 'config';
+
+$mapWidth: 960px;
+$mapHeight: 576px;
+
+.game-map{
+    position: relative;
+    width: $mapWidth;
+    height: $mapHeight;
+
+    & canvas{
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: $mapWidth;
+        height: $mapHeight;
+    }
+}

@@ -12,8 +12,13 @@
         pos_y: 0,
         entities: '',
         template: tmpl,
-        canvas: undefined,
-        gameField: undefined,
+        canvas_background: undefined,
+        canvas_background_context: undefined,
+        canvas_middleground: undefined,
+        canvas_middleground_context: undefined,
+        canvas_frontground: undefined,
+        canvas_frontground_context: undefined,
+        
         loadTilesets: 0,
         amountTilesets: 0,
 
@@ -27,6 +32,17 @@
         setMap: function(map){
             this.map = map;
         },
+        
+        /*testedfun: function(){
+            this.canvas_middleground.beginPath();
+            this.canvas_middleground.arc(  250,
+                        250,
+                        15,
+                        0, 2 * Math.PI, true);
+            this.canvas_middleground.fillStyle = 'rgb(111, 222, 111)';
+            this.canvas_middleground.fill();
+            this.canvas_middleground.closePath();
+        },*/
         
         drawTile: function(gid, x, y){
             var that = this;
@@ -42,7 +58,7 @@
                         yy += tileset.tileheight;
                         xx -= tileset.imagewidth;
                     }
-                    that.gameField.drawImage(tileset.image, xx, yy, tileset.tilewidth, tileset.tileheight, x, y, tileset.tilewidth, tileset.tileheight);
+                    that.canvas_background_context.drawImage(tileset.image, xx, yy, tileset.tilewidth, tileset.tileheight, x, y, tileset.tilewidth, tileset.tileheight);
                 }
             });
         },
@@ -83,14 +99,14 @@
                 var pic = new Image();
                 pic.src = 'http://' + document.location.host + '/res/' + entity.image;
                 pic.onload = function(){
-                    that.gameField.drawImage(pic, (entity.x-1) * 64, (entity.y-1) * 64);
+                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * 64, (entity.y-1) * 64);
                 }
             });
             
             var pic = new Image();
             pic.src = 'http://' + document.location.host + '/res/' + this.entities.player.image;
             pic.onload = function(){
-                that.gameField.drawImage(pic, (that.entities.player.x-1) * 64, (that.entities.player.y-1) * 64);
+                that.canvas_middleground_context.drawImage(pic, (that.entities.player.x-1) * 64, (that.entities.player.y-1) * 64);
             }
         },
         

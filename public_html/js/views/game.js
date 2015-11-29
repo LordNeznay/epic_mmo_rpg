@@ -16,6 +16,7 @@
     var View = BaseView.extend({
         name: 'game',
         template: tmpl,
+        gameField: $(".game-map"),
         
         surroundings: new Surroundings(),
         
@@ -27,26 +28,42 @@
             _.bindAll(this, 'playerMove');
             $(document).bind('keypress', this.playerMove);
         },
+        get_canvas: function(){
+            var that = this;
+            that.surroundings.canvas_background =  document.getElementById("game-map__background");
+            that.surroundings.canvas_background_context = that.surroundings.canvas_background.getContext('2d');
+            that.surroundings.canvas_background.width  = 960;     
+            that.surroundings.canvas_background.height = 576;
+            
+            that.surroundings.canvas_middleground =  document.getElementById("game-map__middleground");
+            that.surroundings.canvas_middleground_context = that.surroundings.canvas_middleground.getContext('2d');
+            that.surroundings.canvas_middleground.width  = 960;     
+            that.surroundings.canvas_middleground.height = 576;   
+            
+            that.surroundings.canvas_frontground =  document.getElementById("game-map__frontground");
+            that.surroundings.canvas_frontground_context = that.surroundings.canvas_frontground.getContext('2d');
+            that.surroundings.canvas_frontground.width  = 960;     
+            that.surroundings.canvas_frontground.height = 576;   
+        },
+        
         render: function(){
             View.__super__.render.call(this);
             var that = this;
-            that.surroundings.canvas =  document.getElementById("game-map__canvas");
-            that.surroundings.gameField = that.surroundings.canvas.getContext('2d');
-            
-            that.surroundings.canvas.width  = 960;     
-            that.surroundings.canvas.height = 576;
-            
-            that.surroundings.canvas.onclick = function(event){
+
+            that.get_canvas();
+            that.gameField = $(".game-map");
+            that.gameField.click(function(event){
                 that.onGameFieldClick(event);
-            };
+            });
 
             this.player.on("isWait:change", function(){
                 if(that.player.isWait){
                     $(".game-info").hide();
-                    that.clear_canvas();                  
+                    that.gameField.hide();              
                     $(".game-result").hide();
                 } else {
                     $(".game-info").show();
+                    that.gameField.show(); 
                     $(".game-result").hide();
                 }
             });
@@ -123,17 +140,11 @@
             if(this.player.isWait || this.player.isGameComplite){
                 return;
             }
-            this.player.setTarget(Math.floor(event.offsetX/64)+1, Math.floor(event.offsetY/64)+1);
+            var w = this.gameField.width() / 15;
+            var h = this.gameField.height()/ 9;
+            this.player.setTarget(Math.floor(event.offsetX/w)+1, Math.floor(event.offsetY/h)+1);
         },
-        
-        clear_canvas: function(){
-            var that = this;
-            that.surroundings.canvas.width  = 1;     
-            that.surroundings.canvas.height = 1;
-            that.surroundings.canvas.width  = 960;     
-            that.surroundings.canvas.height = 576;
-        },
-        
+               
         show: function(){
             View.__super__.show.call(this);
             this.player.status({

@@ -87,7 +87,18 @@ body {
 
 /*# sourceMappingURL=main.css.map */
 
-
+.game-map {
+  position: relative;
+  width: 960px;
+  height: 576px;
+}
+.game-map canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 960px;
+  height: 576px;
+}
 
 /*# sourceMappingURL=map.css.map */
 

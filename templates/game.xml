@@ -59,8 +59,10 @@
                 <tr><td class="pointsRed"></td><td class="captureTime"></td><td class="pointsBlue"></td></tr>
             </table>
         </div>
-        <div class="game-map" width="960" height="576">
-            <canvas id="game-map__canvas" style="border: 1px #000 solid;"></canvas>
+        <div class="game-map">
+            <canvas id="game-map__background"></canvas>
+            <canvas id="game-map__middleground"></canvas>
+            <canvas id="game-map__frontground"></canvas>
         </div>
         <div class="game-info">
             <img class="game-info__img pressZ" src="/res/button_z.png"></img>
