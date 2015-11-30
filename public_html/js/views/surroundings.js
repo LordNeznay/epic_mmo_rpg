@@ -94,6 +94,9 @@
         },
         
         drawEntities: function(){
+            this.canvas_middleground.width  = 960;     
+            this.canvas_middleground.height = 576;  
+        
             var that = this;
             this.entities.entities.forEach(function(entity){
                 var pic = new Image();
@@ -159,6 +162,7 @@
                     }
                 }
             });
+            //alert("1");
         }
         
     });

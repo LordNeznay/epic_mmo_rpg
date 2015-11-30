@@ -9,6 +9,8 @@ import org.json.simple.parser.ParseException;
 import resource.Configuration;
 import resource.ResourceFactory;
 import utils.Repairer;
+import utils.ResponseConstructor;
+import utils.ResponseHeaders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,74 +94,26 @@ public class GameMap {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     private void sendConfirmation(UserProfile userProfile){
-        JSONObject request = new JSONObject();
-        request.put("type", "user_was_joined");
-        userProfile.addMessageForSending(request.toString());
+        String response = ResponseConstructor.getResponse(ResponseHeaders.USER_WAS_JOINED, "{}");
+        userProfile.addMessageForSending(response);
     }
 
-    @SuppressWarnings("unchecked")
-    public void sendPlayerViewArea(UserProfile userProfile){
+    public void sendPlayersViewArea(UserProfile userProfile){
         Vec2d pos;
         try {
-             pos = entities.get(userProfile).getCoord();
+            if(!entities.get(userProfile).isCoordChange()) {
+                return;
+            }
+            pos = entities.get(userProfile).getCoord();
         } catch (RuntimeException e){
             Repairer.getInstance().repaireUser(userProfile);
             return;
         }
-        JSONObject request = new JSONObject();
-        request.put("type", "playerPosition");
-        request.put("pos", "{\"x\":" + pos.x + ", \"y\":" + pos.y + '}');
-        userProfile.addMessageForSending(request.toString());
-    }
 
-    private String getTargetJson(int viewX, int viewY){
-        return "{\"x\":" + viewX + ",\"y\":" + viewY + ",\"image\": \"target.png\"}";
-    }
-
-    private String getFlagEntityJson(int viewX, int viewY){
-        StringBuilder result = new StringBuilder();
-        result.append("{\"x\":");
-        result.append(viewX);
-        result.append(",\"y\":");
-        result.append(viewY);
-        result.append(",\"image\": \"");
-        switch(flag.getOwner()){
-            case "CommandBlue":
-                result.append("blue_flag.png");
-                break;
-            case "CommandRed":
-                result.append("red_flag.png");
-                break;
-            default:
-                result.append("flag.png");
-                break;
-        }
-        result.append("\"}");
-        return result.toString();
-    }
-
-    private String getEntityJson(int viewX, int viewY, int mapX, int mapY){
-        StringBuilder result = new StringBuilder();
-        result.append("{\"x\":");
-        result.append(viewX);
-        result.append(",\"y\":");
-        result.append(viewY);
-        result.append(",\"image\": \"");
-        switch(entityLocation[mapX][mapY].getCommand()){
-            case "CommandBlue":
-                result.append("blue_people.png");
-                break;
-            case "CommandRed":
-                result.append("red_people.png");
-                break;
-            default:
-                result.append("people.png");
-                break;
-        }
-        result.append("\"}");
-        return result.toString();
+        String response = ResponseConstructor.getCoordJson(pos);
+        response = ResponseConstructor.getResponse(ResponseHeaders.PLAYER_POSITION, response);
+        userProfile.addMessageForSending(response);
     }
 
     private String getAllEntityInViewAreaJson(Entity entity){
@@ -174,7 +128,7 @@ public class GameMap {
                         if(amountEntity!=0) {
                             result.append(", ");
                         }
-                        result.append(getFlagEntityJson(x, y));
+                        result.append(ResponseConstructor.getFlagEntityJson(new Vec2d(x, y), flag.getOwner()));
                         ++amountEntity;
                     }
 
@@ -184,7 +138,7 @@ public class GameMap {
                             if (amountEntity != 0) {
                                 result.append(", ");
                             }
-                            result.append(getTargetJson(x, y));
+                            result.append(ResponseConstructor.getTargetJson(new Vec2d(x, y)));
                             ++amountEntity;
                         }
                     }
@@ -193,7 +147,7 @@ public class GameMap {
                     if(amountEntity!=0) {
                         result.append(", ");
                     }
-                    result.append(getEntityJson(x, y, i, j));
+                    result.append(ResponseConstructor.getEntityJson(new Vec2d(x, y), entityLocation[i][j].getCommand()));
                     ++amountEntity;
                 }
             }
@@ -202,14 +156,12 @@ public class GameMap {
         return result.toString();
     }
 
-    @SuppressWarnings("unchecked")
     public void sendEntityInViewArea(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
 
-        JSONObject request = new JSONObject();
-        request.put("type", "entitiesInViewArea");
-        request.put("entities", '{' + "\"player\": {\"x\":" + VIEW_WIDTH_2 + ",\"y\": " + VIEW_HEIGHT_2 + ",\"image\": \"people.png\"}," + "\"entities\": [" + getAllEntityInViewAreaJson(playerEntity) + "]}");
-        userProfile.addMessageForSending(request.toString());
+        String response = ResponseConstructor.entitiesInViewArea(new Vec2d(VIEW_WIDTH_2, VIEW_HEIGHT_2), getAllEntityInViewAreaJson(playerEntity));
+        response = ResponseConstructor.getResponse(ResponseHeaders.ENTITIES_IN_VIEW_AREA, response);
+        userProfile.addMessageForSending(response);
     }
 
     private boolean isPositionCorrect(int j, int i) {
@@ -256,7 +208,6 @@ public class GameMap {
         return result && physMap.isPassability(cell);
     }
 
-    @SuppressWarnings("unchecked")
     private void sendAvailableActions(UserProfile userProfile){
         StringBuilder availableActions = new StringBuilder();
         availableActions.append('[');
@@ -265,21 +216,20 @@ public class GameMap {
         }
         availableActions.append(']');
 
-        JSONObject request = new JSONObject();
-        request.put("type", "availableActions");
-        request.put("availableActions", availableActions.toString());
-        userProfile.addMessageForSending(request.toString());
+        String response = ResponseConstructor.getResponse(ResponseHeaders.AVAILABLE_ACTIONS, availableActions.toString());
+        userProfile.addMessageForSending(response);
     }
 
     public void stepping(){
+        String responseStatusFlag = ResponseConstructor.getResponse(ResponseHeaders.FLAG_STATUS, flag.getStatus());
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
-            entry.getValue().stepping(entry.getKey());
-            sendPlayerViewArea(entry.getKey());
+            sendPlayersViewArea(entry.getKey());
             sendEntityInViewArea(entry.getKey());
             sendAvailableActions(entry.getKey());
             sendEntityStatus(entry.getKey());
-            flag.sendStatus(entry.getKey());
+            entry.getValue().stepping(entry.getKey());
+            entry.getKey().addMessageForSending(responseStatusFlag);
         }
         flag.stepping();
         if(flag.getMaxPoints() == POINTS_TO_WIN){
@@ -373,22 +323,16 @@ public class GameMap {
         playerEntity.useAbility(abilityName);
     }
 
-    @SuppressWarnings("unchecked")
     private void sendEntityStatus(UserProfile userProfile){
         Entity playerEntity = entities.get(userProfile);
-        StringBuilder entityStatus = new StringBuilder();
-        entityStatus.append('{');
-        entityStatus.append("\"hitPoints\":");
-        entityStatus.append(playerEntity.getHitPoints());
-        if(playerEntity.isHaveTarget()) {
-            entityStatus.append(", \"targetsHitPoints\":");
-            entityStatus.append(playerEntity.getTargetsHitPoints());
-        }
-        entityStatus.append('}');
 
-        JSONObject request = new JSONObject();
-        request.put("type", "entityStatus");
-        request.put("entityStatus", entityStatus.toString());
-        userProfile.addMessageForSending(request.toString());
+        String response;
+        if(playerEntity.isHaveTarget()){
+            response = ResponseConstructor.entityStatus(playerEntity.getHitPoints(), true, playerEntity.getTargetsHitPoints());
+        } else {
+            response = ResponseConstructor.entityStatus(playerEntity.getHitPoints(), false,0);
+        }
+        response = ResponseConstructor.getResponse(ResponseHeaders.ENTITY_STATUS, response);
+        userProfile.addMessageForSending(response);
     }
 }

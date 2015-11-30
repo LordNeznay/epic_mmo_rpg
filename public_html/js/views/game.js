@@ -69,7 +69,7 @@
             });
             
             this.surroundings.listenTo(this.player, "playerPosition", function(_pos){
-                _pos = JSON.parse(_pos);
+                //_pos = JSON.parse(_pos);
                 that.surroundings.pos_x = _pos.x;
                 that.surroundings.pos_y = _pos.y;
                 that.surroundings.trigger("newPlayerPosition");
@@ -82,11 +82,13 @@
             });
             
             this.surroundings.listenTo(this.player, "loadEntities", function(entities){
-                that.surroundings.entities = JSON.parse(entities);
+                //that.surroundings.entities = JSON.parse(entities);
+                that.surroundings.entities = entities;
                 that.surroundings.trigger("entitiesIsLoad");
             });
             this.player.on("availableActions", function(availableActions){
-                that.availableActions = JSON.parse(availableActions);
+                //that.availableActions = JSON.parse(availableActions);
+                that.availableActions = availableActions;
                 if(that.availableActions.length != 0){
                     $(".pressZ").show(); 
                 } else {
@@ -94,15 +96,15 @@
                 }
             });
             this.player.on("flagStatus", function(flagStatus){
-                flagStatus = JSON.parse(flagStatus);
+                //flagStatus = JSON.parse(flagStatus);
                 $(".pointsRed").html(flagStatus.commandRed);
                 $(".pointsBlue").html(flagStatus.commandBlue);
                 $(".captureTime").html(flagStatus.captureTime);
             });
             this.player.on("entityStatus", function(entityStatus){
-                entityStatus = JSON.parse(entityStatus);
-                $(".game-info-status-player").html(entityStatus.hitPoints);
-                $(".game-info-status-players-target").html(entityStatus.targetsHitPoints);
+                //entityStatus = JSON.parse(entityStatus);
+                $(".game-info-status-player").html(entityStatus.hp);
+                $(".game-info-status-players-target").html(entityStatus.thp);
             });
             this.player.on("gameResult", function(result, playerCommand){
                 result = JSON.parse(result);
@@ -124,7 +126,7 @@
                 $(".game-result").show(); 
             });
             this.player.on("abilityStatus", function(abilityStatus){
-                abilityStatus = JSON.parse(abilityStatus);
+                //abilityStatus = JSON.parse(abilityStatus);
                 abilityStatus.forEach(function(ability, i){
                     ++i;
                     if(i == 10) i = 0;

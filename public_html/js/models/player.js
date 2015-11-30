@@ -1,8 +1,10 @@
 define([
     'backbone',
+    'utils/headers',
     'sync/playerSync'
 ], function(
     Backbone,
+    headers,
     playerSync
 ){
 
@@ -34,45 +36,45 @@ define([
             }
             this.ws.onmessage = function (event) {
                 var allData = JSON.parse(event.data);
-                //console.log("Query was got:\n");
+                //var allData = event.data;
                 console.log(allData);
                 allData.forEach(function(data){
-                    data = JSON.parse(data);
-                    switch(data.type){
-                        case "Wait_start":{
+                    //data = JSON.parse(data);
+                    switch(data.t){
+                        case headers.waitStart:{
                             that.isGameComplite = false;
                             that.isWait = true;
                             that.trigger("isWait:change");
                         }; break;
-                        case "user_was_joined":{
+                        case headers.userWasJoined:{
                             that.isInGame = true;
                             that.isWait = false;
                             that.trigger("isWait:change");
                         }; break;
-                        case "gameResult":{
+                        case headers.gameResult:{
                             that.isGameComplite = true;
-                            that.trigger("gameResult", data.gameResult, data.playerCommand);
+                            that.trigger("gameResult", data.b.gameResult, data.b.playerCommand);
                         }; break; 
-                        case "viewArea":{
-                            that.trigger("loadMap", data.map);
+                        case headers.viewArea:{
+                            that.trigger("loadMap", data.b);
                         }; break;
-                        case "playerPosition":{
-                            that.trigger("playerPosition", data.pos);
+                        case headers.playerPosition:{
+                            that.trigger("playerPosition", data.b);
                         }; break;
-                        case "entitiesInViewArea":{
-                            that.trigger("loadEntities", data.entities);
+                        case headers.entitiesInViewArea:{
+                            that.trigger("loadEntities", data.b);
                         }; break;
-                        case "availableActions":{
-                            that.trigger("availableActions", data.availableActions);
+                        case headers.availableActions:{
+                            that.trigger("availableActions", data.b);
                         }; break;       
-                        case "flagStatus":{
-                            that.trigger("flagStatus", data.flagStatus);
+                        case headers.flagStatus:{
+                            that.trigger("flagStatus", data.b);
                         }; break; 
-                        case "entityStatus":{
-                            that.trigger("entityStatus", data.entityStatus);
+                        case headers.entityStatus:{
+                            that.trigger("entityStatus", data.b);
                         }; break;     
-                        case "abilityStatus":{
-                            that.trigger("abilityStatus", data.abilityStatus);
+                        case headers.abilityStatus:{
+                            that.trigger("abilityStatus", data.b);
                         }; break;   
                         default: break;
                     }

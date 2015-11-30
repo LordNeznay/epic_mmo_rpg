@@ -8,6 +8,8 @@ import main.UserProfile;
 import org.json.simple.JSONObject;
 import resource.Configuration;
 import utils.Repairer;
+import utils.ResponseConstructor;
+import utils.ResponseHeaders;
 import utils.TimeHelper;
 
 /**
@@ -58,7 +60,10 @@ public class GameMechanics {
             return;
         }
         userQueue.add(userProfile);
-        userProfile.addMessageForSending("{\"type\": \"Wait_start\"}");
+
+        String response = ResponseConstructor.getResponse(ResponseHeaders.WAIT_START, "{}");
+        userProfile.addMessageForSending(response);
+
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
             GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
@@ -99,11 +104,11 @@ public class GameMechanics {
     private void sendResultMap(GameMap map){
         String result = map.getResult();
         usersMaps.entrySet().stream().filter(entry -> map.equals(entry.getValue())).forEach(entry -> {
-            JSONObject request = new JSONObject();
-            request.put("type", "gameResult");
-            request.put("gameResult", result);
-            request.put("playerCommand", map.getUserCommand(entry.getKey()));
-            entry.getKey().addMessageForSending(request.toString());
+            JSONObject body = new JSONObject();
+            body.put("gameResult", result);
+            body.put("playerCommand", map.getUserCommand(entry.getKey()));
+            String response = ResponseConstructor.getResponse(ResponseHeaders.GAME_RESULT, body.toString());
+            entry.getKey().addMessageForSending(response);
         });
         removeMap(map);
     }

@@ -4,6 +4,7 @@ import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 import resource.Configuration;
+import utils.ResponseConstructor;
 
 /**
  * Created by Андрей on 01.11.2015.
@@ -47,21 +48,7 @@ public class Flag {
     }
 
     public String getResult(boolean isTechnicalWin, String winner){
-        StringBuilder result = new StringBuilder();
-        result.append("{\"CommandRed\": ");
-        result.append(commandRedPoints);
-        result.append(", \"CommandBlue\": ");
-        result.append(commandBluePoints);
-        result.append(", \"winner\": \"");
-        result.append(winner);
-        result.append("\", \"isTechnical\": ");
-        if(isTechnicalWin){
-            result.append("true");
-        } else {
-            result.append("false");
-        }
-        result.append('}');
-        return result.toString();
+        return ResponseConstructor.resultGame(commandRedPoints, commandBluePoints, winner, isTechnicalWin);
     }
 
     public boolean startCapture(Entity invaderEntity){
@@ -113,27 +100,8 @@ public class Flag {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void sendStatus(UserProfile userProfile){
-        StringBuilder flagStatus = new StringBuilder();
-        flagStatus.append("{ \"commandRed\": ");
-        flagStatus.append(commandRedPoints);
-        flagStatus.append(", \"commandBlue\": ");
-        flagStatus.append(commandBluePoints);
-        flagStatus.append(", \"captureTime\": \"");
-        if(delayCapture == 0){
-            if(!owner.equals("none")) {
-                flagStatus.append(owner.equals("CommandRed") ? "R" : "B");
-            }
-        } else {
-            flagStatus.append(invader.getCommand().equals("CommandRed") ? "R" : "B");
-            flagStatus.append((double)delayCapture / ONE_SECOND);
-        }
-        flagStatus.append("\"}");
 
-        JSONObject request = new JSONObject();
-        request.put("type", "flagStatus");
-        request.put("flagStatus", flagStatus.toString());
-        userProfile.addMessageForSending(request.toString());
+    public String getStatus(){
+        return ResponseConstructor.statusFlag(commandRedPoints, commandBluePoints,owner, invader==null ? "" : invader.getCommand(), delayCapture, ONE_SECOND);
     }
 }

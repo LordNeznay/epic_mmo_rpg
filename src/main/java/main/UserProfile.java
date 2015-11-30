@@ -49,7 +49,18 @@ public class UserProfile {
     }
 
     public void sendMessage(){
-        JSONArray response = forSending.stream().collect(Collectors.toCollection(JSONArray::new));
+        //JSONArray response = forSending.stream().collect(Collectors.toCollection(JSONArray::new));
+        StringBuilder response = new StringBuilder();
+        response.append('[');
+
+        boolean isOne = true;
+        for (String aForSending : forSending) {
+            if (!isOne) response.append(',');
+            response.append(aForSending);
+            isOne = false;
+        }
+
+        response.append(']');
         try{
             userSocket.sendMessage(response.toString());
         } catch (RuntimeException e){

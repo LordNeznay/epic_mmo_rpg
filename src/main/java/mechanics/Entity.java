@@ -6,8 +6,9 @@ import mechanics.ability.OrdinaryHealing;
 import mechanics.ability.OrdinaryHit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.simple.JSONObject;
 import resource.Configuration;
+import utils.ResponseConstructor;
+import utils.ResponseHeaders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,9 @@ public class Entity {
     private static Vec2d s_commandsBlueSpawnPoint = new Vec2d(0, 0);
     private int hitPoints = MAX_HIT_POINTS;
     private int x = 0;
+    private int lastX = 0;
     private int y = 0;
+    private int lastY = 0;
     private String command = "";
     private GameMap map = null;
     private int timeUntilMove = 0;
@@ -58,17 +61,20 @@ public class Entity {
         return new Vec2d(x, y);
     }
 
-    private void goToSpawn(){
-        int lastX = x;
-        int lastY = y;
-        if(command.equals("CommandRed")){
-            x = (int) s_commandsRedSpawnPoint.x;
-            y = (int) s_commandsRedSpawnPoint.y;
-        } else {
-            x = (int) s_commandsBlueSpawnPoint.x;
-            y = (int) s_commandsBlueSpawnPoint.y;
-        }
+    private void moving(Vec2d destination){
+        lastX = x;
+        lastY = y;
+        x = (int)destination.x;
+        y = (int)destination.y;
         map.updatePositionEntity(this, lastX, lastY);
+    }
+
+    private void goToSpawn(){
+        if(command.equals("CommandRed")){
+            moving(new Vec2d(s_commandsRedSpawnPoint.x, s_commandsRedSpawnPoint.y));
+        } else {
+            moving(new Vec2d(s_commandsBlueSpawnPoint.x, s_commandsBlueSpawnPoint.y));
+        }
     }
 
     public void setCommand(String newCommand){
@@ -80,6 +86,10 @@ public class Entity {
         return command;
     }
 
+    public boolean isCoordChange(){
+        return !(lastX == x && lastY == y);
+    }
+
     public void steppingAllAbility(){
         for (Map.Entry<String, Ability> entry : abilities.entrySet()) {
             entry.getValue().stepping();
@@ -87,13 +97,14 @@ public class Entity {
     }
 
     public void stepping(UserProfile userProfile){
+        lastX = x;
+        lastY = y;
         steppingAllAbility();
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
         abilityDelay = abilityDelay > 0 ? abilityDelay-STEP_TIME : 0;
         sendAbilityStatus(userProfile);
     }
 
-    @SuppressWarnings("unchecked")
     private void sendAbilityStatus(UserProfile userProfile){
         StringBuilder abilityStatus = new StringBuilder();
         abilityStatus.append('[');
@@ -115,10 +126,9 @@ public class Entity {
             ++amountAbility;
         }
         abilityStatus.append(']');
-        JSONObject request = new JSONObject();
-        request.put("type", "abilityStatus");
-        request.put("abilityStatus", abilityStatus.toString());
-        userProfile.addMessageForSending(request.toString());
+
+        String response = ResponseConstructor.getResponse(ResponseHeaders.ABILITY_STATUS, abilityStatus.toString());
+        userProfile.addMessageForSending(response);
     }
 
     public void move(String params){
@@ -126,25 +136,25 @@ public class Entity {
         switch (params){
             case "up":
                 if(map.isPassability(new Vec2d(x, y-1))) {
-                    y = y - 1;
+                    moving(new Vec2d(x, y-1));
                     timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "down":
                 if(map.isPassability(new Vec2d(x, y+1))) {
-                    y = y + 1;
+                    moving(new Vec2d(x, y+1));
                     timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "left":
                 if(map.isPassability(new Vec2d(x-1, y))) {
-                    x = x - 1;
+                    moving(new Vec2d(x-1, y));
                     timeUntilMove = MOVE_DELAY;
                 }
                 break;
             case "right":
                 if(map.isPassability(new Vec2d(x+1, y))) {
-                    x = x + 1;
+                    moving(new Vec2d(x+1, y));
                     timeUntilMove = MOVE_DELAY;
                 }
                 break;
