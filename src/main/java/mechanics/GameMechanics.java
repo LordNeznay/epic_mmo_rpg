@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import main.UserProfile;
+import org.jetbrains.annotations.TestOnly;
 import org.json.simple.JSONObject;
 import resource.Configuration;
 import utils.Repairer;
@@ -22,6 +23,22 @@ public class GameMechanics {
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
     private ArrayList<GameMap> gameMaps = new ArrayList<>();
     private boolean isGame = false;
+
+    @TestOnly
+    public GameMap getMapWithUser(UserProfile userProfile){
+        return usersMaps.get(userProfile);
+    }
+
+    @TestOnly
+    public void replaseMap(GameMap lastMap, GameMap newMap){
+        gameMaps.remove(lastMap);
+        gameMaps.add(newMap);
+        for(Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet()){
+            if(entry.getValue().equals(lastMap)){
+                entry.setValue(newMap);
+            }
+        }
+    }
 
     public boolean isInGame(){
         return isGame;
@@ -76,8 +93,13 @@ public class GameMechanics {
     }
 
     public void removeUser(UserProfile userProfile){
+        if(userQueue.contains(userProfile)){
+            userQueue.remove(userProfile);
+            return;
+        }
+
         GameMap mapWithUser = usersMaps.get(userProfile);
-        if(mapWithUser == null) return;
+        if(mapWithUser == null)return;
         mapWithUser.removeUser(userProfile);
         usersMaps.remove(userProfile);
         userProfile.sendMessage();

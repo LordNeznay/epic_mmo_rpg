@@ -2,9 +2,13 @@ package mechanics;
 
 import main.UserProfile;
 import org.junit.Test;
+import utils.ReflectionHelper;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Андрей on 17.11.2015.
@@ -57,4 +61,107 @@ public class GameMechanicsTest {
         }
         assertEquals(mechanics.getAmountMap(), 3);
     }
+
+    @Test
+    public void testRemoveUser() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+
+        UserProfile userProfile = new UserProfile("", "", "");
+        userProfile = spy(userProfile);
+
+        mechanics.addUser(userProfile);
+        assertTrue(mechanics.getAmountPlayerInQueue() == 1 || mechanics.getAmountPlayerInGame() == 1);
+
+        mechanics.removeUser(userProfile);
+        assertTrue(mechanics.getAmountPlayerInQueue() == 0 && mechanics.getAmountPlayerInGame() == 0);
+    }
+
+    /*
+    @Test
+    public void testStartStop() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        assertTrue(!mechanics.isInGame());
+        mechanics.start();
+        assertTrue(mechanics.isInGame());
+        mechanics.stop();
+        assertTrue(!mechanics.isInGame());
+    }*/
+
+
+    @Test
+    public void testRemoveMap() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        UserProfile userProfile = new UserProfile("","","");
+        mechanics.addUser(userProfile);
+        for(int i=1; i<mechanics.getMinPlayersForStart(); ++i){
+            mechanics.addUser(new UserProfile("", "", ""));
+        }
+
+        assertEquals(mechanics.getAmountMap(), 1);
+        mechanics.removeMap(mechanics.getMapWithUser(userProfile));
+        assertEquals(mechanics.getAmountMap(), 0);
+    }
+
+
+    @Test
+    public void testMovePlayer() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        UserProfile userProfile = new UserProfile("","","");
+        mechanics.addUser(userProfile);
+        for(int i=1; i<mechanics.getMinPlayersForStart(); ++i){
+            mechanics.addUser(new UserProfile("", "", ""));
+        }
+        GameMap map = spy(mechanics.getMapWithUser(userProfile));
+        mechanics.replaseMap(mechanics.getMapWithUser(userProfile), map);
+
+        mechanics.movePlayer(userProfile, "up");
+        verify(map, times(1)).entityMove(userProfile, "up");
+    }
+
+
+    @Test
+    public void testStartFlagCapture() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        UserProfile userProfile = new UserProfile("","","");
+        mechanics.addUser(userProfile);
+        for(int i=1; i<mechanics.getMinPlayersForStart(); ++i){
+            mechanics.addUser(new UserProfile("", "", ""));
+        }
+        GameMap map = spy(mechanics.getMapWithUser(userProfile));
+        mechanics.replaseMap(mechanics.getMapWithUser(userProfile), map);
+
+        mechanics.startFlagCapture(userProfile);
+        verify(map, times(1)).startFlagCapture(userProfile);
+    }
+
+    @Test
+    public void testSetPlayerTarget() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        UserProfile userProfile = new UserProfile("","","");
+        mechanics.addUser(userProfile);
+        for(int i=1; i<mechanics.getMinPlayersForStart(); ++i){
+            mechanics.addUser(new UserProfile("", "", ""));
+        }
+        GameMap map = spy(mechanics.getMapWithUser(userProfile));
+        mechanics.replaseMap(mechanics.getMapWithUser(userProfile), map);
+
+        mechanics.setPlayerTarget(userProfile, 1, 1);
+        verify(map, times(1)).setPlayerTarget(userProfile, 1, 1);
+    }
+
+    @Test
+    public void testUseAbility() throws Exception {
+        GameMechanics mechanics = new GameMechanics();
+        UserProfile userProfile = new UserProfile("","","");
+        mechanics.addUser(userProfile);
+        for(int i=1; i<mechanics.getMinPlayersForStart(); ++i){
+            mechanics.addUser(new UserProfile("", "", ""));
+        }
+        GameMap map = spy(mechanics.getMapWithUser(userProfile));
+        mechanics.replaseMap(mechanics.getMapWithUser(userProfile), map);
+
+        mechanics.useAbility(userProfile, "NoneEffectAbility");
+        verify(map, times(1)).useAbility(userProfile, "NoneEffectAbility");
+    }
+
 }
