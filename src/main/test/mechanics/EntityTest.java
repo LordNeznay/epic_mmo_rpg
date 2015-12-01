@@ -7,7 +7,6 @@ import mechanics.abilityAction.NoneEffectAction;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

@@ -2,6 +2,7 @@ package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
+import org.jetbrains.annotations.TestOnly;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,6 +13,7 @@ import utils.Repairer;
 import utils.ResponseConstructor;
 import utils.ResponseHeaders;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +51,7 @@ public class GameMap {
     public int getAmountBluePlayers(){
         return amountBluePlayers;
     }
+
 
     public GameMap(){
         System.out.println("Создана новая карта");
@@ -99,7 +102,7 @@ public class GameMap {
         userProfile.addMessageForSending(response);
     }
 
-    public void sendPlayersViewArea(UserProfile userProfile){
+    public void sendPlayersPosition(UserProfile userProfile){
         Vec2d pos;
         try {
             if(!entities.get(userProfile).isCoordChange()) {
@@ -195,14 +198,12 @@ public class GameMap {
 
     public void entityMove(UserProfile userProfile, String params){
         Entity playerEntity = entities.get(userProfile);
-        entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = null;
         playerEntity.move(params);
-        entityLocation[(int)playerEntity.getCoord().x][(int)playerEntity.getCoord().y] = playerEntity;
     }
 
     public boolean isPassability(Vec2d cell){
         boolean result = false;
-        if(isPositionCorrect((int)cell.x, (int)cell.y) ) {
+        if(isPositionCorrect((int)cell.x, (int)cell.y)) {
             result = entityLocation[(int) cell.x][(int) cell.y] == null;
         }
         return result && physMap.isPassability(cell);
@@ -224,7 +225,7 @@ public class GameMap {
         String responseStatusFlag = ResponseConstructor.getResponse(ResponseHeaders.FLAG_STATUS, flag.getStatus());
         for (Map.Entry<UserProfile, Entity> entry : entities.entrySet())
         {
-            sendPlayersViewArea(entry.getKey());
+            sendPlayersPosition(entry.getKey());
             sendEntityInViewArea(entry.getKey());
             sendAvailableActions(entry.getKey());
             sendEntityStatus(entry.getKey());
@@ -307,13 +308,13 @@ public class GameMap {
         flag.startCapture(playerEntity);
     }
 
-    public void setPlayerTarget(UserProfile userProfile, int x, int y){
+    public void setPlayerTarget(UserProfile userProfile, int relative_x, int relative_y){
         Entity playerEntity = entities.get(userProfile);
-        x = (int)playerEntity.getCoord().x - VIEW_WIDTH_2 + x;
-        y = (int)playerEntity.getCoord().y - VIEW_HEIGHT_2 + y;
-        if(isPositionCorrect(y, x)){
-            if(entityLocation[x][y] != null){
-                playerEntity.setTarget(entityLocation[x][y]);
+        relative_x = (int)playerEntity.getCoord().x - VIEW_WIDTH_2 + relative_x;
+        relative_y = (int)playerEntity.getCoord().y - VIEW_HEIGHT_2 + relative_y;
+        if(isPositionCorrect(relative_y, relative_x)){
+            if(entityLocation[relative_x][relative_y] != null){
+                playerEntity.setTarget(entityLocation[relative_x][relative_y]);
             }
         }
     }
