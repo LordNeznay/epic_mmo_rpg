@@ -35,11 +35,10 @@ define([
                 that.trigger("joinGame");
             }
             this.ws.onmessage = function (event) {
+                console.log(event.data);
                 var allData = JSON.parse(event.data);
-                //var allData = event.data;
-                console.log(allData);
+                //console.log(allData);
                 allData.forEach(function(data){
-                    //data = JSON.parse(data);
                     switch(data.t){
                         case headers.waitStart:{
                             that.isGameComplite = false;

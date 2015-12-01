@@ -128,7 +128,7 @@ public class GameMap {
                         if(amountEntity!=0) {
                             result.append(", ");
                         }
-                        result.append(ResponseConstructor.getFlagEntityJson(new Vec2d(x, y), flag.getOwner()));
+                        result.append(ResponseConstructor.getFlagJson(new Vec2d(x, y), flag.getOwner()));
                         ++amountEntity;
                     }
 
