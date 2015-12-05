@@ -7,8 +7,11 @@ import javax.persistence.*;
  * Created by uschsh on 29.11.15.
  */
 @NamedQueries({
-        @NamedQuery(name = "userByName",query = "from user u where u.username = :username"),
-        @NamedQuery(name = "userBySession",query = "from user u where u.session = :session")
+        @NamedQuery(name = "userByName", query = "from user u where u.username = :username"),
+        @NamedQuery(name = "userBySession", query = "from user u where u.session = :session"),
+        @NamedQuery(name = "deleteBySession", query = "delete user u where u.session = :session"),
+        @NamedQuery(name = "deleteByName", query = "delete user u where u.username = :username"),
+        @NamedQuery(name = "getAuthUser", query = "select count(*) from user u where u.session IS NOT NULL")
 })
 
 @Entity(name="user")

@@ -3,7 +3,9 @@ package frontend;
 import dbservice.DBService;
 import main.AccountService;
 import main.UserProfile;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +15,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,23 +26,33 @@ public class ExitServletTest {
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private HttpSession session = mock(HttpSession.class);
 
-    private final UserProfile testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
-    private final UserProfile testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
-    private DBService dbService = mock(DBService.class);
-    private final AccountService accountService = new AccountService(dbService);
+    private static UserProfile s_testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
+    private static UserProfile s_testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
+    private static DBService dbService;
+    private static AccountService s_accountService;
+    private static String s_sessionIdSecond = "sessionidsecond";
+
+    @BeforeClass
+    public static void setBefore() throws IOException {
+        dbService   =   new DBService("test");
+        s_accountService = new AccountService(dbService);
+        s_accountService.addUser(s_testFirstUser.getLogin(), s_testFirstUser);
+        s_accountService.addUser(s_testSecondUser.getLogin(), s_testSecondUser);
+
+        s_accountService.addSession("session", s_testFirstUser);
+
+        s_accountService.addSession(s_sessionIdSecond, s_testSecondUser);
+    }
+
+    @AfterClass
+    public static void after() throws IOException {
+        dbService.shutdown();
+    }
 
     @Before
     public void setUp() throws IOException {
-        accountService.addUser(testFirstUser.getLogin(), testFirstUser);
-        accountService.addUser(testSecondUser.getLogin(), testSecondUser);
-
-        accountService.addSession(anyString(), testFirstUser);
-
-        String sessionIdSecond = "sessionidsecond";
-        accountService.addSession(sessionIdSecond, testSecondUser);
-
         when(request.getSession(true)).thenReturn(session);
-        when(session.getId()).thenReturn(sessionIdSecond);
+        when(session.getId()).thenReturn(s_sessionIdSecond);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -55,9 +66,9 @@ public class ExitServletTest {
 
     @Test
     public void testDoPost() throws IOException {
-        ExitServlet exitServlet = new ExitServlet(accountService);
+        ExitServlet exitServlet = new ExitServlet(s_accountService);
 
-        assertEquals(accountService.getAuthUsersNumber(), 2);
+        assertEquals(s_accountService.getAuthUsersNumber(), 2);
 
         try {
             exitServlet.doPost(request, response);
@@ -65,6 +76,6 @@ public class ExitServletTest {
             e.printStackTrace();
         }
 
-        assertEquals(accountService.getAuthUsersNumber(), 1);
+        assertEquals(s_accountService.getAuthUsersNumber(), 1);
     }
 }

@@ -1,8 +1,11 @@
 package main;
 
 import dbservice.DBService;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -11,47 +14,55 @@ import static org.mockito.Mockito.mock;
  * Created by uschsh on 01.11.15.
  */
 public class AccountServiceTest {
-    private DBService dbService = mock(DBService.class);
-    private final AccountService accountService = new AccountService(dbService);
+    private static AccountService s_accountService;
+    private static DBService dbService;
+    private static UserProfile s_testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
+    private static UserProfile s_testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
 
-    private final UserProfile testFirstUser = new UserProfile("testLogin1", "testPassword1", "testEmail1");
-    private final UserProfile testSecondUser = new UserProfile("testLogin2", "testPassword2", "testEmail2");
+    private static String s_sessionIdSecond = "sessioidsecond";
 
-    private final String sessionIdSecond = "sessioidsecond";
+    @BeforeClass
+    public static void setUp() throws Exception {
+        dbService   =   new DBService("test");
+        s_accountService = new AccountService(dbService);
+        s_accountService.addUser(s_testFirstUser.getLogin(), s_testFirstUser);
+        s_accountService.addUser(s_testSecondUser.getLogin(), s_testSecondUser);
 
-    @Before
-    public void setUp() throws Exception {
-        accountService.addUser(testFirstUser.getLogin(), testFirstUser);
-        accountService.addUser(testSecondUser.getLogin(), testSecondUser);
+        s_accountService.addSession(s_sessionIdSecond, s_testSecondUser);
+    }
 
-        accountService.addSession(sessionIdSecond, testSecondUser);
+    @AfterClass
+    public static void after() throws IOException {
+        dbService.shutdown();
     }
 
     @Test
     public void testAddUser() throws Exception {
         UserProfile newUser = new UserProfile("newUser", "password", "email1");
 
-        accountService.addUser(newUser.getLogin(), newUser);
+        s_accountService.addUser(newUser.getLogin(), newUser);
 
-        UserProfile user = accountService.getUserByName(newUser.getLogin());
+        UserProfile user = s_accountService.getUserByName(newUser.getLogin());
 
         assertNotNull(user);
 
         assertEquals(newUser.getLogin(), user.getLogin());
         assertEquals(newUser.getEmail(), user.getEmail());
         assertEquals(newUser.getPassword(), user.getPassword());
+
+        s_accountService.deleteUserByName(newUser.getLogin());
     }
 
     @Test
     public void testAddExistingUser() throws Exception {
-        assertFalse(accountService.addUser(testFirstUser.getLogin(), testFirstUser));
+        assertFalse(s_accountService.addUser(s_testFirstUser.getLogin(), s_testFirstUser));
     }
 
     @Test
     public void testAuthorization() throws Exception {
         String sessionIdFirst = "sessionidfirst";
 
-        assertTrue(accountService.addSession(sessionIdFirst, testFirstUser));
+        assertTrue(s_accountService.addSession(sessionIdFirst, s_testFirstUser));
     }
 
     @Test
@@ -60,41 +71,45 @@ public class AccountServiceTest {
 
         String sessionIdError = "sessioiderror";
 
-        assertFalse(accountService.addSession(sessionIdError, notRegisteredUser));
+        assertFalse(s_accountService.addSession(sessionIdError, notRegisteredUser));
     }
 
 
     @Test
     public void testGetUserByName() throws Exception {
-        UserProfile user = accountService.getUserByName(testFirstUser.getLogin());
+        UserProfile user = s_accountService.getUserByName(s_testFirstUser.getLogin());
 
-        assertEquals(user, testFirstUser);
+        assertEquals(user.getLogin(), s_testFirstUser.getLogin());
+        assertEquals(user.getPassword(), s_testFirstUser.getPassword());
+        assertEquals(user.getEmail(), s_testFirstUser.getEmail());
     }
 
     @Test
     public void testGetUserBySession() throws Exception {
-        UserProfile user = accountService.getUserBySession(sessionIdSecond);
+        UserProfile user = s_accountService.getUserBySession(s_sessionIdSecond);
 
-        assertEquals(user, testSecondUser);
+        assertEquals(user.getLogin(), s_testSecondUser.getLogin());
+        assertEquals(user.getPassword(), s_testSecondUser.getPassword());
+        assertEquals(user.getEmail(), s_testSecondUser.getEmail());
     }
 
     @Test
     public void testRemoveUser() throws Exception {
-        accountService.removeUser(sessionIdSecond);
+        s_accountService.removeUser(s_sessionIdSecond);
 
-        UserProfile user = accountService.getUserBySession(sessionIdSecond);
+        UserProfile user = s_accountService.getUserBySession(s_sessionIdSecond);
 
         assertNull(user);
     }
 
     @Test
     public void testGetAuthUsersNumber() throws Exception {
-        assertEquals(accountService.getAuthUsersNumber(), 1);
+        assertEquals(s_accountService.getAuthUsersNumber(), 1);
     }
 
     @Test
     public void testGetRegUsersNumber() throws Exception {
-        assertEquals(accountService.getRegUsersNumber(), 2);
+        assertEquals(s_accountService.getRegUsersNumber(), 2);
 
     }
 }

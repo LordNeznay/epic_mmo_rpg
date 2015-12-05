@@ -2,7 +2,9 @@ package frontend;
 
 import dbservice.DBService;
 import main.AccountService;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.ServletException;
@@ -23,9 +25,15 @@ public class SignUpServletTest {
 
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
-    private DBService dbService = mock(DBService.class);
-    private final AccountService accountService = new AccountService(dbService);
+    private static DBService dbService;
+    private static AccountService s_accountService;
     private StringWriter stringWriter;
+
+    @BeforeClass
+    public static void setBefore() throws IOException {
+        dbService   =   new DBService("test");
+        s_accountService =   new AccountService(dbService);
+    }
 
     @Before
     public void setUp() throws IOException {
@@ -42,21 +50,26 @@ public class SignUpServletTest {
         }
     }
 
+    @AfterClass
+    public static void after() throws IOException {
+        dbService.shutdown();
+    }
+
     @Test
     public void testDoPost() throws ServletException, IOException {
-        SignUpServlet signUp = new SignUpServlet(accountService);
+        SignUpServlet signUp = new SignUpServlet(s_accountService);
         try {
             signUp.doPost(request, response);
         } catch(ServletException e) {
             e.printStackTrace();
         }
 
-        assertEquals(accountService.getRegUsersNumber(), 1);
+        assertEquals(s_accountService.getRegUsersNumber(), 1);
     }
 
     @Test
     public void testRegExisting() throws ServletException, IOException {
-        SignUpServlet signUp = new SignUpServlet(accountService);
+        SignUpServlet signUp = new SignUpServlet(s_accountService);
         try {
             signUp.doPost(request, response);
             signUp.doPost(request, response);

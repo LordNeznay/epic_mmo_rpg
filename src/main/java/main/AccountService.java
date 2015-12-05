@@ -23,7 +23,7 @@ public class AccountService {
     public boolean addUser(String userName, UserProfile userProfile) {
         if (dbservice.isAvailable(userName))
             return false;
-        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0, ""));
+        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0, null));
         return true;
     }
 
@@ -41,6 +41,8 @@ public class AccountService {
     @Nullable
     public UserProfile getUserByName(String userName) {
         UserDataSet dataSet = dbservice.getByName(userName);
+        if(dataSet == null)
+            return null;
         return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
     }
 
@@ -53,9 +55,12 @@ public class AccountService {
             return null;
     }
 
-    public void removeUser(String sessionId) { /*sessions.remove(sessionId);*/ }
+    public void removeUser(String sessionId) { dbservice.nullSession(sessionId);/*sessions.remove(sessionId);*/ }
 
-    public long getAuthUsersNumber() { return dbservice.getRegCount(); }
+    public void deleteUserBySession(String sessionId) { dbservice.deleteBySession(sessionId); }
+    public void deleteUserByName(String userName) { dbservice.deleteByName(userName); }
+
+    public long getAuthUsersNumber() { return dbservice.getAuthUser(); }
 
     public long getRegUsersNumber() { return dbservice.getRegCount(); }
 }
