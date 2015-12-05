@@ -3,12 +3,11 @@ package mechanics;
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import org.junit.Test;
+import org.mockito.Mockito;
 import utils.ReflectionHelper;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UnknownFormatConversionException;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -114,9 +113,9 @@ public class GameMapTest {
         user = spy(user);
         map.addUser(user);
 
+        Mockito.reset(user);
         map.sendEntityInViewArea(user);
-        //Один вызов в addUser...
-        verify(user, times(2)).addMessageForSending(anyString());
+        verify(user, times(1)).addMessageForSending(anyString());
     }
 
 

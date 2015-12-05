@@ -7,7 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import resource.Configuration;
+import resource.ServerConfiguration;
 import resource.ResourceFactory;
 import utils.Repairer;
 import utils.ResponseConstructor;
@@ -21,10 +21,10 @@ import java.util.Map;
  * Created by uschsh on 26.10.15.
  */
 public class GameMap {
-    private static final int MAX_PLAYERS_IN_COMMAND = Configuration.getInstance().getAmountPlayerInCommand();
+    private static final int MAX_PLAYERS_IN_COMMAND = ServerConfiguration.getInstance().getAmountPlayerInCommand();
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
-    private static final int POINTS_TO_WIN = Configuration.getInstance().getPointsToWin();
+    private static final int POINTS_TO_WIN = ServerConfiguration.getInstance().getPointsToWin();
     private boolean isEnd = false;
     private int mapWidth;
     private int mapHeight;
