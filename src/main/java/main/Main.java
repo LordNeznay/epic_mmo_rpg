@@ -58,7 +58,7 @@ public class Main {
 
 
         ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
+        resource_handler.setDirectoriesListed(false);
         resource_handler.setResourceBase("public_html");
 
         HandlerList handlers = new HandlerList();

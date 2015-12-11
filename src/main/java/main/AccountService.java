@@ -55,7 +55,7 @@ public class AccountService {
             return null;
     }
 
-    public void removeUser(String sessionId) { dbservice.nullSession(sessionId);/*sessions.remove(sessionId);*/ }
+    public void removeUser(String sessionId) { dbservice.nullSession(sessionId); }
 
     public void deleteUserBySession(String sessionId) { dbservice.deleteBySession(sessionId); }
     public void deleteUserByName(String userName) { dbservice.deleteByName(userName); }

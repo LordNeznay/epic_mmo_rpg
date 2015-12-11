@@ -22,16 +22,22 @@ public class DBService {
 
     public DBService(String state) {
         String hbm2ddl_auto;
-        if (state.equals("test"))
-            hbm2ddl_auto    =   "create-drop";
+        String url;
+        if (state.equals("test")) {
+            hbm2ddl_auto = ServerConfiguration.getInstance().getHbm2ddAutoTest();
+            url = ServerConfiguration.getInstance().getConnectionUrlTest();
+        }
         else
-            hbm2ddl_auto    =   ServerConfiguration.getInstance().getHbm2ddAuto();
+        {
+            hbm2ddl_auto = ServerConfiguration.getInstance().getHbm2ddAuto();
+            url = ServerConfiguration.getInstance().getConnectionUrl();
+        }
 
         Configuration configuration = new Configuration()
         .addAnnotatedClass(UserDataSet.class)
         .setProperty("hibernate.dialect", ServerConfiguration.getInstance().getDialect())
         .setProperty("hibernate.connection.driver_class", ServerConfiguration.getInstance().getDriverClass())
-        .setProperty("hibernate.connection.url", ServerConfiguration.getInstance().getConnectionUrl())
+        .setProperty("hibernate.connection.url", url)
         .setProperty("hibernate.connection.username", ServerConfiguration.getInstance().getConnectionUsername())
         .setProperty("hibernate.connection.password", ServerConfiguration.getInstance().getConnectionPassword())
         .setProperty("hibernate.show_sql", ServerConfiguration.getInstance().getShowSql())

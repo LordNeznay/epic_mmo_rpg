@@ -46,6 +46,10 @@ public final class ServerConfiguration {
             serverProperties.put("connection_password", properties.getProperty("hibernate.connection.password"));
             serverProperties.put("show_sql", properties.getProperty("hibernate.show_sql"));
             serverProperties.put("hbm2ddl_auto", properties.getProperty("hibernate.hbm2ddl.auto"));
+            serverProperties.put("hbm2ddl_auto_test", properties.getProperty("hibernate.hbm2ddl.auto_test"));
+            serverProperties.put("connection_url_test", properties.getProperty("hibernate.connection.url_test"));
+
+
 
             getAbilityConfig(properties, "OrdinaryHit");
             getAbilityConfig(properties, "OrdinaryHealing");
@@ -119,6 +123,10 @@ public final class ServerConfiguration {
         return serverProperties.get("connection_url");
     }
 
+    public String getConnectionUrlTest(){
+        return serverProperties.get("connection_url_test");
+    }
+
     public String getConnectionUsername(){
         return serverProperties.get("connection_username");
     }
@@ -133,5 +141,9 @@ public final class ServerConfiguration {
 
     public String getHbm2ddAuto(){
         return serverProperties.get("hbm2ddl_auto");
+    }
+
+    public String getHbm2ddAutoTest(){
+        return serverProperties.get("hbm2ddl_auto_test");
     }
 }
