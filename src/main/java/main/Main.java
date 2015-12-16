@@ -43,7 +43,7 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet exitServlet = new ExitServlet(accountService);
-        Servlet adminServlet = new AdminServlet(accountService);
+        Servlet adminServlet = new AdminServlet(accountService, gameMechanics, dbservice);
         Servlet gameServlet = new WebSocketGameServlet(accountService, gameMechanics);
         Servlet topPlayersServlet = new TopPlayersServlet();
 

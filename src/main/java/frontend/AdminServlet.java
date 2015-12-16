@@ -1,7 +1,9 @@
 package frontend;
 
+import dbservice.DBService;
 import main.AccountService;
 import main.TimeHelper;
+import mechanics.GameMechanics;
 import org.jetbrains.annotations.NotNull;
 import templater.PageGenerator;
 
@@ -18,9 +20,13 @@ import java.util.Map;
  */
 public class AdminServlet extends HttpServlet {
     private AccountService accountService;
+    private GameMechanics gameMechanics;
+    private DBService dbservice;
+    public AdminServlet(AccountService accService, GameMechanics gameMechanics, DBService dbservice) {
 
-    public AdminServlet(AccountService accService) {
         this.accountService = accService;
+        this.gameMechanics = gameMechanics;
+        this.dbservice = dbservice;
     }
 
     @Override
@@ -30,7 +36,9 @@ public class AdminServlet extends HttpServlet {
 
         if(shutdown_time != null) {
             int time = Integer.valueOf(shutdown_time);
-            System.out.print("Server will be down after: "+ time + " ms");
+            System.out.print("Server will be down after: " + time + " ms");
+            gameMechanics.stop();
+            dbservice.shutdown();
             TimeHelper.sleep(time);
             System.out.print("\nShutdown");
             System.exit(0);
