@@ -38,24 +38,9 @@ public class UserDataSet implements Serializable {
     @Column(name = "session")
     private String session;
 
-    public UserDataSet(long id, String username) {
-        this.id         =   id;
-        this.username   =   username;
-        this.score      =   0;
-    }
-
     public UserDataSet() {
-    }
 
-    public UserDataSet(long id, String username, String email, String password, long score, String session) {
-        this.id         =   id;
-        this.username   =   username;
-        this.email      =   email;
-        this.password   =   password;
-        this.score      =   score;
-        this.session    =   session;
     }
-
     public UserDataSet(String username, String email, String password, long score, String session) {
         this.id         =   -1;
         this.username   =   username;
@@ -65,11 +50,6 @@ public class UserDataSet implements Serializable {
         this.session    =   session;
     }
 
-    public UserDataSet(String name) {
-        this.id         =   -1;
-        this.username   =   name;
-        this.score      =   0;
-    }
 
     public String getName() {
         return username;

@@ -3,6 +3,7 @@ package frontend;
 import dbservice.DBService;
 import main.AccountService;
 import main.UserProfile;
+import mechanics.GameMechanics;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,6 +26,7 @@ public class AdminServletTest {
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private static DBService dbService;
+    private static GameMechanics gameMechanics = mock(GameMechanics.class);
     private static AccountService s_accountService;
 
     @BeforeClass
@@ -55,7 +57,7 @@ public class AdminServletTest {
 
     @Test
     public void testDoGet() throws IOException {
-        AdminServlet adminServlet = new AdminServlet(s_accountService);
+        AdminServlet adminServlet = new AdminServlet(s_accountService, gameMechanics, dbService);
 
         try {
             adminServlet.doGet(request, response);
@@ -71,7 +73,7 @@ public class AdminServletTest {
     public void testDoGetStopServer() throws IOException {
         //when(request.getParameter("shutdown")).thenReturn("100");
 
-        AdminServlet adminServlet = new AdminServlet(s_accountService);
+        AdminServlet adminServlet = new AdminServlet(s_accountService, gameMechanics, dbService);
 
         try {
             adminServlet.doGet(request, response);
