@@ -55,6 +55,7 @@ define([
                     url: "/api/v1/auth/signin",
                     dataType: 'json',
                     success: function(data){	
+                        //console.log(data.isLogin);
                         if(data.isLogin == 'true'){
                             that.isLogin = true;
                         } else {

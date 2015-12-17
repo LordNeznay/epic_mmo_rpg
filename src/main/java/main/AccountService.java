@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class AccountService {
    // @NotNull private Map<String, UserProfile> users = new HashMap<>();
-   // @NotNull private Map<String, UserProfile> sessions = new HashMap<>();
+    @NotNull private Map<String, UserProfile> sessions = new HashMap<>();
     private DBService dbservice;
 
     public AccountService(DBService dbservice) {
@@ -31,7 +31,7 @@ public class AccountService {
         UserDataSet user = dbservice.getByName(userProfile.getLogin());
 
         if(user != null) {
-            dbservice.setSession(userProfile.getLogin(), sessionId);
+            sessions.put(sessionId, userProfile);
             return true;
         } else
             return false;
@@ -48,11 +48,7 @@ public class AccountService {
 
     @Nullable
     public UserProfile getUserBySession(String sessionId) {
-        UserDataSet dataSet = dbservice.getBySession(sessionId);
-        if (dataSet != null)
-            return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
-        else
-            return null;
+        return sessions.get(sessionId);
     }
 
     public void removeUser(String sessionId) { dbservice.nullSession(sessionId); }
