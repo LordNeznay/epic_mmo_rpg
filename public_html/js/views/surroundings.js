@@ -1,6 +1,6 @@
 ﻿define([
     'backbone',
-    'tmpl/surroundings'
+    'tmpl/game'
 ], function(
     Backbone,
     tmpl

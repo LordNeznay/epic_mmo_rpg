@@ -52,7 +52,7 @@ module.exports = function (grunt) {
             },
             css: {
                 files: ['public_html/css/gen-css/*.css'],
-                tasks: ['concat:css'],
+                tasks: ['concat:css', 'cssmin'],
             }
         },
         concurrent: {
@@ -85,8 +85,49 @@ module.exports = function (grunt) {
             css: {
                 src: ['public_html/css/gen-css/*.css'],
                 dest: 'public_html/css/main.css',
+            },
+            
+            build: { /* Подзадача */
+				separator: ';\n',
+				src: [
+					'public_html/js/lib/almond.js',
+					'public_html/js/build/main.js'
+				],
+				dest: 'public_html/js/build.js'
+			}
+        },
+        
+        cssmin: {
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: 'public_html/css',
+                    src: ['*.css', '!*.min.css'],
+                    dest: 'public_html/css',
+                    ext: '.min.css'
+                }]
             }
-        }
+        },
+        
+        requirejs: {
+			build: {
+				options: {
+					almond: true,
+					baseUrl: 'public_html/js',
+                    mainConfigFile: 'public_html/js/main.js',
+					name: 'main',
+					optimize: 'none',
+					out: 'public_html/js/build/main.js'
+				}
+			}
+		},
+        uglify: { 
+			build: {
+				files: {
+					'public_html/js/build.min.js': ['public_html/js/build.js']
+				}
+			}
+		}
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -95,7 +136,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-fest');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['sass:dev', 'concat',  'concurrent']);
+    grunt.registerTask('default', ['sass:dev', 'requirejs', 'concat', 'cssmin', 'uglify', 'concurrent']);
 
 };
