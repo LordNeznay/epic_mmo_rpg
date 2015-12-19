@@ -14,5 +14,5 @@ public_html/css/gen-css
 #’з что это, но там его быть не должно
 public_html/*.tml
 public_html/js/build.js
-public_html/js/build.main.js
+public_html/js/build.min.js
 public_html/js/build

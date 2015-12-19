@@ -3,9 +3,14 @@
     <meta charset="UTF-8"/>
     <title>Epic MMO RPG</title>
     <link rel="stylesheet" type="text/css" href="css/main.min.css" />
-</head><body>
+</head>
+<body>
     <div class="page"></div>
-	<script src="//localhost:35729/livereload.js"></script>
-	<script data-main="js/main" src="js/lib/require.js"></script>
-</body>
+	<script src="js/build.min.js"></script>
+	<script>
+		require(['main'], function(){
+			console.log('hello');
+		});
+	</script>
+    </body>
 </html>
