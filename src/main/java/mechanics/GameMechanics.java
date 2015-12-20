@@ -3,8 +3,13 @@ package mechanics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import main.UserProfile;
+import messageSystem.Abonent;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
 import org.jetbrains.annotations.TestOnly;
 import org.json.simple.JSONObject;
 import resource.ServerConfiguration;
@@ -16,13 +21,30 @@ import utils.TimeHelper;
 /**
  * Created by uschsh on 26.10.15.
  */
-public class GameMechanics {
+public class GameMechanics implements Abonent {
+    private final Address address = new Address();
+    private final MessageSystem messageSystem;
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MIN_PLAYERS_FOR_START = ServerConfiguration.getInstance().getPlayerToStart();
-    private Map<UserProfile, GameMap> usersMaps = new HashMap<>();
-    private ArrayList<UserProfile> userQueue = new ArrayList<>();
-    private ArrayList<GameMap> gameMaps = new ArrayList<>();
+    private ConcurrentHashMap<UserProfile, GameMap> usersMaps = new ConcurrentHashMap<>();
+    private CopyOnWriteArrayList<UserProfile> userQueue = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<GameMap> gameMaps = new CopyOnWriteArrayList<>();
     private boolean isGame = false;
+
+    public GameMechanics(MessageSystem messageSystem){
+        this.messageSystem = messageSystem;
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerGameMechanics(this);
+    }
+
+    public MessageSystem getMessageSystem() {
+        return messageSystem;
+    }
+
+    @Override
+    public Address getAddress(){
+        return address;
+    }
 
     @TestOnly
     public GameMap getMapWithUser(UserProfile userProfile){
@@ -82,7 +104,7 @@ public class GameMechanics {
         userProfile.addMessageForSending(response);
 
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
-            GameMap gameMap = new GameMap();
+            GameMap gameMap = new GameMap(messageSystem);
             gameMaps.add(gameMap);
             for (UserProfile anUserQueue : userQueue) {
                 usersMaps.put(anUserQueue, gameMap);

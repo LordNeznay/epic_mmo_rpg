@@ -1,9 +1,9 @@
 package frontend;
 
-import main.AccountService;
+import main.TimeHelper;
 import main.UserProfile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import resource.ServerConfiguration;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -19,27 +19,28 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class SignInServlet extends HttpServlet {
-    @Nullable private AccountService accountService;
+    @NotNull private Frontend frontend;
+    private static final int RESPONSE_TIME = ServerConfiguration.getInstance().getServletResponseTime();
 
-    public SignInServlet(@Nullable AccountService accService) {
-        this.accountService = accService;
+    public SignInServlet(@NotNull Frontend frontend) {
+        this.frontend = frontend;
     }
 
     @Override
     protected void doGet(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
 
-        String sesseionId = null;
+        String sessionId = null;
         if(session != null) {
-            sesseionId = session.getId();
+            sessionId = session.getId();
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
 
-        if((accountService != null) && (sesseionId != null)) {
+        if(sessionId != null) {
             Map<String, Object> pageVariables = new HashMap<>();
-            if (accountService.getUserBySession(sesseionId) == null) {
+            if (!frontend.isAuthenticated(sessionId)){
                 pageVariables.put("loginStatus", "false");
             } else {
                 pageVariables.put("loginStatus", "true");
@@ -57,25 +58,23 @@ public class SignInServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if((name != null) && (password != null)) {
+            Map<String, Object> pageVariables = new HashMap<>();
 
-            if(accountService != null) {
-                Map<String, Object> pageVariables = new HashMap<>();
-                UserProfile profile = accountService.getUserByName(name);
+            String session = request.getSession(true).getId();
+            frontend.authenticate(name, password, session);
 
-
-                if (profile != null && profile.getPassword().equals(password)) {
-                    String session = request.getSession(true).getId();
-                    accountService.addSession(session, profile);
-                    pageVariables.put("errors", "null");
-                    response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
-                } else {
-                    pageVariables.put("errors", "Wrong login/password");
-                    response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
-                }
-                response.setStatus(HttpServletResponse.SC_OK);
+            while (! frontend.isResivedResponseAuthorization(session)){
+                TimeHelper.sleep(RESPONSE_TIME);
             }
 
-        }else
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            if (frontend.getResponseAuthorization(session)) {
+                pageVariables.put("errors", "null");
+                response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
+            } else {
+                pageVariables.put("errors", "Wrong login/password");
+                response.getWriter().println(PageGenerator.getPage("loginResult.json", pageVariables));
+            }
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
     }
 }

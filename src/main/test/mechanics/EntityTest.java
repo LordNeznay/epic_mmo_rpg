@@ -1,5 +1,5 @@
 package mechanics;
-
+/*
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.ability.NoneEffectAbility;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Created by Андрей on 18.11.2015.
- */
+ *//*
 
 public class EntityTest {
 
@@ -155,4 +155,4 @@ public class EntityTest {
         verify(target, times(2)).affect(someAction);
     }
 
-}
+}*/

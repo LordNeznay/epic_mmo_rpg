@@ -1,18 +1,12 @@
 package main;
 
+import accountService.AccountService;
 import dbservice.DBService;
 import frontend.*;
 import mechanics.GameMechanics;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import messageSystem.MessageSystem;
 import resource.ServerConfiguration;
 import utils.Repairer;
-
-import javax.servlet.Servlet;
 
 /**
  * @author v.chibrikov
@@ -30,46 +24,35 @@ public class Main {
         }
 
         DBService dbservice = new DBService();
+        MessageSystem messageSystem = new MessageSystem();
 
-        System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
+        //GameMechanics gameMechanics = new GameMechanics(messageSystem);
+        //Repairer.getInstance().setGameMechanics(gameMechanics);
 
-        GameMechanics gameMechanics = new GameMechanics();
-        Repairer.getInstance().setGameMechanics(gameMechanics);
-
-        AccountService accountService = new AccountService(dbservice);
+        AccountService accountService = new AccountService(messageSystem, dbservice);
         accountService.addUser("admin", new UserProfile("admin", "admin", ""));
         accountService.addUser("LordNeznay", new UserProfile("LordNeznay", "LordNeznay", ""));
 
-        Servlet signin = new SignInServlet(accountService);
-        Servlet signUp = new SignUpServlet(accountService);
-        Servlet exitServlet = new ExitServlet(accountService);
-        Servlet adminServlet = new AdminServlet(accountService, gameMechanics, dbservice);
-        Servlet gameServlet = new WebSocketGameServlet(accountService, gameMechanics);
-        Servlet topPlayersServlet = new TopPlayersServlet();
-
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(signin), "/api/v1/auth/signin");
-        context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
-        context.addServlet(new ServletHolder(exitServlet), "/api/v1/auth/exit");
-        context.addServlet(new ServletHolder(adminServlet), "/api/admin");
-        context.addServlet(new ServletHolder(topPlayersServlet), "/api/topplayers");
-
-        context.addServlet(new ServletHolder(gameServlet), "/gameplay");
+        Frontend frontend = new Frontend(messageSystem, port);
 
 
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(false);
-        resource_handler.setResourceBase("public_html");
 
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, context});
+        final Thread accountServiceThread = new Thread(accountService);
+        accountServiceThread.setDaemon(true);
+        accountServiceThread.setName("Account Service");
+        //final Thread gameMechanicsThread = new Thread(gameMechanics);
+        //gameMechanicsThread.setDaemon(true);
+        //gameMechanicsThread.setName("Game Mechanics");
+        final Thread frontEndThread = new Thread(frontend);
+        frontEndThread.setDaemon(true);
+        frontEndThread.setName("FrontEnd");
 
-        Server server = new Server(port);
-        server.setHandler(handlers);
+        accountServiceThread.start();
+        //gameMechanicsThread.start();
+        frontEndThread.start();
 
-        server.start();
-        //server.join();
 
-        gameMechanics.start();
+
+        //gameMechanics.start();
     }
 }

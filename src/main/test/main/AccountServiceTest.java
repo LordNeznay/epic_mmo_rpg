@@ -1,5 +1,5 @@
 package main;
-
+/*
 import dbservice.DBService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Created by uschsh on 01.11.15.
- */
+ *//*
 public class AccountServiceTest {
     private static AccountService s_accountService;
     private static DBService dbService;
@@ -112,4 +112,4 @@ public class AccountServiceTest {
         assertEquals(s_accountService.getRegUsersNumber(), 2);
 
     }
-}
+}*/

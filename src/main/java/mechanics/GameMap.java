@@ -2,6 +2,9 @@ package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
+import messageSystem.Abonent;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
 import org.jetbrains.annotations.TestOnly;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,11 +19,15 @@ import utils.ResponseHeaders;
 import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by uschsh on 26.10.15.
  */
-public class GameMap {
+public class GameMap implements Abonent{
+    private Address address = new Address();
+    private MessageSystem messageSystem;
+
     private static final int MAX_PLAYERS_IN_COMMAND = ServerConfiguration.getInstance().getAmountPlayerInCommand();
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
@@ -29,7 +36,7 @@ public class GameMap {
     private int mapWidth;
     private int mapHeight;
 
-    private Map<UserProfile, Entity> entities = new HashMap<>();
+    private ConcurrentHashMap<UserProfile, Entity> entities = new ConcurrentHashMap<>();
     private Flag flag = new Flag();
     private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
@@ -52,8 +59,16 @@ public class GameMap {
         return amountBluePlayers;
     }
 
+    @Override
+    public Address getAddress(){
+        return address;
+    }
 
-    public GameMap(){
+    public GameMap(MessageSystem messageSystem){
+        this.messageSystem = messageSystem;
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerGameMap(this);
+
         System.out.println("Создана новая карта");
         Vec2d sizeMap = physMap.getSize();
         mapWidth = (int) sizeMap.x;
@@ -66,6 +81,10 @@ public class GameMap {
         }
 
         parseObjectLayer(physMap.getObjectLayer());
+    }
+
+    public MessageSystem getMessageSystem() {
+        return messageSystem;
     }
 
     public String getResult(){

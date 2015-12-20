@@ -1,6 +1,5 @@
 package frontend;
 
-import mechanics.GameMechanics;
 import main.UserProfile;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -8,6 +7,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,12 +20,13 @@ import java.io.IOException;
 @WebSocket
 public class GameWebSocket {
     private UserProfile userProfile;
-    private GameMechanics gameMechanics;
+    @NotNull
+    private Frontend frontend;
     private Session session;
 
-    public GameWebSocket(UserProfile userProfile, GameMechanics gameMechanics) {
+    public GameWebSocket(UserProfile userProfile, @NotNull Frontend frontend) {
         this.userProfile = userProfile;
-        this.gameMechanics = gameMechanics;
+        this.frontend = frontend;
     }
 
     public UserProfile getUser() {
@@ -48,10 +49,10 @@ public class GameWebSocket {
         if (query != null) {
             switch (query.get("command").toString()) {
                 case "join_game":
-                    gameMechanics.addUser(userProfile);
+                    //gameMechanics.addUser(userProfile);
                     break;
                 case "leave_game":
-                    gameMechanics.removeUser(userProfile);
+                    //gameMechanics.removeUser(userProfile);
                     break;
                 case "action":
                     onGetAction(query);
@@ -64,22 +65,22 @@ public class GameWebSocket {
     private void onGetAction(JSONObject query){
         switch (query.get("action").toString()) {
             case "move":
-                gameMechanics.movePlayer(userProfile, query.get("direction").toString());
+                //gameMechanics.movePlayer(userProfile, query.get("direction").toString());
                 break;
             case "flagCapture":
-                gameMechanics.startFlagCapture(userProfile);
+                //gameMechanics.startFlagCapture(userProfile);
                 break;
             case "setTarget":
                 try {
                     int x = Integer.valueOf(query.get("x").toString());
                     int y = Integer.valueOf(query.get("y").toString());
-                    gameMechanics.setPlayerTarget(userProfile, x, y);
+                    //gameMechanics.setPlayerTarget(userProfile, x, y);
                 } catch (NumberFormatException e) {
                     System.err.println("Cannot parse game map!");
                 }
                 break;
             case "useAbility":
-                gameMechanics.useAbility(userProfile, query.get("abilityName").toString());
+                //gameMechanics.useAbility(userProfile, query.get("abilityName").toString());
                 break;
             default: break;
         }

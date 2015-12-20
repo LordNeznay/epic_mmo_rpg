@@ -1,22 +1,17 @@
 package frontend;
 
-import dbservice.DBService;
-import main.AccountService;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by uschsh on 01.11.15.
@@ -25,20 +20,17 @@ public class SignUpServletTest {
 
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
-    private static DBService dbService;
-    private static AccountService s_accountService;
+    private HttpSession session = mock(HttpSession.class);
+    private static Frontend s_frontend = mock(Frontend.class);
     private StringWriter stringWriter;
-
-    @BeforeClass
-    public static void setBefore() throws IOException {
-        dbService   =   new DBService("test");
-        s_accountService =   new AccountService(dbService);
-    }
 
     @Before
     public void setUp() throws IOException {
+        when(request.getSession(true)).thenReturn(session);
         when(request.getParameter("name")).thenReturn("name");
         when(request.getParameter("password")).thenReturn("password");
+
+        when(session.getId()).thenReturn("sessionid");
 
         stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -50,28 +42,28 @@ public class SignUpServletTest {
         }
     }
 
-    @AfterClass
-    public static void after() throws IOException {
-        dbService.shutdown();
-    }
-
     @Test
     public void testDoPost() throws ServletException, IOException {
-        SignUpServlet signUp = new SignUpServlet(s_accountService);
+        when(s_frontend.isResivedResponseExistUser(anyString())).thenReturn(true);
+        when(s_frontend.getResponseExistUser(anyString())).thenReturn(false);
+
+        SignUpServlet signUp = new SignUpServlet(s_frontend);
         try {
             signUp.doPost(request, response);
         } catch(ServletException e) {
             e.printStackTrace();
         }
 
-        assertEquals(s_accountService.getRegUsersNumber(), 1);
+        assert !stringWriter.toString().contains("already exists");
     }
 
     @Test
     public void testRegExisting() throws ServletException, IOException {
-        SignUpServlet signUp = new SignUpServlet(s_accountService);
+        when(s_frontend.isResivedResponseExistUser(anyString())).thenReturn(true);
+        when(s_frontend.getResponseExistUser(anyString())).thenReturn(true);
+
+        SignUpServlet signUp = new SignUpServlet(s_frontend);
         try {
-            signUp.doPost(request, response);
             signUp.doPost(request, response);
         } catch(ServletException e) {
             e.printStackTrace();
@@ -79,6 +71,4 @@ public class SignUpServletTest {
 
         assert stringWriter.toString().contains("already exists");
     }
-
-
 }

@@ -1,15 +1,14 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
+import main.TimeHelper;
 import org.jetbrains.annotations.NotNull;
+import resource.ServerConfiguration;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +17,11 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class SignUpServlet extends HttpServlet {
-    private AccountService accountService;
+    @NotNull private Frontend frontend;
+    private static final int RESPONSE_TIME = ServerConfiguration.getInstance().getServletResponseTime();
 
-    public SignUpServlet(AccountService accService) {
-        this.accountService = accService;
+    public SignUpServlet(@NotNull Frontend frontend) {
+        this.frontend = frontend;
     }
 
     @Override
@@ -31,20 +31,28 @@ public class SignUpServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
 
-        if((name != null) && (password != null)) {
-            if(accountService != null) {
-                Map<String, Object> pageVariables = new HashMap<>();
-                if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-                    pageVariables.put("errors", "null");
-                } else {
-                    pageVariables.put("errors", "User with name '" + name + "' already exists");
-                }
+        String session = request.getSession(true).getId();
 
-                response.getWriter().println(PageGenerator.getPage("signupResult.json", pageVariables));
-                response.setStatus(HttpServletResponse.SC_OK);
+        if((name != null) && (password != null)) {
+            frontend.isUserExist(session, name);
+
+            while (!frontend.isResivedResponseExistUser(session)){
+                TimeHelper.sleep(RESPONSE_TIME);
             }
-        }else
+
+            Map<String, Object> pageVariables = new HashMap<>();
+            if (!frontend.getResponseExistUser(session)) {
+                frontend.registerUser(name, password);
+                pageVariables.put("errors", "null");
+            } else {
+                pageVariables.put("errors", "User with name '" + name + "' already exists");
+            }
+
+            response.getWriter().println(PageGenerator.getPage("signupResult.json", pageVariables));
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
 

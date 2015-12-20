@@ -1,9 +1,6 @@
 package frontend;
 
-import dbservice.DBService;
-import main.AccountService;
 import main.TimeHelper;
-import mechanics.GameMechanics;
 import org.jetbrains.annotations.NotNull;
 import templater.PageGenerator;
 
@@ -19,15 +16,12 @@ import java.util.Map;
  * Created by uschsh on 22.09.15.
  */
 public class AdminServlet extends HttpServlet {
-    private AccountService accountService;
-    private GameMechanics gameMechanics;
-    private DBService dbservice;
-    public AdminServlet(AccountService accService, GameMechanics gameMechanics, DBService dbservice) {
+    @NotNull private Frontend frontend;
 
-        this.accountService = accService;
-        this.gameMechanics = gameMechanics;
-        this.dbservice = dbservice;
+    public AdminServlet(@NotNull Frontend frontend) {
+        this.frontend = frontend;
     }
+
 
     @Override
     protected void doGet(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws ServletException, IOException {
@@ -37,20 +31,18 @@ public class AdminServlet extends HttpServlet {
         if(shutdown_time != null) {
             int time = Integer.valueOf(shutdown_time);
             System.out.print("Server will be down after: " + time + " ms");
-            gameMechanics.stop();
-            dbservice.shutdown();
+            frontend.signalShutdown();
             TimeHelper.sleep(time);
             System.out.print("\nShutdown");
-            System.exit(0);
         }
 
-        if(accountService !=null) {
-            Map<String, Object> pageVariables = new HashMap<>();
-            pageVariables.put("auth_users",Long.toString(accountService.getAuthUsersNumber()));
-            pageVariables.put("reg_users", Long.toString(accountService.getRegUsersNumber()));
 
-            response.getWriter().println(PageGenerator.getPage("adminform.html", pageVariables));
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+        Map<String, Object> pageVariables = new HashMap<>();
+        pageVariables.put("auth_users", Long.toString(frontend.getAuthUsersNumber()));
+        pageVariables.put("reg_users", "Когда-нибудь я придумаю, как красиво с помощью системы сообдений получить переменную с другого сервера, но это уже совсем другая история.");
+
+        response.getWriter().println(PageGenerator.getPage("adminform.html", pageVariables));
+        response.setStatus(HttpServletResponse.SC_OK);
+
     }
 }

@@ -35,6 +35,8 @@ public final class ServerConfiguration {
             serverProperties.put("delayOnePoint", properties.getProperty("flag.delayOnePoint"));
             serverProperties.put("captureTime", properties.getProperty("flag.captureTime"));
 
+            serverProperties.put("servletResponseTime", properties.getProperty("frontend.servletResponseTime"));
+
             serverProperties.put("maxHitPoints", properties.getProperty("entity.maxHitPoints"));
             serverProperties.put("moveDelay", properties.getProperty("entity.moveDelay"));
             serverProperties.put("abilityDelay", properties.getProperty("entity.abilityDelay"));
@@ -109,6 +111,10 @@ public final class ServerConfiguration {
 
     public int getAbilityDelay(){
         return Integer.parseInt(serverProperties.get("abilityDelay"));
+    }
+
+    public int getServletResponseTime(){
+        return Integer.parseInt(serverProperties.get("servletResponseTime"));
     }
 
     public String getDialect(){
