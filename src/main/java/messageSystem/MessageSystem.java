@@ -1,5 +1,7 @@
 package messageSystem;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,5 +31,15 @@ public class MessageSystem {
             Message message = queue.poll();
             message.exec(abonent);
         }
+    }
+
+    @TestOnly
+    public int getAmountMessages(){
+        return messages.size();
+    }
+
+    @TestOnly
+    public int getAmountMessagesFromServise(Address address){
+        return messages.get(address).size();
     }
 }

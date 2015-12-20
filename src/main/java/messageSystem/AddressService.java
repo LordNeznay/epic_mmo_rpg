@@ -16,7 +16,7 @@ public class AddressService {
     private Address gameMechanics;
     private Address frontend;
     private Address accountService;
-    private final List<Address> gameMapList = new ArrayList<>();
+//    private final List<Address> gameMapList = new ArrayList<>();
 
     private AtomicInteger gameMapCounter = new AtomicInteger();
 
@@ -48,11 +48,11 @@ public class AddressService {
         return accountService;
     }
 
-    public synchronized Address getGameMapAddress() {
-        int index = gameMapCounter.getAndIncrement();
-        if (index >= gameMapList.size()) {
-            index = 0;
-        }
-        return gameMapList.get(index);
-    }
+//    public synchronized Address getGameMapAddress() {
+//        int index = gameMapCounter.getAndIncrement();
+//        if (index >= gameMapList.size()) {
+//            index = 0;
+//        }
+//        return gameMapList.get(index);
+//    }
 }
