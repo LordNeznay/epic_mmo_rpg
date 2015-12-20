@@ -1,6 +1,7 @@
 package mechanics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,9 +26,9 @@ public class GameMechanics implements Abonent, Runnable {
     private final MessageSystem messageSystem;
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MIN_PLAYERS_FOR_START = ServerConfiguration.getInstance().getPlayerToStart();
-    private ConcurrentHashMap<UserProfile, GameMap> usersMaps = new ConcurrentHashMap<>();
-    private CopyOnWriteArrayList<UserProfile> userQueue = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<GameMap> gameMaps = new CopyOnWriteArrayList<>();
+    private Map<UserProfile, GameMap> usersMaps = new HashMap<>();
+    private ArrayList<UserProfile> userQueue = new ArrayList<>();
+    private ArrayList<GameMap> gameMaps = new ArrayList<>();
     private boolean isWorked = false;
 
     public GameMechanics(MessageSystem messageSystem){
@@ -103,7 +104,8 @@ public class GameMechanics implements Abonent, Runnable {
         userProfile.addMessageForSending(response);
 
         if(userQueue.size() == MIN_PLAYERS_FOR_START) {
-            GameMap gameMap = new GameMap(messageSystem);
+//            GameMap gameMap = new GameMap(messageSystem);
+            GameMap gameMap = new GameMap();
             gameMaps.add(gameMap);
             for (UserProfile anUserQueue : userQueue) {
                 usersMaps.put(anUserQueue, gameMap);

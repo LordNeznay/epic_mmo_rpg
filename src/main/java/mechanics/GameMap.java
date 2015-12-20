@@ -40,7 +40,7 @@ public class GameMap {
     private int mapHeight;
 //    private boolean isWorked = false;
 
-    private ConcurrentHashMap<UserProfile, Entity> entities = new ConcurrentHashMap<>();
+    private Map<UserProfile, Entity> entities = new HashMap<>();
     private Flag flag = new Flag();
     private Entity[][] entityLocation;
     private int amountRedPlayers = 0;
@@ -68,11 +68,11 @@ public class GameMap {
 //        return address;
 //    }
 
-    public GameMap(MessageSystem messageSystem){
+//    public GameMap(MessageSystem messageSystem){
 //        this.messageSystem = messageSystem;
 //        messageSystem.addService(this);
 //        messageSystem.getAddressService().registerGameMap(this);
-
+public GameMap(){
         System.out.println("Создана новая карта");
         Vec2d sizeMap = physMap.getSize();
         mapWidth = (int) sizeMap.x;
