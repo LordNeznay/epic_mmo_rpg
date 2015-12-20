@@ -8,10 +8,7 @@ import javax.persistence.*;
  */
 @NamedQueries({
         @NamedQuery(name = "userByName", query = "from user u where u.username = :username"),
-        @NamedQuery(name = "userBySession", query = "from user u where u.session = :session"),
-        @NamedQuery(name = "deleteBySession", query = "delete user u where u.session = :session"),
-        @NamedQuery(name = "deleteByName", query = "delete user u where u.username = :username"),
-        @NamedQuery(name = "getAuthUser", query = "select count(*) from user u where u.session IS NOT NULL")
+        @NamedQuery(name = "deleteByName", query = "delete user u where u.username = :username")
 })
 
 @Entity(name="user")
@@ -35,19 +32,16 @@ public class UserDataSet implements Serializable {
     @Column(name = "score")
     private long score;
 
-    @Column(name = "session")
-    private String session;
 
     public UserDataSet() {
 
     }
-    public UserDataSet(String username, String email, String password, long score, String session) {
+    public UserDataSet(String username, String email, String password, long score) {
         this.id         =   -1;
         this.username   =   username;
         this.email      =   email;
         this.password   =   password;
         this.score      =   score;
-        this.session    =   session;
     }
 
 
@@ -75,13 +69,6 @@ public class UserDataSet implements Serializable {
         this.password = password;
     }
 
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
-    }
 
     public long getId() {
         return id;

@@ -20,10 +20,12 @@ public class AccountService {
         this.dbservice = dbservice;
     }
 
+
+
     public boolean addUser(String userName, UserProfile userProfile) {
-        if (dbservice.isAvailable(userName))
+        if (!dbservice.isAvailable(userName))
             return false;
-        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0, null));
+        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0));
         return true;
     }
 
@@ -36,6 +38,31 @@ public class AccountService {
         } else
             return false;
 
+    }
+
+    public UserProfile authenticate(String login, String password) {
+        UserDataSet dataSet = dbservice.getByName(login);
+
+        if((dataSet != null) && (dataSet.getPassword().equals(password))) {
+            UserProfile userProfile = new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
+            sessions.put(login, userProfile);
+            return userProfile;
+            }
+        return null;
+    }
+
+    public boolean isExistUser(String login) {
+        return !dbservice.isAvailable(login);
+    }
+
+    public void registerUser(String login, String password) {
+        if (dbservice.isAvailable(login)) {
+            dbservice.saveUser(new UserDataSet(login, "useremail", password, 0));
+        }
+    }
+
+    public void shutdown()  {
+        dbservice.shutdown();
     }
 
     @Nullable
@@ -51,12 +78,9 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
-    public void removeUser(String sessionId) { dbservice.nullSession(sessionId); }
 
-    public void deleteUserBySession(String sessionId) { dbservice.deleteBySession(sessionId); }
     public void deleteUserByName(String userName) { dbservice.deleteByName(userName); }
 
-    public long getAuthUsersNumber() { return dbservice.getAuthUser(); }
 
     public long getRegUsersNumber() { return dbservice.getRegCount(); }
 }
