@@ -87,14 +87,24 @@ module.exports = function (grunt) {
                 dest: 'public_html/css/main.css',
             },
             
-            build: { /* Подзадача */
+            build: {
 				separator: ';\n',
 				src: [
 					'public_html/js/lib/almond.js',
 					'public_html/js/build/main.js'
 				],
 				dest: 'public_html/js/build.js'
-			}
+			},
+            
+            forProd: {
+                src: ['public_html/index/index_prod.html'],
+                dest: 'public_html/index.html',
+            },
+            
+            forDev: {
+                src: ['public_html/index/index_dev.html'],
+                dest: 'public_html/index.html',
+            }
         },
         
         cssmin: {
@@ -141,6 +151,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['sass:dev', 'requirejs', 'concat', 'cssmin', 'uglify', 'concurrent']);
+    grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:map', 'concat:css', 'cssmin', 'concurrent']);
+    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:map', 'concat:css', 'concat:build', 'cssmin', 'uglify', 'concurrent']);
 
 };

@@ -1,18 +1,29 @@
 @import 'config';
 
-$mapWidth: 960px;
-$mapHeight: 576px;
-
 .game-map{
     position: relative;
-    width: $mapWidth;
-    height: $mapHeight;
 
     & canvas{
         position: absolute;
         left: 0px;
         top: 0px;
-        width: $mapWidth;
-        height: $mapHeight;
     }
+}
+
+.ability{
+    border: solid #000 1px;
+    border-right: none;
+    float: left;
+}
+
+.abilities-status__ability_number-0{
+    border-right: solid #000 1px;
+}
+
+.pressZ{
+    float: left;
+}
+
+.game-info-status-flags{
+    float: right;
 }

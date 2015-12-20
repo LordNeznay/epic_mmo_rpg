@@ -6,6 +6,12 @@
     tmpl
 ){
 
+    var canvas_map_height = 576;
+    var canvas_map_width = 960;
+    var canvas_tile_width = 64;
+    var canvas_tile_height = 64;
+
+
     var View = Backbone.View.extend({
         map: '',
         pos_x: 0,
@@ -33,21 +39,9 @@
             this.map = map;
         },
         
-        /*testedfun: function(){
-            this.canvas_middleground.beginPath();
-            this.canvas_middleground.arc(  250,
-                        250,
-                        15,
-                        0, 2 * Math.PI, true);
-            this.canvas_middleground.fillStyle = 'rgb(111, 222, 111)';
-            this.canvas_middleground.fill();
-            this.canvas_middleground.closePath();
-        },*/
-        
         drawTile: function(gid, x, y){
             var that = this;
             
-            //if(gid == 0) return;
             that.map.tilesets.forEach(function(tileset){
                 if(tileset.firstgid <= gid && gid < tileset.firstgid + (tileset.imageheight*tileset.imagewidth/tileset.tileheight/tileset.tilewidth)){
                     var dgid = gid - tileset.firstgid;
@@ -67,11 +61,11 @@
             var dop_tileset = {
                 firstgid: -1,
                 image: "0.png",
-                imageheight: 64, 
-                imagewidth: 64, 
+                imageheight: canvas_tile_height, 
+                imagewidth: canvas_tile_width, 
                 name: "zeroTile",
-                tileheight: 64, 
-                tilewidth: 64
+                tileheight: canvas_tile_height, 
+                tilewidth: canvas_tile_width
             }
             this.map.tilesets.push(dop_tileset);
             
@@ -94,28 +88,27 @@
         },
         
         drawEntities: function(){
-            this.canvas_middleground.width  = 960;     
-            this.canvas_middleground.height = 576;  
+            this.canvas_middleground.width  = canvas_map_width;     
+            this.canvas_middleground.height = canvas_map_height;  
         
             var that = this;
             this.entities.entities.forEach(function(entity){
                 var pic = new Image();
                 pic.src = 'http://' + document.location.host + '/res/' + entity.image;
                 pic.onload = function(){
-                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * 64, (entity.y-1) * 64);
+                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * canvas_tile_width, (entity.y-1) * canvas_tile_height);
                 }
             });
             
             var pic = new Image();
             pic.src = 'http://' + document.location.host + '/res/' + this.entities.player.image;
             pic.onload = function(){
-                that.canvas_middleground_context.drawImage(pic, (that.entities.player.x-1) * 64, (that.entities.player.y-1) * 64);
+                that.canvas_middleground_context.drawImage(pic, (that.entities.player.x-1) * canvas_tile_width, (that.entities.player.y-1) * canvas_tile_height);
             }
         },
         
         drawMap: function(){
             //Если картинки не догружены, то выйти
-            //alert(this.loadTilesets);
             if(this.amountTilesets != this.loadTilesets) return;
             
             var that = this;

@@ -2,7 +2,6 @@
     <fest:script>var json = {title: 'Game', 'back': true  };</fest:script>
     
     <div class="page-game default-hidden">
-        <fest:include src="./base.xml" context="json"/>
         
         <div class="game-result">
             CommandBlue: <span class="game-result__result-blue"></span><br></br>
@@ -12,61 +11,85 @@
             Your team: <span class="game-result__player-team"></span><br></br>
             <span class="game-result__player-result"></span><br></br>
         </div>
-        
-        <div class="game-info">
-            <span class="game-info-status-player"></span> : 
-            <span class="game-info-status-players-target"></span>
-            <table class="game-info__ability-status" align="center">
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                    <td>7</td>
-                    <td>8</td>
-                    <td>9</td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    <td class="ability1-name"></td>
-                    <td class="ability2-name"></td>
-                    <td class="ability3-name"></td>
-                    <td class="ability4-name"></td>
-                    <td class="ability5-name"></td>
-                    <td class="ability6-name"></td>
-                    <td class="ability7-name"></td>
-                    <td class="ability8-name"></td>
-                    <td class="ability9-name"></td>
-                    <td class="ability0-name"></td>
-                </tr>
-                <tr>
-                    <td class="ability1-time"></td>
-                    <td class="ability2-time"></td>
-                    <td class="ability3-time"></td>
-                    <td class="ability4-time"></td>
-                    <td class="ability5-time"></td>
-                    <td class="ability6-time"></td>
-                    <td class="ability7-time"></td>
-                    <td class="ability8-time"></td>
-                    <td class="ability9-time"></td>
-                    <td class="ability0-time"></td>
-                </tr>
-            </table>
-            <table class="game-info-status-flags" align="center">
-                <tr><td>Red</td><td>_</td><td>Blue</td></tr>
-                <tr><td class="pointsRed"></td><td class="captureTime"></td><td class="pointsBlue"></td></tr>
-            </table>
+ 
+        <div class="game-info">    
+            <div class="players-hitpoints">
+                <span class="players-hitpoints__player"></span> : 
+                <span class="players-hitpoints__players-target"></span>
+            </div>
         </div>
+        
         <div class="game-map">
             <canvas id="game-map__background"></canvas>
             <canvas id="game-map__middleground"></canvas>
             <canvas id="game-map__frontground"></canvas>
         </div>
+        
+        <div class="game-info">    
+            <div class="abilities-status">
+                <div class="abilities-status__ability_number-1 ability">
+                    <div class="ability__key_number-1">1</div>
+                    <div class="ability__name_number-1"></div>
+                    <div class="ability__time_number-1"></div>
+                </div>
+                <div class="abilities-status__ability_number-2 ability">
+                    <div class="ability__key_number-2">2</div>
+                    <div class="ability__name_number-2"></div>
+                    <div class="ability__time_number-2"></div>
+                </div>
+                <div class="abilities-status__ability_number-3 ability">
+                    <div class="ability__key_number-3">3</div>
+                    <div class="ability__name_number-3"></div>
+                    <div class="ability__time_number-3"></div>
+                </div>
+                <div class="abilities-status__ability_number-4 ability">
+                    <div class="ability__key_number-4">4</div>
+                    <div class="ability__name_number-4"></div>
+                    <div class="ability__time_number-4"></div>
+                </div>
+                <div class="abilities-status__ability_number-5 ability">
+                    <div class="ability__key_number-5">5</div>
+                    <div class="ability__name_number-5"></div>
+                    <div class="ability__time_number-5"></div>
+                </div>
+                <div class="abilities-status__ability_number-6 ability">
+                    <div class="ability__key_number-6">6</div>
+                    <div class="ability__name_number-6"></div>
+                    <div class="ability__time_number-6"></div>
+                </div>
+                <div class="abilities-status__ability_number-7 ability">
+                    <div class="ability__key_number-7">7</div>
+                    <div class="ability__name_number-7"></div>
+                    <div class="ability__time_number-7"></div>
+                </div>
+                <div class="abilities-status__ability_number-8 ability">
+                    <div class="ability__key_number-8">8</div>
+                    <div class="ability__name_number-8"></div>
+                    <div class="ability__time_number-8"></div>
+                </div>
+                <div class="abilities-status__ability_number-9 ability">
+                    <div class="ability__key_number-9">9</div>
+                    <div class="ability__name_number-9"></div>
+                    <div class="ability__time_number-9"></div>
+                </div>
+                <div class="abilities-status__ability_number-0 ability">
+                    <div class="ability__key_number-0">0</div>
+                    <div class="ability__name_number-0"></div>
+                    <div class="ability__time_number-0"></div>
+                </div>
+            </div>
+        </div>
+          
         <div class="game-info">
             <img class="game-info__img pressZ" src="/res/button_z.png"></img>
+            <table class="game-info-status-flags">
+                <tr><td>Red</td><td>_</td><td>Blue</td></tr>
+                <tr><td class="pointsRed"></td><td class="captureTime"></td><td class="pointsBlue"></td></tr>
+            </table>
         </div>
+
+        <div class="please_wait">Ожидание игроков, пожалуйста подождите!</div>
+        
         <fest:include src="./backbutton.xml"/>	
 	</div>
     

@@ -12,6 +12,8 @@
     Surroundings
 ){
 
+    var canvas_map_height = 576;
+    var canvas_map_width = 960;
 
     var View = BaseView.extend({
         name: 'game',
@@ -32,18 +34,18 @@
             var that = this;
             that.surroundings.canvas_background =  document.getElementById("game-map__background");
             that.surroundings.canvas_background_context = that.surroundings.canvas_background.getContext('2d');
-            that.surroundings.canvas_background.width  = 960;     
-            that.surroundings.canvas_background.height = 576;
+            that.surroundings.canvas_background.width  = canvas_map_width;     
+            that.surroundings.canvas_background.height = canvas_map_height;
             
             that.surroundings.canvas_middleground =  document.getElementById("game-map__middleground");
             that.surroundings.canvas_middleground_context = that.surroundings.canvas_middleground.getContext('2d');
-            that.surroundings.canvas_middleground.width  = 960;     
-            that.surroundings.canvas_middleground.height = 576;   
+            that.surroundings.canvas_middleground.width  = canvas_map_width;     
+            that.surroundings.canvas_middleground.height = canvas_map_height;   
             
             that.surroundings.canvas_frontground =  document.getElementById("game-map__frontground");
             that.surroundings.canvas_frontground_context = that.surroundings.canvas_frontground.getContext('2d');
-            that.surroundings.canvas_frontground.width  = 960;     
-            that.surroundings.canvas_frontground.height = 576;   
+            that.surroundings.canvas_frontground.width  = canvas_map_width;     
+            that.surroundings.canvas_frontground.height = canvas_map_height;   
         },
         
         render: function(){
@@ -56,38 +58,41 @@
                 that.onGameFieldClick(event);
             });
 
+            that.hide_game_info();
+            that.gameField.show(); 
+            that.gameField.hide();              
+            $(".game-result").hide();
+            
             this.player.on("isWait:change", function(){
                 if(that.player.isWait){
-                    $(".game-info").hide();
+                    that.hide_game_info();
                     that.gameField.hide();              
                     $(".game-result").hide();
+                    $(".please_wait").show();
                 } else {
-                    $(".game-info").show();
+                    that.show_game_info();
                     that.gameField.show(); 
                     $(".game-result").hide();
+                    $(".please_wait").hide();
                 }
             });
             
             this.surroundings.listenTo(this.player, "playerPosition", function(_pos){
-                //_pos = JSON.parse(_pos);
                 that.surroundings.pos_x = _pos.x;
                 that.surroundings.pos_y = _pos.y;
                 that.surroundings.trigger("newPlayerPosition");
             });
             
             $.get("/res/tilemap.json", " ", function(data){
-                //console.log(data);
                 that.surroundings.map = data;
                 that.surroundings.trigger("mapIsLoad");
             });
             
             this.surroundings.listenTo(this.player, "loadEntities", function(entities){
-                //that.surroundings.entities = JSON.parse(entities);
                 that.surroundings.entities = entities;
                 that.surroundings.trigger("entitiesIsLoad");
             });
             this.player.on("availableActions", function(availableActions){
-                //that.availableActions = JSON.parse(availableActions);
                 that.availableActions = availableActions;
                 if(that.availableActions.length != 0){
                     $(".pressZ").show(); 
@@ -96,15 +101,13 @@
                 }
             });
             this.player.on("flagStatus", function(flagStatus){
-                //flagStatus = JSON.parse(flagStatus);
                 $(".pointsRed").html(flagStatus.commandRed);
                 $(".pointsBlue").html(flagStatus.commandBlue);
                 $(".captureTime").html(flagStatus.captureTime);
             });
             this.player.on("entityStatus", function(entityStatus){
-                //entityStatus = JSON.parse(entityStatus);
-                $(".game-info-status-player").html(entityStatus.hp);
-                $(".game-info-status-players-target").html(entityStatus.thp);
+                $(".players-hitpoints__player").html(entityStatus.hp);
+                $(".players-hitpoints__players-target").html(entityStatus.thp);
             });
             this.player.on("gameResult", function(result, playerCommand){
                 result = JSON.parse(result);
@@ -122,20 +125,81 @@
                 } else {
                     $(".game-result__player-result").html("You lose!"); 
                 }
-                $(".game-info").hide();
+                that.hide_game_info();
                 $(".game-result").show(); 
             });
             this.player.on("abilityStatus", function(abilityStatus){
-                //abilityStatus = JSON.parse(abilityStatus);
                 abilityStatus.forEach(function(ability, i){
                     ++i;
                     if(i == 10) i = 0;
                     if(i == 11) return;
                     
-                    $(".ability" + i + "-name").html(ability.name);
-                    $(".ability" + i + "-time").html(ability.time);
+                    $(".ability__name_number-"+i).html(ability.name);
+                    $(".ability__time_number-"+i).html(ability.time);
                 });
             });
+            
+            
+            that.canv = $('canvas');
+            that.gm = $('.game-map');
+            that.ab = $('.ability');
+            that.abs = $('.abilities-status');
+            that.gi = $('.game-info');
+            that.fi = $('.game-info-status-flags');
+            that.body = $('body');
+            that.resize_canvas();
+            $(window).resize(function(){
+                that.resize_canvas()
+            });
+        },
+        
+        hide_game_info: function(){
+            $(".game-info").hide();
+        },
+        
+        show_game_info: function(){
+            $(".game-info").show();
+        },
+        
+        resize_canvas: function(){
+            var that = this;
+            var w = that.body.width();
+            var h = document.documentElement.clientHeight;
+            if(w/h >= 1.25){
+                that.gm.width(h/12  *15);
+                that.gm.height(9/12 * h);
+                that.canv.width(h/12  *15);
+                that.canv.height(9/12 * h);
+                
+                that.abs.height(1.8/12*h);
+                that.abs.width(h/12*15);
+                
+                that.gi.width(h/12*15);
+                
+                that.ab.height(1.8/12*h);
+                that.ab.width(h/12*15/10-1.2);
+                
+                that.gm.css('margin-left', (w-h/12*15)/2);
+                that.gi.css('margin-left', (w-h/12*15)/2);
+                //that.abs.css('margin-left', (w-h/12*15)/2);
+            } else {
+                that.gm.width(w);
+                that.gm.height(w/15 * 9);
+                that.canv.width(w);
+                that.canv.height(w/15 * 9);
+                
+                that.ab.height(w/15 * 1.8);
+                that.ab.width(w/10-1.2);
+
+                that.abs.height(1.8/12*h);
+                that.abs.width(w);
+                
+                that.gi.width(h/12*15);
+                
+                that.gm.css('margin-left', 0);
+                that.gi.css('margin-left', 0);
+                //that.abs.css('margin-left', 0);
+            }
         },
         
         onGameFieldClick: function(event){
@@ -203,7 +267,7 @@
                 case '8':
                 case '9':
                 case '0':{
-                    var abilityName = $(".ability" + sim + "-name").html();
+                    var abilityName = $(".ability__name_number-"+sim).html();
                     that.player.ability(abilityName);
                 }; break;
 
