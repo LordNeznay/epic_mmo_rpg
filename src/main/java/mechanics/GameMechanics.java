@@ -1,7 +1,6 @@
 package mechanics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -21,7 +20,7 @@ import utils.TimeHelper;
 /**
  * Created by uschsh on 26.10.15.
  */
-public class GameMechanics implements Abonent {
+public class GameMechanics implements Abonent, Runnable {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
@@ -29,7 +28,7 @@ public class GameMechanics implements Abonent {
     private ConcurrentHashMap<UserProfile, GameMap> usersMaps = new ConcurrentHashMap<>();
     private CopyOnWriteArrayList<UserProfile> userQueue = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<GameMap> gameMaps = new CopyOnWriteArrayList<>();
-    private boolean isGame = false;
+    private boolean isWorked = false;
 
     public GameMechanics(MessageSystem messageSystem){
         this.messageSystem = messageSystem;
@@ -63,7 +62,7 @@ public class GameMechanics implements Abonent {
     }
 
     public boolean isInGame(){
-        return isGame;
+        return isWorked;
     }
 
     public int getMinPlayersForStart(){
@@ -127,18 +126,14 @@ public class GameMechanics implements Abonent {
         userProfile.sendMessage();
     }
 
-    public void start(){
-        isGame = true;
-        this.run();
-    }
-
     public void stop(){
-
-        isGame = false;
+        isWorked = false;
     }
 
+    @Override
     public void run() {
-        while (isGame) {
+        isWorked = true;
+        while (isWorked) {
             stepping();
             TimeHelper.sleep(STEP_TIME);
         }

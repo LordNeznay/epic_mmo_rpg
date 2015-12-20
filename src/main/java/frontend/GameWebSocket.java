@@ -1,6 +1,8 @@
 package frontend;
 
 import main.UserProfile;
+import mechanics.messages.*;
+import messageSystem.Message;
 import org.eclipse.jetty.websocket.api.Session;
 
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -33,7 +35,35 @@ public class GameWebSocket {
         return userProfile;
     }
 
+    private void addUserInGame(){
+        Message messageAddUserInQueue = new MessageAddUserInQueue(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(), userProfile);
+        frontend.getMessageSystem().sendMessage(messageAddUserInQueue);
+    }
 
+    private void removeUserFromGame(){
+        Message messageRemoveUserFromGame = new MessageRemoveUserFromGame(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(),userProfile);
+        frontend.getMessageSystem().sendMessage(messageRemoveUserFromGame);
+    }
+
+    private void movePlayer(String direction){
+        Message messageMovePlayer = new MessageMovePlayer(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(), userProfile, direction);
+        frontend.getMessageSystem().sendMessage(messageMovePlayer);
+    }
+
+    private void startFlagCapture(){
+        Message messageStartFlagCapture = new MessageStartFlagCapture(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(), userProfile);
+        frontend.getMessageSystem().sendMessage(messageStartFlagCapture);
+    }
+
+    private void setTarget(int x, int y){
+        Message messageSetPlayerTarget = new MessageSetPlayerTarget(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(), userProfile, x, y);
+        frontend.getMessageSystem().sendMessage(messageSetPlayerTarget);
+    }
+
+    private void useAbility(String abilityName){
+        Message messageUseAbility = new MessageUseAbility(frontend.getAddress(), frontend.getMessageSystem().getAddressService().getGameMechanicsAddress(), userProfile, abilityName);
+        frontend.getMessageSystem().sendMessage(messageUseAbility);
+    }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
@@ -49,10 +79,10 @@ public class GameWebSocket {
         if (query != null) {
             switch (query.get("command").toString()) {
                 case "join_game":
-                    //gameMechanics.addUser(userProfile);
+                    addUserInGame();
                     break;
                 case "leave_game":
-                    //gameMechanics.removeUser(userProfile);
+                    removeUserFromGame();
                     break;
                 case "action":
                     onGetAction(query);
@@ -65,22 +95,22 @@ public class GameWebSocket {
     private void onGetAction(JSONObject query){
         switch (query.get("action").toString()) {
             case "move":
-                //gameMechanics.movePlayer(userProfile, query.get("direction").toString());
+                movePlayer(query.get("direction").toString());
                 break;
             case "flagCapture":
-                //gameMechanics.startFlagCapture(userProfile);
+                startFlagCapture();
                 break;
             case "setTarget":
                 try {
                     int x = Integer.valueOf(query.get("x").toString());
                     int y = Integer.valueOf(query.get("y").toString());
-                    //gameMechanics.setPlayerTarget(userProfile, x, y);
+                    setTarget(x, y);
                 } catch (NumberFormatException e) {
                     System.err.println("Cannot parse game map!");
                 }
                 break;
             case "useAbility":
-                //gameMechanics.useAbility(userProfile, query.get("abilityName").toString());
+                useAbility(query.get("abilityName").toString());
                 break;
             default: break;
         }

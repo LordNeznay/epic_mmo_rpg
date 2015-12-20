@@ -20,9 +20,9 @@ public class AddressService {
 
     private AtomicInteger gameMapCounter = new AtomicInteger();
 
-    public void registerGameMap(GameMap gameMap){
-        gameMapList.add(gameMap.getAddress());
-    }
+//    public void registerGameMap(GameMap gameMap){
+//        gameMapList.add(gameMap.getAddress());
+//    }
 
     public void registerGameMechanics(GameMechanics _gameMechanics){
         gameMechanics = _gameMechanics.getAddress();

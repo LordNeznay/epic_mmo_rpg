@@ -26,7 +26,7 @@ public class Main {
         DBService dbservice = new DBService();
         MessageSystem messageSystem = new MessageSystem();
 
-        //GameMechanics gameMechanics = new GameMechanics(messageSystem);
+        GameMechanics gameMechanics = new GameMechanics(messageSystem);
         //Repairer.getInstance().setGameMechanics(gameMechanics);
 
         AccountService accountService = new AccountService(messageSystem, dbservice);
@@ -40,19 +40,16 @@ public class Main {
         final Thread accountServiceThread = new Thread(accountService);
         accountServiceThread.setDaemon(true);
         accountServiceThread.setName("Account Service");
-        //final Thread gameMechanicsThread = new Thread(gameMechanics);
-        //gameMechanicsThread.setDaemon(true);
-        //gameMechanicsThread.setName("Game Mechanics");
+        final Thread gameMechanicsThread = new Thread(gameMechanics);
+        gameMechanicsThread.setDaemon(true);
+        gameMechanicsThread.setName("Game Mechanics");
         final Thread frontEndThread = new Thread(frontend);
         frontEndThread.setDaemon(true);
         frontEndThread.setName("FrontEnd");
 
         accountServiceThread.start();
-        //gameMechanicsThread.start();
+        gameMechanicsThread.start();
         frontEndThread.start();
 
-
-
-        //gameMechanics.start();
     }
 }

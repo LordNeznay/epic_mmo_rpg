@@ -24,8 +24,10 @@ public final class Repairer {
     }
 
     public void repaireGameMap(GameMap gameMap){
-        gameMechanics.removeMap(gameMap);
-        System.out.println("Game map was fixed!");
+        if(gameMechanics != null) {
+            gameMechanics.removeMap(gameMap);
+            System.out.println("Game map was fixed!");
+        }
     }
 
     public void repaireUser(UserProfile userProfile){

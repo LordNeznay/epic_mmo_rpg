@@ -15,6 +15,7 @@ import resource.ResourceFactory;
 import utils.Repairer;
 import utils.ResponseConstructor;
 import utils.ResponseHeaders;
+import utils.TimeHelper;
 
 import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
@@ -24,10 +25,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by uschsh on 26.10.15.
  */
-public class GameMap implements Abonent{
-    private Address address = new Address();
-    private MessageSystem messageSystem;
+//public class GameMap implements Abonent{
+//    private Address address = new Address();
+//    private MessageSystem messageSystem;
 
+public class GameMap {
+//    private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MAX_PLAYERS_IN_COMMAND = ServerConfiguration.getInstance().getAmountPlayerInCommand();
     private static final int VIEW_WIDTH_2 = 8;
     private static final int VIEW_HEIGHT_2 = 5;
@@ -35,6 +38,7 @@ public class GameMap implements Abonent{
     private boolean isEnd = false;
     private int mapWidth;
     private int mapHeight;
+//    private boolean isWorked = false;
 
     private ConcurrentHashMap<UserProfile, Entity> entities = new ConcurrentHashMap<>();
     private Flag flag = new Flag();
@@ -59,15 +63,15 @@ public class GameMap implements Abonent{
         return amountBluePlayers;
     }
 
-    @Override
-    public Address getAddress(){
-        return address;
-    }
+//    @Override
+//    public Address getAddress(){
+//        return address;
+//    }
 
     public GameMap(MessageSystem messageSystem){
-        this.messageSystem = messageSystem;
-        messageSystem.addService(this);
-        messageSystem.getAddressService().registerGameMap(this);
+//        this.messageSystem = messageSystem;
+//        messageSystem.addService(this);
+//        messageSystem.getAddressService().registerGameMap(this);
 
         System.out.println("Создана новая карта");
         Vec2d sizeMap = physMap.getSize();
@@ -83,9 +87,9 @@ public class GameMap implements Abonent{
         parseObjectLayer(physMap.getObjectLayer());
     }
 
-    public MessageSystem getMessageSystem() {
-        return messageSystem;
-    }
+//    public MessageSystem getMessageSystem() {
+//        return messageSystem;
+//    }
 
     public String getResult(){
         if(amountBluePlayers == 0) {
@@ -355,4 +359,17 @@ public class GameMap implements Abonent{
         response = ResponseConstructor.getResponse(ResponseHeaders.ENTITY_STATUS, response);
         userProfile.addMessageForSending(response);
     }
+
+//    public void stop(){
+//        isWorked = false;
+//    }
+//
+//    @Override
+//    public void run(){
+//        isWorked = true;
+//        while (isWorked) {
+//            stepping();
+//            TimeHelper.sleep(STEP_TIME);
+//        }
+//    }
 }

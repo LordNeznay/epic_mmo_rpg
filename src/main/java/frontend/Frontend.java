@@ -1,10 +1,14 @@
 package frontend;
 
-import accountService.MessageAuthenticate;
-import accountService.MessageIsUserExist;
-import accountService.MessageRegisterUser;
-import accountService.MessageSignalShutdown;
+import accountService.messages.MessageAuthenticate;
+import accountService.messages.MessageIsUserExist;
+import accountService.messages.MessageRegisterUser;
+import accountService.messages.MessageSignalShutdown;
 import main.UserProfile;
+import mechanics.messages.MessageAddUserInQueue;
+import mechanics.messages.MessageMovePlayer;
+import mechanics.messages.MessageRemoveUserFromGame;
+import mechanics.messages.MessageToGameMechanics;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
@@ -28,6 +32,7 @@ import java.util.Map;
 public class Frontend implements Abonent, Runnable {
     private Address address = new Address();
     private MessageSystem messageSystem;
+    private boolean isWorked = false;
 
     private Map<String, UserProfile> sessions = new HashMap<>();
     private Map<String, Boolean> responsesAuthorization = new HashMap<>();
@@ -149,12 +154,15 @@ public class Frontend implements Abonent, Runnable {
         messageSystem.sendMessage(messageShutdownAccountService);
         //Message messageShutdownGameMechanics = new
 
+        isWorked = false;
         System.exit(0);
     }
 
+
     @Override
     public void run() {
-        while (true){
+        isWorked = true;
+        while (isWorked){
             messageSystem.execForAbonent(this);
             try {
                 Thread.sleep(ServerConfiguration.getInstance().getStepTime());

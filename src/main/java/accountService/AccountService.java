@@ -6,17 +6,15 @@ import main.UserProfile;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import resource.ServerConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by v.chibrikov on 13.09.2014.
  */
 public class AccountService implements Abonent, Runnable{
+    private boolean isWorked = false;
     private final Address address = new Address();
     private final MessageSystem messageSystem;
     private DBService dbservice;
@@ -66,24 +64,13 @@ public class AccountService implements Abonent, Runnable{
     @Deprecated
     public void shutdown(){
 
+        isWorked = false;
     }
-
-    @Nullable
-    public UserProfile getUserByName(String userName) {
-        UserDataSet dataSet = dbservice.getByName(userName);
-        if(dataSet == null)
-            return null;
-        return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
-    }
-
-
-    public long getAuthUsersNumber() { return dbservice.getAuthUser(); }
-
-    public long getRegUsersNumber() { return dbservice.getRegCount(); }
 
     @Override
     public void run() {
-        while (true){
+        isWorked = true;
+        while (isWorked){
             messageSystem.execForAbonent(this);
             try {
                 Thread.sleep(ServerConfiguration.getInstance().getStepTime());
