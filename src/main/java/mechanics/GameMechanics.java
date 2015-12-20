@@ -136,6 +136,7 @@ public class GameMechanics implements Abonent, Runnable {
     public void run() {
         isWorked = true;
         while (isWorked) {
+            messageSystem.execForAbonent(this);
             stepping();
             TimeHelper.sleep(STEP_TIME);
         }

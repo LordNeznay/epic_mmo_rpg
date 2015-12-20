@@ -19,18 +19,6 @@ public class UserDataSetDAO {
         return (UserDataSet) query.uniqueResult();
     }
 
-    public UserDataSet getBySession(String user_session) {
-        Query query = session.getNamedQuery("userBySession");
-        query.setString("session", user_session);
-        return (UserDataSet) query.uniqueResult();
-    }
-
-    public boolean deleteBySession(String user_session) {
-        Query query = session.getNamedQuery("deleteBySession");
-        query.setString("session", user_session);
-        query.executeUpdate();
-        return true;
-    }
 
     public boolean deleteByName(String username) {
         Query query = session.getNamedQuery("deleteByName");
@@ -39,28 +27,12 @@ public class UserDataSetDAO {
         return true;
     }
 
-    public long getAuthUser() {
-        Query query = session.getNamedQuery("getAuthUser");
-        return (long)query.uniqueResult();
-    }
-
-    public void setUserSession(String username, String user_session) {
-        UserDataSet dataSet = getUserByName(username);
-        dataSet.setSession(user_session);
-        session.update(dataSet);
-    }
-
-    public void setNullUserSession(String user_session) {
-        UserDataSet dataSet = getBySession(user_session);
-        dataSet.setSession(null);
-        session.update(dataSet);
-    }
 
     public boolean isAvailable(String username) {
         Query query = session.getNamedQuery("userByName");
         query.setString("username", username);
         UserDataSet dataSet = (UserDataSet)query.uniqueResult();
-        return dataSet != null;
+        return dataSet == null;
     }
 
     public long getRegCount() {

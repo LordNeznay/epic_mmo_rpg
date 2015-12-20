@@ -1,11 +1,6 @@
 package frontend;
 
-import dbservice.DBService;
-import main.UserProfile;
-import mechanics.GameMechanics;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.ServletException;
@@ -50,6 +45,7 @@ public class AdminServletTest {
         }
 
         assert stringWriter.toString().contains("666");
+
     }
 
     @Test

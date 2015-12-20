@@ -67,21 +67,6 @@ public class DBService {
         return dataSet;
     }
 
-    public UserDataSet getBySession(String user_session) {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        UserDataSet dataSet = dao.getBySession(user_session);
-        session.close();
-        return dataSet;
-    }
-
-    public boolean deleteBySession(String user_session) {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        boolean status = dao.deleteBySession(user_session);
-        session.close();
-        return status;
-    }
 
     public boolean deleteByName(String username) {
         Session session = sessionFactory.openSession();
@@ -91,13 +76,6 @@ public class DBService {
         return status;
     }
 
-    public long getAuthUser() {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        long count = dao.getAuthUser();
-        session.close();
-        return count;
-    }
 
     public long getRegCount() {
         Session session = sessionFactory.openSession();
@@ -124,22 +102,6 @@ public class DBService {
         return status;
     }
 
-    public void setSession(String username, String user_session) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        dao.setUserSession(username, user_session);
-        session.getTransaction().commit();
-        session.close();
-    }
-    public void nullSession(String user_session) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        dao.setNullUserSession(user_session);
-        session.getTransaction().commit();
-        session.close();
-    }
 
 
     private static SessionFactory createSessionFactory(Configuration configuration) {

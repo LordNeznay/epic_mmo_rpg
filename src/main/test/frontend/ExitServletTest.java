@@ -40,6 +40,7 @@ public class ExitServletTest {
     public void testDoPost() throws IOException {
         ExitServlet exitServlet = new ExitServlet(s_frontend);
 
+
         try {
             exitServlet.doPost(request, response);
         } catch (ServletException e) {

@@ -36,34 +36,35 @@ public class AccountService implements Abonent, Runnable{
     }
 
     public boolean addUser(String userName, UserProfile userProfile) {
-        if (dbservice.isAvailable(userName)) {
+        if (!dbservice.isAvailable(userName)) {
             return false;
         }
-        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0, null));
+        dbservice.saveUser(new UserDataSet(userProfile.getLogin(), userProfile.getEmail(), userProfile.getPassword(), 0));
         return true;
     }
 
     @Deprecated
     public void registerUser(String login, String password){
-
+        if (dbservice.isAvailable(login)) {
+            dbservice.saveUser(new UserDataSet(login, "useremail", password, 0));
+        }
     }
 
-    @Deprecated
     @Nullable public UserProfile authenticate(String login, String password){
-        if(login.equals("admin") && password.equals("admin")){
-            return new UserProfile(login, password,login);
+        UserDataSet dataSet = dbservice.getByName(login);
+        if((dataSet != null) && (dataSet.getPassword().equals(password))) {
+            return new UserProfile(dataSet.getName(), dataSet.getPassword(), dataSet.getEmail());
         }
         return null;
     }
 
-    @Deprecated
     public boolean isExistUser(String login){
-        return login.equals("admin");
+        return !dbservice.isAvailable(login);
     }
 
     @Deprecated
     public void shutdown(){
-
+        dbservice.shutdown();
         isWorked = false;
     }
 
