@@ -19,7 +19,6 @@ import utils.ResponseHeaders;
  * Created by uschsh on 26.10.15.
  */
 public class GameMechanics implements Abonent, Runnable {
-    private Thread thisThread;
     private final Address address = new Address();
     private final MessageSystem messageSystem;
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
@@ -29,11 +28,7 @@ public class GameMechanics implements Abonent, Runnable {
     private Map<Address, Integer> amountPlayerInMaps = new HashMap<>();
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
 
-    private boolean isWorked = false;
-
-    public void setThisThread(Thread thisThread){
-        this.thisThread = thisThread;
-    }
+    private volatile boolean isWorked = false;
 
     public GameMechanics(MessageSystem messageSystem){
         System.out.print("GameMechanics-server was started\n");
@@ -79,7 +74,6 @@ public class GameMechanics implements Abonent, Runnable {
             Thread gameMapThread = new Thread(gameMap);
             gameMapThread.setDaemon(true);
             gameMapThread.start();
-            gameMap.setThisThread(gameMapThread);
 
             amountPlayerInMaps.put(addressMap, userQueue.size());
             for (UserProfile anUserQueue : userQueue) {
@@ -150,7 +144,6 @@ public class GameMechanics implements Abonent, Runnable {
             Message message = new MessageDeleteGameMap(address, entry.getKey());
             messageSystem.sendMessage(message);
         }
-        thisThread.interrupt();
     }
 
     @Override
@@ -165,6 +158,7 @@ public class GameMechanics implements Abonent, Runnable {
                 return;
             }
         }
+        System.out.print("GameMechanics-server was shutdown\n");
     }
 
     public void removeMap(Address mapAddress){

@@ -28,7 +28,6 @@ import java.util.Map;
 public class GameMap implements Abonent, Runnable{
     private Address address = new Address();
     private MessageSystem messageSystem;
-    private Thread thisThread;
 
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MAX_PLAYERS_IN_COMMAND = ServerConfiguration.getInstance().getAmountPlayerInCommand();
@@ -38,7 +37,7 @@ public class GameMap implements Abonent, Runnable{
     private boolean isEnd = false;
     private int mapWidth;
     private int mapHeight;
-    private boolean isWorked = false;
+    private volatile boolean isWorked = false;
 
     private Map<UserProfile, Entity> entities = new HashMap<>();
     private Flag flag = new Flag();
@@ -46,11 +45,6 @@ public class GameMap implements Abonent, Runnable{
     private int amountRedPlayers = 0;
     private int amountBluePlayers = 0;
     private PhysMapJson physMap = (PhysMapJson)ResourceFactory.getInstance().getPhysMap("public_html/res/tilemap.json");
-
-
-    public void setThisThread(Thread thisThread){
-        this.thisThread = thisThread;
-    }
 
     public boolean getEnd(){
         return isEnd;
@@ -399,9 +393,6 @@ public class GameMap implements Abonent, Runnable{
 
     public void stop(){
         isWorked = false;
-        thisThread.interrupt();
-
-//        Thread.currentThread().interrupt();
     }
 
     @Override
@@ -417,5 +408,6 @@ public class GameMap implements Abonent, Runnable{
                 return;
             }
         }
+        System.out.print("GameMap was deleted\n");
     }
 }

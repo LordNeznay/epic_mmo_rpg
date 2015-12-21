@@ -47,11 +47,7 @@ public class Main {
         frontEndThread.setName("FrontEnd");
 
         accountServiceThread.start();
-        accountService.setThisThread(accountServiceThread);
         gameMechanicsThread.start();
-        gameMechanics.setThisThread(gameMechanicsThread);
         frontEndThread.start();
-        frontend.setThisThread(frontEndThread);
-
     }
 }

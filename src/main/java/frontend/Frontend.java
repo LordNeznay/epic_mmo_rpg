@@ -32,17 +32,12 @@ public class Frontend implements Abonent, Runnable {
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private Address address = new Address();
     private MessageSystem messageSystem;
-    private Thread thisThread;
-    private boolean isWorked = false;
+    private volatile boolean isWorked = false;
     Server server;
 
     private Map<String, UserProfile> sessions = new HashMap<>();
     private Map<String, Boolean> responsesAuthorization = new HashMap<>();
     private Map<String, Boolean> responsesExistUser = new HashMap<>();
-
-    public void setThisThread(Thread thisThread){
-        this.thisThread = thisThread;
-    }
 
     public Frontend(MessageSystem messageSystem, int port) throws Exception {
         System.out.print("Frontend-server was started\n");
@@ -78,7 +73,6 @@ public class Frontend implements Abonent, Runnable {
         server.setHandler(handlers);
 
         server.start();
-        //server.join();
     }
 
     public MessageSystem getMessageSystem() {
@@ -171,21 +165,16 @@ public class Frontend implements Abonent, Runnable {
         messageSystem.sendMessage(messageShutdownAccountService);
         Message messageShutdownGameMechanics = new MessageSignalShutdownGameMechanics(address, messageSystem.getAddressService().getGameMechanicsAddress());
         messageSystem.sendMessage(messageShutdownGameMechanics);
-        isWorked = false;
         stop();
-//        System.exit(0);
     }
 
     public void stop(){
+        try {
+            server.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isWorked = false;
-//        try {
-//            server.stop();
-//        } catch (Exception e) {
-//            //e.printStackTrace();
-//        }
-//        Thread.currentThread().interrupt();
-        thisThread.interrupt();
-
     }
 
     @Override
@@ -200,5 +189,6 @@ public class Frontend implements Abonent, Runnable {
                 return;
             }
         }
+        System.out.print("Frontend-server was shutdown\n");
     }
 }

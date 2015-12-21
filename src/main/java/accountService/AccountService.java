@@ -15,9 +15,8 @@ import resource.ServerConfiguration;
  */
 public class AccountService implements Abonent, Runnable{
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
-    private boolean isWorked = false;
+    private volatile boolean isWorked = false;
     private final Address address = new Address();
-    private Thread thisThread;
     private final MessageSystem messageSystem;
     private DBService dbservice;
 
@@ -26,9 +25,6 @@ public class AccountService implements Abonent, Runnable{
         return address;
     }
 
-    public void setThisThread(Thread thisThread){
-        this.thisThread = thisThread;
-    }
 
     public AccountService(MessageSystem messageSystem, DBService dbservice) {
         System.out.print("Account-server was started\n");
@@ -71,9 +67,6 @@ public class AccountService implements Abonent, Runnable{
     public void shutdown(){
         dbservice.shutdown();
         isWorked = false;
-//        Thread.currentThread().interrupt();
-        thisThread.interrupt();
-
     }
 
     @Override
@@ -88,5 +81,6 @@ public class AccountService implements Abonent, Runnable{
                 return;
             }
         }
+        System.out.print("Account-server was shutdown\n");
     }
 }

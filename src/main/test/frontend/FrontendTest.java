@@ -24,12 +24,12 @@ public class FrontendTest {
     MessageSystem messageSystem = mock(MessageSystem.class);
     Frontend frontend;
     AddressService addressService = mock(AddressService.class);
-    Address accountServiseStub = new Address();
+//    Address accountServiseStub = new Address();
     Address frontendAddress = new Address();
 
     @Before
     public void setUp() throws Exception {
-        when(addressService.getAccountServiceAddress()).thenReturn(accountServiseStub);
+//        when(addressService.getAccountServiceAddress()).thenReturn(accountServiseStub);
         when(messageSystem.getAddressService()).thenReturn(addressService);
         frontend = new Frontend(messageSystem, ServerConfiguration.getInstance().getPort());
         frontend = spy(frontend);
