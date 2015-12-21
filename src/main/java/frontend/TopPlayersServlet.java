@@ -19,9 +19,8 @@ public class TopPlayersServlet extends HttpServlet {
 
     @Override
     protected void doGet(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response) throws ServletException, IOException {
-
-            Map<String, Object> pageVariables = new HashMap<>();
-            response.getWriter().println(PageGenerator.getPage("topPlayers.json", pageVariables));
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+        Map<String, Object> pageVariables = new HashMap<>();
+        response.getWriter().println(PageGenerator.getPage("topPlayers.json", pageVariables));
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
 }

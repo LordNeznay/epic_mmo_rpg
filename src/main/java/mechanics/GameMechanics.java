@@ -128,6 +128,10 @@ public class GameMechanics implements Abonent, Runnable {
         userProfile.sendMessage();
     }
 
+    public void shutdown(){
+        stop();
+    }
+
     public void stop(){
         isWorked = false;
     }

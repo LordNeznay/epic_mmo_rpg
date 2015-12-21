@@ -3,12 +3,9 @@ package frontend;
 import accountService.messages.MessageAuthenticate;
 import accountService.messages.MessageIsUserExist;
 import accountService.messages.MessageRegisterUser;
-import accountService.messages.MessageSignalShutdown;
+import accountService.messages.MessageSignalShutdownAccountService;
 import main.UserProfile;
-import mechanics.messages.MessageAddUserInQueue;
-import mechanics.messages.MessageMovePlayer;
-import mechanics.messages.MessageRemoveUserFromGame;
-import mechanics.messages.MessageToGameMechanics;
+import mechanics.messages.MessageSignalShutdownGameMechanics;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
@@ -20,6 +17,8 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import resource.ServerConfiguration;
 
 import javax.servlet.Servlet;
@@ -33,6 +32,7 @@ public class Frontend implements Abonent, Runnable {
     private Address address = new Address();
     private MessageSystem messageSystem;
     private boolean isWorked = false;
+    Server server;
 
     private Map<String, UserProfile> sessions = new HashMap<>();
     private Map<String, Boolean> responsesAuthorization = new HashMap<>();
@@ -68,7 +68,7 @@ public class Frontend implements Abonent, Runnable {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
 
-        Server server = new Server(port);
+        server = new Server(port);
         server.setHandler(handlers);
 
         server.start();
@@ -95,6 +95,11 @@ public class Frontend implements Abonent, Runnable {
         responsesAuthorization.put(session, result);
     }
 
+    @TestOnly
+    public int sizeResponseAuthorization(){
+        return responsesAuthorization.size();
+    }
+
     public boolean isResivedResponseAuthorization(String session){
         return responsesAuthorization.containsKey(session);
     }
@@ -113,7 +118,7 @@ public class Frontend implements Abonent, Runnable {
         return sessions.containsKey(sessionId);
     }
 
-    public void authenticated(String sessionId, UserProfile userProfile){
+    public void authenticated(String sessionId, @Nullable UserProfile userProfile){
         if(userProfile != null) {
             sessions.put(sessionId, userProfile);
         }
@@ -130,6 +135,11 @@ public class Frontend implements Abonent, Runnable {
 
     public boolean isResivedResponseExistUser(String session){
         return responsesExistUser.containsKey(session);
+    }
+
+    @TestOnly
+    public int sizeResponseExistUser(){
+        return responsesExistUser.size();
     }
 
     public boolean getResponseExistUser(String session){
@@ -150,14 +160,22 @@ public class Frontend implements Abonent, Runnable {
 
 
     public void signalShutdown(){
-        Message messageShutdownAccountService = new MessageSignalShutdown(address, messageSystem.getAddressService().getAccountServiceAddress());
+        Message messageShutdownAccountService = new MessageSignalShutdownAccountService(address, messageSystem.getAddressService().getAccountServiceAddress());
         messageSystem.sendMessage(messageShutdownAccountService);
-        //Message messageShutdownGameMechanics = new
-
+        Message messageShutdownGameMechanics = new MessageSignalShutdownGameMechanics(address, messageSystem.getAddressService().getGameMechanicsAddress());
+        messageSystem.sendMessage(messageShutdownGameMechanics);
         isWorked = false;
-        System.exit(0);
+//        System.exit(0);
     }
 
+    public void stop(){
+        isWorked = false;
+        try {
+            server.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void run() {

@@ -43,7 +43,6 @@ public class AccountService implements Abonent, Runnable{
         return true;
     }
 
-    @Deprecated
     public void registerUser(String login, String password){
         if (dbservice.isAvailable(login)) {
             dbservice.saveUser(new UserDataSet(login, "useremail", password, 0));
@@ -62,7 +61,6 @@ public class AccountService implements Abonent, Runnable{
         return !dbservice.isAvailable(login);
     }
 
-    @Deprecated
     public void shutdown(){
         dbservice.shutdown();
         isWorked = false;
