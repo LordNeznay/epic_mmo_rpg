@@ -1,15 +1,11 @@
 package main;
 
 import frontend.GameWebSocket;
+import mechanics.messages.MessageRemoveUserFromGame;
+import messageSystem.Message;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
-import utils.Repairer;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 /**
  * Created by v.chibrikov on 13.09.2014.
@@ -64,7 +60,7 @@ public class UserProfile {
         try{
             userSocket.sendMessage(response.toString());
         } catch (RuntimeException e){
-            Repairer.getInstance().repaireUser(this);
+            //Repairer.getInstance().repaireUser(this);
             userSocket = null;
         }
         forSending.clear();

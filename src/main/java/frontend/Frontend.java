@@ -29,8 +29,10 @@ import java.util.Map;
  * Created by Андрей on 20.12.2015.
  */
 public class Frontend implements Abonent, Runnable {
+    private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private Address address = new Address();
     private MessageSystem messageSystem;
+    private Thread thisThread;
     private boolean isWorked = false;
     Server server;
 
@@ -38,12 +40,16 @@ public class Frontend implements Abonent, Runnable {
     private Map<String, Boolean> responsesAuthorization = new HashMap<>();
     private Map<String, Boolean> responsesExistUser = new HashMap<>();
 
+    public void setThisThread(Thread thisThread){
+        this.thisThread = thisThread;
+    }
+
     public Frontend(MessageSystem messageSystem, int port) throws Exception {
+        System.out.print("Frontend-server was started\n");
+        System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
         messageSystem.getAddressService().registerFrontend(this);
-
-        System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
         Servlet signin = new SignInServlet(this);
         Servlet signUp = new SignUpServlet(this);
@@ -72,6 +78,7 @@ public class Frontend implements Abonent, Runnable {
         server.setHandler(handlers);
 
         server.start();
+        //server.join();
     }
 
     public MessageSystem getMessageSystem() {
@@ -165,16 +172,20 @@ public class Frontend implements Abonent, Runnable {
         Message messageShutdownGameMechanics = new MessageSignalShutdownGameMechanics(address, messageSystem.getAddressService().getGameMechanicsAddress());
         messageSystem.sendMessage(messageShutdownGameMechanics);
         isWorked = false;
+        stop();
 //        System.exit(0);
     }
 
     public void stop(){
         isWorked = false;
-        try {
-            server.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            server.stop();
+//        } catch (Exception e) {
+//            //e.printStackTrace();
+//        }
+//        Thread.currentThread().interrupt();
+        thisThread.interrupt();
+
     }
 
     @Override
@@ -183,9 +194,10 @@ public class Frontend implements Abonent, Runnable {
         while (isWorked){
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(ServerConfiguration.getInstance().getStepTime());
+                Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.print("Frontend-server was shutdown\n");
+                return;
             }
         }
     }

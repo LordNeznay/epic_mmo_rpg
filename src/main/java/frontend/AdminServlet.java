@@ -30,10 +30,9 @@ public class AdminServlet extends HttpServlet {
 
         if(shutdown_time != null) {
             int time = Integer.valueOf(shutdown_time);
-            System.out.print("Server will be down after: " + time + " ms");
+            System.out.print("Server will be down after: " + time + " ms\n");
             frontend.signalShutdown();
             TimeHelper.sleep(time);
-            System.out.print("\nShutdown");
         }
 
 

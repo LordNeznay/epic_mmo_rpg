@@ -1,8 +1,6 @@
 package mechanics.ability;
 
-import mechanics.Ability;
-import mechanics.AbilityAction;
-import mechanics.AttackAbility;
+import mechanics.abilityAction.AbilityAction;
 import mechanics.abilityAction.OrdinaryHitAction;
 import resource.ServerConfiguration;
 

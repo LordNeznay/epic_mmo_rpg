@@ -3,7 +3,7 @@ package resource;
 import java.util.HashMap;
 import java.util.Map;
 
-import mechanics.PhysMapJson;
+import mechanics.gameMap.PhysMapJson;
 
 /**
  * Created by uschsh on 22.11.15.

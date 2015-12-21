@@ -1,18 +1,12 @@
 package utils;
 
-import  javax.xml.parsers.DocumentBuilderFactory;
-import  javax.xml.parsers.DocumentBuilder;
-
-import mechanics.GameMap;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import  org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**

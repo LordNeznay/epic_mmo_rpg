@@ -1,8 +1,6 @@
 package mechanics.ability;
 
-import mechanics.Ability;
-import mechanics.AbilityAction;
-import mechanics.HealingAbility;
+import mechanics.abilityAction.AbilityAction;
 import mechanics.abilityAction.OrdinaryHealingAction;
 import resource.ServerConfiguration;
 

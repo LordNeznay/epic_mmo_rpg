@@ -2,8 +2,9 @@ package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
-import mechanics.ability.OrdinaryHealing;
-import mechanics.ability.OrdinaryHit;
+import mechanics.ability.*;
+import mechanics.abilityAction.AbilityAction;
+import mechanics.gameMap.GameMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import utils.ResponseConstructor;

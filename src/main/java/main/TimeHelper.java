@@ -5,7 +5,8 @@ public class TimeHelper {
         try {
             Thread.sleep(period);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return;
         }
     }
 }

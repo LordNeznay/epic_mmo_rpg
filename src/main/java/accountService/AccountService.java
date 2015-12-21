@@ -14,8 +14,10 @@ import resource.ServerConfiguration;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class AccountService implements Abonent, Runnable{
+    private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private boolean isWorked = false;
     private final Address address = new Address();
+    private Thread thisThread;
     private final MessageSystem messageSystem;
     private DBService dbservice;
 
@@ -24,7 +26,12 @@ public class AccountService implements Abonent, Runnable{
         return address;
     }
 
+    public void setThisThread(Thread thisThread){
+        this.thisThread = thisThread;
+    }
+
     public AccountService(MessageSystem messageSystem, DBService dbservice) {
+        System.out.print("Account-server was started\n");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
         messageSystem.getAddressService().registerAccountService(this);
@@ -64,6 +71,9 @@ public class AccountService implements Abonent, Runnable{
     public void shutdown(){
         dbservice.shutdown();
         isWorked = false;
+//        Thread.currentThread().interrupt();
+        thisThread.interrupt();
+
     }
 
     @Override
@@ -72,9 +82,10 @@ public class AccountService implements Abonent, Runnable{
         while (isWorked){
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(ServerConfiguration.getInstance().getStepTime());
+                Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.print("Account-server was shutdown\n");
+                return;
             }
         }
     }

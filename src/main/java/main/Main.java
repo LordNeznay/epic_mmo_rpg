@@ -6,7 +6,6 @@ import frontend.*;
 import mechanics.GameMechanics;
 import messageSystem.MessageSystem;
 import resource.ServerConfiguration;
-import utils.Repairer;
 
 /**
  * @author v.chibrikov
@@ -48,8 +47,11 @@ public class Main {
         frontEndThread.setName("FrontEnd");
 
         accountServiceThread.start();
+        accountService.setThisThread(accountServiceThread);
         gameMechanicsThread.start();
+        gameMechanics.setThisThread(gameMechanicsThread);
         frontEndThread.start();
+        frontend.setThisThread(frontEndThread);
 
     }
 }

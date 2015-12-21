@@ -2,7 +2,7 @@ package messageSystem;
 
 import frontend.Frontend;
 import accountService.AccountService;
-import mechanics.GameMap;
+import mechanics.gameMap.GameMap;
 import mechanics.GameMechanics;
 
 import java.util.ArrayList;
@@ -16,13 +16,13 @@ public class AddressService {
     private Address gameMechanics;
     private Address frontend;
     private Address accountService;
-//    private final List<Address> gameMapList = new ArrayList<>();
+    private final List<Address> gameMapList = new ArrayList<>();
 
     private AtomicInteger gameMapCounter = new AtomicInteger();
 
-//    public void registerGameMap(GameMap gameMap){
-//        gameMapList.add(gameMap.getAddress());
-//    }
+    public void registerGameMap(GameMap gameMap){
+        gameMapList.add(gameMap.getAddress());
+    }
 
     public void registerGameMechanics(GameMechanics _gameMechanics){
         gameMechanics = _gameMechanics.getAddress();
@@ -48,11 +48,11 @@ public class AddressService {
         return accountService;
     }
 
-//    public synchronized Address getGameMapAddress() {
-//        int index = gameMapCounter.getAndIncrement();
-//        if (index >= gameMapList.size()) {
-//            index = 0;
-//        }
-//        return gameMapList.get(index);
-//    }
+    public synchronized Address getGameMapAddress() {
+        int index = gameMapCounter.getAndIncrement();
+        if (index >= gameMapList.size()) {
+            index = 0;
+        }
+        return gameMapList.get(index);
+    }
 }

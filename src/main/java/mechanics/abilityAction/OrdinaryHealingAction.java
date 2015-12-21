@@ -1,6 +1,5 @@
 package mechanics.abilityAction;
 
-import mechanics.AbilityAction;
 import mechanics.Entity;
 import org.jetbrains.annotations.NotNull;
 import utils.Helper;
