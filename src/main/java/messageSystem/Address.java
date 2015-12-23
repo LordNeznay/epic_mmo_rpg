@@ -17,4 +17,9 @@ public class Address {
     public int hashCode(){
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        return this.hashCode() == obj.hashCode();
+    }
 }
