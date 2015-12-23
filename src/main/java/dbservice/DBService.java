@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class DBService {
     private SessionFactory sessionFactory;
+    private TExecutor executor;
+
 
     public DBService(String state) {
         String hbm2ddl_auto;
@@ -44,6 +46,8 @@ public class DBService {
         .setProperty("hibernate.hbm2ddl.auto", hbm2ddl_auto);
 
         sessionFactory = createSessionFactory(configuration);
+
+        executor = new TExecutor(sessionFactory);
     }
     public DBService() {
         Configuration configuration = new Configuration()
@@ -57,49 +61,45 @@ public class DBService {
                 .setProperty("hibernate.hbm2ddl.auto", ServerConfiguration.getInstance().getHbm2ddAuto());
 
         sessionFactory = createSessionFactory(configuration);
+
+        executor = new TExecutor(sessionFactory);
     }
 
     public UserDataSet getByName(String username) {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        UserDataSet dataSet = dao.getUserByName(username);
-        session.close();
-        return dataSet;
+        return executor.execQuery((session, param) -> {
+            UserDataSetDAO dao = new UserDataSetDAO(session);
+            return dao.getUserByName(param);
+            }, username);
     }
 
 
     public boolean deleteByName(String username) {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        boolean status = dao.deleteByName(username);
-        session.close();
-        return status;
+        return executor.execQuery((session, param) -> {
+            UserDataSetDAO dao = new UserDataSetDAO(session);
+            return dao.deleteByName(param);
+        }, username);
     }
 
 
     public long getRegCount() {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        long count = dao.getRegCount();
-        session.close();
-        return count;
+        return executor.execQuery((session, param) -> {
+            UserDataSetDAO dao = new UserDataSetDAO(session);
+            return dao.getRegCount();
+        }, 0);
     }
 
     public void saveUser(UserDataSet dataSet) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        dao.save(dataSet);
-        session.getTransaction().commit();
-        session.close();
+        executor.execUpdate((session, param) -> {
+            UserDataSetDAO dao = new UserDataSetDAO(session);
+            dao.save(param);
+        }, dataSet);
     }
 
     public boolean isAvailable(String username) {
-        Session session = sessionFactory.openSession();
-        UserDataSetDAO dao = new UserDataSetDAO(session);
-        boolean status =dao.isAvailable(username);
-        session.close();
-        return status;
+        return executor.execQuery((session, param) -> {
+            UserDataSetDAO dao = new UserDataSetDAO(session);
+            return dao.isAvailable(param);
+        }, username);
     }
 
 

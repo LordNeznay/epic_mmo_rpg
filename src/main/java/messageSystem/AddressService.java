@@ -37,4 +37,12 @@ public class AddressService {
         return accountService;
     }
 
+    /*public synchronized Address getGameMapAddress() {
+        int index = gameMapCounter.getAndIncrement();
+        if (index >= gameMapList.size()) {
+            gameMapCounter.set(0);
+        }
+        return gameMapList.get(index);
+    }*/
+
 }
