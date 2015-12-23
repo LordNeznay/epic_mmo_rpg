@@ -2,12 +2,8 @@ package messageSystem;
 
 import frontend.Frontend;
 import accountService.AccountService;
-import mechanics.gameMap.GameMap;
 import mechanics.GameMechanics;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Андрей on 20.12.2015.
@@ -16,13 +12,6 @@ public class AddressService {
     private Address gameMechanics;
     private Address frontend;
     private Address accountService;
-    private final List<Address> gameMapList = new ArrayList<>();
-
-    private AtomicInteger gameMapCounter = new AtomicInteger();
-
-    public void registerGameMap(GameMap gameMap){
-        gameMapList.add(gameMap.getAddress());
-    }
 
     public void registerGameMechanics(GameMechanics _gameMechanics){
         gameMechanics = _gameMechanics.getAddress();
@@ -48,11 +37,4 @@ public class AddressService {
         return accountService;
     }
 
-    public synchronized Address getGameMapAddress() {
-        int index = gameMapCounter.getAndIncrement();
-        if (index >= gameMapList.size()) {
-            index = 0;
-        }
-        return gameMapList.get(index);
-    }
 }

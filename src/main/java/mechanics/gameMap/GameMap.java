@@ -71,7 +71,6 @@ public class GameMap implements Abonent, Runnable{
         System.out.print("GameMap was created\n");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
-        messageSystem.getAddressService().registerGameMap(this);
 
         Vec2d sizeMap = physMap.getSize();
         mapWidth = (int) sizeMap.x;
