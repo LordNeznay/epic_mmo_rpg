@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.ResponseConstructor;
+import utils.ResponseHeaders;
 
 import java.io.IOException;
 
@@ -96,11 +98,14 @@ public class GameWebSocket {
         switch (query.get("action").toString()) {
             case "move":
                 movePlayer(query.get("direction").toString());
+                userProfile.addMessageForSending(ResponseConstructor.getConfirmRequest(ResponseHeaders.CONFIRMED_PLAYER_MOVE));
                 break;
             case "flagCapture":
                 startFlagCapture();
+                userProfile.addMessageForSending(ResponseConstructor.getConfirmRequest(ResponseHeaders.CONFIRMED_START_FLAG_CAPTURE));
                 break;
             case "setTarget":
+                userProfile.addMessageForSending(ResponseConstructor.getConfirmRequest(ResponseHeaders.CONFIRMED_SET_TARGET));
                 try {
                     int x = Integer.valueOf(query.get("x").toString());
                     int y = Integer.valueOf(query.get("y").toString());
@@ -110,6 +115,7 @@ public class GameWebSocket {
                 }
                 break;
             case "useAbility":
+                userProfile.addMessageForSending(ResponseConstructor.getConfirmRequest(ResponseHeaders.CONFIRMED_USE_ABILITY));
                 useAbility(query.get("abilityName").toString());
                 break;
             default: break;

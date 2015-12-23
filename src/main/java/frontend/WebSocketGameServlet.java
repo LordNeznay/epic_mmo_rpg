@@ -2,8 +2,6 @@ package frontend;
 
 import javax.servlet.annotation.WebServlet;
 
-import accountService.AccountService;
-import mechanics.GameMechanics;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.jetbrains.annotations.NotNull;

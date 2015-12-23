@@ -1,11 +1,15 @@
 package utils;
 
 import com.sun.javafx.geom.Vec2d;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Андрей on 30.11.2015.
  */
 public class ResponseConstructor {
+    @NotNull
+    @Contract(pure = true)
     public static String getResponse(String type, String body){
         return "{\"t\":\"" +
                 type +
@@ -14,14 +18,26 @@ public class ResponseConstructor {
                 '}';
     }
 
+    @NotNull
+    @Contract(pure = true)
+    public static String getConfirmRequest(String type){
+        return "{\"t\":\"" + type + "\"}";
+    }
+
+    @NotNull
+    @Contract(pure = true)
     public static String getCoordJson(Vec2d vec){
         return "{\"x\":" + (int)vec.x + ",\"y\":" + (int)vec.y + '}';
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String getTargetJson(Vec2d vec){
         return "{\"x\":" + (int)vec.x + ",\"y\":" + (int)vec.y + ",\"image\":\"target.png\"}";
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String getFlagJson(Vec2d vec, String command){
         StringBuilder result = new StringBuilder();
         result.append("{\"x\":");
@@ -44,6 +60,8 @@ public class ResponseConstructor {
         return result.toString();
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String getEntityJson(Vec2d vec, String command){
         StringBuilder result = new StringBuilder();
         result.append("{\"x\":");
@@ -66,10 +84,14 @@ public class ResponseConstructor {
         return result.toString();
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String entitiesInViewArea(Vec2d vec, String entities){
         return '{' + "\"player\":{\"x\":" + (int)vec.x + ",\"y\":" + (int)vec.y + ",\"image\":\"people.png\"}," + "\"entities\":[" + entities + "]}";
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String entityStatus(int hitPoints, boolean isHaveTarget, int targetHitPoints){
         StringBuilder entityStatus = new StringBuilder();
         entityStatus.append('{');
@@ -83,6 +105,8 @@ public class ResponseConstructor {
         return entityStatus.toString();
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String statusFlag(int commandRedPoints, int commandBluePoints, String owner, String invader, int delayCapture, double ONE_SECOND){
         StringBuilder flagStatus = new StringBuilder();
         flagStatus.append("{\"commandRed\":");
@@ -102,6 +126,8 @@ public class ResponseConstructor {
         return flagStatus.toString();
     }
 
+    @NotNull
+    @Contract(pure = true)
     public static String resultGame(int commandRedPoints, int commandBluePoints, String winner, boolean isTechnicalWin){
         StringBuilder result = new StringBuilder();
         result.append("{\"CommandRed\":");

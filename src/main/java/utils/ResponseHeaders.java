@@ -14,4 +14,9 @@ public class ResponseHeaders {
     public static final String FLAG_STATUS = "h8";
     public static final String ENTITY_STATUS = "h9";
     public static final String ABILITY_STATUS = "h10";
+
+    public static final String CONFIRMED_PLAYER_MOVE = "c1";
+    public static final String CONFIRMED_START_FLAG_CAPTURE = "c2";
+    public static final String CONFIRMED_SET_TARGET = "c3";
+    public static final String CONFIRMED_USE_ABILITY = "c4";
 }

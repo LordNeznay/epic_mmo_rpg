@@ -75,6 +75,19 @@ define([
                         case headers.abilityStatus:{
                             that.trigger("abilityStatus", data.b);
                         }; break;   
+                        
+                        case headers.confirmed_playerMove:{
+                            that.isAllowedMove = true;
+                        }; break;
+                        case headers.confirmed_startFlagCapture:{
+                            that.isAllowedStartFlagCapture = true;
+                        }; break;
+                        case headers.confirmed_setTarget:{
+                            that.isAllowedSetTarget = true;
+                        }; break;
+                        case headers.confirmed_useAbility:{
+                            that.isAllowedUseAbility = true;
+                        }; break;
                         default: break;
                     }
                 });
@@ -108,6 +121,11 @@ define([
             var that = this;
             var message = '{"command": "join_game"}';
             that.sendMessage(message);
+            
+            that.isAllowedMove = true;
+            that.isAllowedSetTarget = true;
+            that.isAllowedUseAbility = true;
+            that.isAllowedStartFlagCapture = true;
         },
         
         leaveGame: function(){
@@ -119,30 +137,37 @@ define([
         },
         
         move: function(params){
+            if(!this.isAllowedMove) return;
             var message = '{"command": "action", "action" : "move", "direction" : "';
             message += params;
             message += '"}';
             this.sendMessage(message);
+            this.isAllowedMove = false;
         },
         
         setTarget: function(x, y){
+            if(!this.isAllowedSetTarget) return;
             var message = '{"command": "action", "action" : "setTarget", "x" : ';
             message += x;
             message += ', "y": ';
             message += y;
             message += '}';
             this.sendMessage(message);
+            this.isAllowedSetTarget = false;
         },
         
         ability: function(name){
+            if(!this.isAllowedUseAbility) return;
             var message = '{"command": "action", "action" : "useAbility", "abilityName" : "' + name + '"}';
             this.sendMessage(message);
+            this.isAllowedUseAbility = false;
         },
                 
         startCapture: function(){
+            if(!this.isAllowedStartFlagCapture) return;
             var message = '{"command": "action", "action" : "flagCapture"}';
             this.sendMessage(message);
-            //alert(message);
+            this.isAllowedStartFlagCapture = false;
         },
         
         getCoord: function(){

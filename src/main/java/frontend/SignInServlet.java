@@ -1,7 +1,6 @@
 package frontend;
 
 import main.TimeHelper;
-import main.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import resource.ServerConfiguration;
 import templater.PageGenerator;
