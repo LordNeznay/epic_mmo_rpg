@@ -26,6 +26,7 @@ public final class ServerConfiguration {
             properties.load(fis);
 
             serverProperties.put("port", properties.getProperty("server.port"));
+            serverProperties.put("maxAmountGameMap", properties.getProperty("server.maxAmountGameMap"));
 
             serverProperties.put("stepTime", properties.getProperty("mechanics.stepTime"));
             serverProperties.put("playerToStart", properties.getProperty("mechanics.playerToStart"));
@@ -75,6 +76,10 @@ public final class ServerConfiguration {
 
     public int getPort() {
         return Integer.parseInt(serverProperties.get("port"));
+    }
+
+    public int getMaxAmountGameMap() {
+        return Integer.parseInt(serverProperties.get("maxAmountGameMap"));
     }
 
     public int getPlayerToStart(){

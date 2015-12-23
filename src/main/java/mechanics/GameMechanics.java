@@ -24,6 +24,7 @@ public class GameMechanics implements Abonent, Runnable {
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MIN_PLAYERS_FOR_START = ServerConfiguration.getInstance().getPlayerToStart();
     private static final int MAX_PLAYER_IN_GAME = ServerConfiguration.getInstance().getAmountPlayerInCommand()*2;
+    private static final int MAX_AMOUNT_MAP = ServerConfiguration.getInstance().getMaxAmountGameMap();
     private Map<UserProfile, Address> usersMaps = new HashMap<>();
     private Map<Address, Integer> amountPlayerInMaps = new HashMap<>();
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
@@ -68,7 +69,7 @@ public class GameMechanics implements Abonent, Runnable {
         String response = ResponseConstructor.getResponse(ResponseHeaders.WAIT_START, "{}");
         userProfile.addMessageForSending(response);
 
-        if(userQueue.size() == MIN_PLAYERS_FOR_START) {
+        if(userQueue.size() == MIN_PLAYERS_FOR_START && amountPlayerInMaps.size() < MAX_AMOUNT_MAP) {
             GameMap gameMap = new GameMap(messageSystem);
             Address addressMap = gameMap.getAddress();
             Thread gameMapThread = new Thread(gameMap);
