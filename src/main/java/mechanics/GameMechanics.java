@@ -85,21 +85,6 @@ public class GameMechanics implements Abonent, Runnable {
         }
     }
 
-//    @TestOnly
-//    public GameMap getMapWithUser(UserProfile userProfile){
-//        return usersMaps.get(userProfile);
-//    }
-
-//    @TestOnly
-//    public void replaseMap(GameMap lastMap, GameMap newMap){
-//        gameMaps.remove(lastMap);
-//        gameMaps.add(newMap);
-//        for(Map.Entry<UserProfile, GameMap> entry : usersMaps.entrySet()){
-//            if(entry.getValue().equals(lastMap)){
-//                entry.setValue(newMap);
-//            }
-//        }
-//    }
 
     public boolean isInGame(){
         return isWorked;

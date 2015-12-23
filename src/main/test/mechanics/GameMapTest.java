@@ -4,7 +4,6 @@ import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.gameMap.GameMap;
 import mechanics.gameMap.PhysMap;
-import messageSystem.Address;
 import messageSystem.AddressService;
 import messageSystem.MessageSystem;
 import org.junit.After;

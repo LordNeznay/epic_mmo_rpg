@@ -1,7 +1,6 @@
 package mechanics.gameMap;
 
 import com.sun.javafx.geom.Vec2d;
-import mechanics.gameMap.PhysMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import resource.Resource;

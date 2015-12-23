@@ -1,8 +1,6 @@
 package main;
 
 import frontend.GameWebSocket;
-import mechanics.messages.MessageRemoveUserFromGame;
-import messageSystem.Message;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
@@ -45,7 +43,6 @@ public class UserProfile {
     }
 
     public void sendMessage(){
-        //JSONArray response = forSending.stream().collect(Collectors.toCollection(JSONArray::new));
         StringBuilder response = new StringBuilder();
         response.append('[');
 
@@ -60,7 +57,6 @@ public class UserProfile {
         try{
             userSocket.sendMessage(response.toString());
         } catch (RuntimeException e){
-            //Repairer.getInstance().repaireUser(this);
             userSocket = null;
         }
         forSending.clear();
