@@ -19,6 +19,7 @@ public final class MessageAuthenticate extends MessageToAccountService {
         this.name = name;
         this.password = password;
         this.sessionId = sessionId;
+
     }
 
     @Override
