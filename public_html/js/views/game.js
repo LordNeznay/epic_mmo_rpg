@@ -69,17 +69,20 @@
                     that.gameField.hide();              
                     $(".game-result").hide();
                     $(".please_wait").show();
-                } else {
+                    that.surroundings.stopAnimation();
+                } else if(!that.player.isWait){
                     that.show_game_info();
                     that.gameField.show(); 
                     $(".game-result").hide();
                     $(".please_wait").hide();
+                    that.surroundings.startAnimation();
                 }
             });
             
             this.surroundings.listenTo(this.player, "playerPosition", function(_pos){
-                that.surroundings.pos_x = _pos.x;
-                that.surroundings.pos_y = _pos.y;
+                //that.surroundings.pos_x = _pos.x;
+                //that.surroundings.pos_y = _pos.y;
+                that.surroundings.newPosition(_pos.x, _pos.y);
                 that.surroundings.trigger("newPlayerPosition");
             });
             
@@ -224,6 +227,7 @@
         },
         hide: function(){
             this.player.leaveGame();
+            this.surroundings.stopAnimation();
             View.__super__.hide.call(this);
         },
         
@@ -238,18 +242,22 @@
                 case 'ц':
                 case 'w':{
                     that.player.move("up");
+                    //that.surroundings.startMove("up");
                 }; break;
                 case 'ы':
                 case 's':{
                     that.player.move("down");
+                    //that.surroundings.startMove("down");
                 }; break;
                 case 'ф':
                 case 'a':{
                     that.player.move("left");
+                    //that.surroundings.startMove("left");
                 }; break;
                 case 'в':
                 case 'd':{
                     that.player.move("right");
+                    //that.surroundings.startMove("right");
                 }; break;
                 case 'я':
                 case 'z':{

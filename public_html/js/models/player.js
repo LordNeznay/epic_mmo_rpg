@@ -35,7 +35,7 @@ define([
                 that.trigger("joinGame");
             }
             this.ws.onmessage = function (event) {
-                console.log(event.data);
+                //console.log(event.data);
                 var allData = JSON.parse(event.data);
                 //console.log(allData);
                 allData.forEach(function(data){
@@ -113,6 +113,10 @@ define([
         },
         
         startGame: function(){
+            this.isInGame = false;
+            this.isWait = true;
+            this.isGameComplite = false;
+            this.trigger("isWait:change");
             this.socket_open();
         },
         

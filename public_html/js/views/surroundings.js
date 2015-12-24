@@ -25,16 +25,114 @@
         canvas_frontground: undefined,
         canvas_frontground_context: undefined,
         
+        offsetX: 0,
+        offsetY: 0,
+        directMove: "none",
+        fps: 30,
+        sfps: 5,
+        dst: 0,
+        minD: 0.5,
+        
         loadTilesets: 0,
         amountTilesets: 0,
 
         initialize: function(){
             this.on("mapIsLoad", this.loadingTilesets, this);
-            this.on("newPlayerPosition", this.redrawMap, this);
+            this.on("newPlayerPosition", this.updMap, this);
             this.on("entitiesIsLoad", this.drawEntities, this);
             this.on("readyDrawMap", this.drawMap, this);
         },
+        
+        updMap: function(){
+            //Функция вызовится при сдвиге карты.
+            this.redrawMap();
+        },
+        
+        newPosition: function(x, y){
+            var that = this;
+            if((x > that.pos_x && y > that.pos_y) || (x < that.pos_x && y < that.pos_y)
+                || ((x - that.pos_x) > 1) || ((x - that.pos_x) < -1) || ((y - that.pos_y) > 1) || ((y - that.pos_y) < -1)
+                ){
+                
+            } else {
+                if(x > that.pos_x && y == that.pos_y){
+                    that.startMove("right");
+                    that.offsetX = canvas_tile_width;
+                    that.offsetY = 0;
+                }
+                if(x < that.pos_x && y == that.pos_y){
+                    that.startMove("left");
+                    that.offsetX = -canvas_tile_width;
+                    that.offsetY = 0;
+                }
+                if(x == that.pos_x && y > that.pos_y){
+                    that.startMove("down");
+                    that.offsetX = 0;
+                    that.offsetY = canvas_tile_width;
+                }
+                if(x == that.pos_x && y < that.pos_y){
+                    that.startMove("up");
+                    that.offsetX = 0;
+                    that.offsetY = -canvas_tile_width;
+                }
+            }
+            that.pos_x = x;
+            that.pos_y = y;
+        },
+        
+        startAnimation: function(){
+            var that = this;
+            this.timerId = setInterval(function(){
+                that.step();
+            }, 1000/that.fps);
+        },
+        
+        stopAnimation: function(){
+            clearInterval(this.timerId);
+        },
+        
+        stopMove: function(){
+            this.offsetX = 0;
+            this.offsetY = 0;
+            this.directMove = "none";
+            this.dst = 0;
+        },
 
+        startMove: function(direct){
+            this.dst = 0;
+            this.directMove = direct;
+        },
+        
+        step: function(){
+            var that = this;
+            var dist = canvas_tile_width*that.sfps/that.fps;
+            this.dst += dist;
+            switch(this.directMove){
+                case "up": {
+                    that.offsetY += dist;
+                }; break;
+                case "down": {
+                    that.offsetY -= dist;
+                }; break;
+                case "left": {
+                    that.offsetX += dist;
+                }; break;
+                case "right": {
+                    that.offsetX -= dist;
+                }; break;
+            }
+            
+            if(Math.abs(this.offsetX) < this.minD && Math.abs(this.offsetY) < this.minD){
+                this.stopMove();
+            }
+            
+            if(this.dst > canvas_tile_width){
+                this.stopMove();
+            }
+            this.redrawMap();
+            that.trigger("entitiesIsLoad");
+        },
+        
         setMap: function(map){
             this.map = map;
         },
@@ -52,7 +150,7 @@
                         yy += tileset.tileheight;
                         xx -= tileset.imagewidth;
                     }
-                    that.canvas_background_context.drawImage(tileset.image, xx, yy, tileset.tilewidth, tileset.tileheight, x, y, tileset.tilewidth, tileset.tileheight);
+                    that.canvas_background_context.drawImage(tileset.image, xx, yy, tileset.tilewidth, tileset.tileheight, x + that.offsetX, y + that.offsetY, tileset.tilewidth, tileset.tileheight);
                 }
             });
         },
@@ -96,7 +194,7 @@
                 var pic = new Image();
                 pic.src = 'http://' + document.location.host + '/res/' + entity.image;
                 pic.onload = function(){
-                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * canvas_tile_width, (entity.y-1) * canvas_tile_height);
+                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * canvas_tile_width  + that.offsetX, (entity.y-1) * canvas_tile_height  + that.offsetY);
                 }
             });
             
@@ -121,7 +219,7 @@
                 var x = -dx;
                 var y = -dy;
                 layer.data.forEach(function(gid){
-                    that.drawTile(gid, x, y);
+                    that.drawTile(gid, x  + that.offsetX, y  + that.offsetY);
                     x += dx;
                     while(x >= (that.map.width-1) * dx){
                         x = -dx;
@@ -138,6 +236,8 @@
         },
         
         redrawMap: function(){
+            //Отменить движение
+            //this.stopMove();
             //Если картинки не догружены, то выйти
             if(this.amountTilesets != this.loadTilesets) return;
             var that = this;

@@ -26,7 +26,6 @@ public class Main {
         MessageSystem messageSystem = new MessageSystem();
 
         GameMechanics gameMechanics = new GameMechanics(messageSystem);
-        //Repairer.getInstance().setGameMechanics(gameMechanics);
 
         AccountService accountService = new AccountService(messageSystem, dbservice);
         accountService.addUser("admin", new UserProfile("admin", "admin", ""));
