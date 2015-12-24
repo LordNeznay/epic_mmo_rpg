@@ -14,13 +14,13 @@ public class TExecutor {
         this.sessionFactory = sessionFactory;
     }
 
-    public <T, P> T execQuery(ExecQuery<T, P> handler, P param) {
+    public <T> T execQuery(ExecQuery<T> handler) {
         T result;
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            result = handler.execQuery(session, param);
+            result = handler.execQuery(session);
 
             tx.commit();
         } catch (RuntimeException e) {
@@ -31,12 +31,12 @@ public class TExecutor {
         return result;
     }
 
-    public <P> void execUpdate(ExecUpdate<P> handler, P param) {
+    public void execUpdate(ExecUpdate handler) {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            handler.execUpdate(session, param);
+            handler.execUpdate(session);
 
             tx.commit();
         } catch (RuntimeException e) {
