@@ -110,6 +110,11 @@ module.exports = function (grunt) {
                 src: ['src/main/resources/data/tilemap.json'],
                 dest: 'production/public_html/res/tilemap.json',
             },
+            
+            config: {
+                src: ['src/main/resources/cfg/config.properties'],
+                dest: 'production/src/main/resources/cfg/config.properties',
+            }
         },
         
         cssmin: {
@@ -166,6 +171,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:map', 'concat:css', 'cssmin:dev', 'concurrent']);
-    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:mapForProd', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify']);
+    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:mapForProd', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify', 'concat:config']);
 
 };

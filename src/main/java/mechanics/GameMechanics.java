@@ -48,7 +48,7 @@ public class GameMechanics implements Abonent, Runnable {
     }
 
     public void addUser(UserProfile userProfile) {
-        if(usersMaps.containsKey(userProfile)) {
+        if(usersMaps.containsKey(userProfile) || userQueue.contains(userProfile)) {
             return;
         }
 

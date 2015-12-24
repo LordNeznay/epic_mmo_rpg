@@ -100,6 +100,9 @@ public class GameMap implements Abonent, Runnable{
     }
 
     public boolean addUser(UserProfile userProfile) {
+        if(entities.containsKey(userProfile)){
+            return true;
+        }
         if(amountRedPlayers == MAX_PLAYERS_IN_COMMAND && amountBluePlayers == MAX_PLAYERS_IN_COMMAND){
             return false;
         }
