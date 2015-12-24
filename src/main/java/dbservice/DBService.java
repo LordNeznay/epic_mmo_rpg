@@ -21,44 +21,7 @@ public class DBService {
     private SessionFactory sessionFactory;
     private TExecutor executor;
 
-
-    public DBService(String state) {
-        String hbm2ddl_auto;
-        String url;
-        if (state.equals("test")) {
-            hbm2ddl_auto = ServerConfiguration.getInstance().getHbm2ddAutoTest();
-            url = ServerConfiguration.getInstance().getConnectionUrlTest();
-        }
-        else
-        {
-            hbm2ddl_auto = ServerConfiguration.getInstance().getHbm2ddAuto();
-            url = ServerConfiguration.getInstance().getConnectionUrl();
-        }
-
-        Configuration configuration = new Configuration()
-        .addAnnotatedClass(UserDataSet.class)
-        .setProperty("hibernate.dialect", ServerConfiguration.getInstance().getDialect())
-        .setProperty("hibernate.connection.driver_class", ServerConfiguration.getInstance().getDriverClass())
-        .setProperty("hibernate.connection.url", url)
-        .setProperty("hibernate.connection.username", ServerConfiguration.getInstance().getConnectionUsername())
-        .setProperty("hibernate.connection.password", ServerConfiguration.getInstance().getConnectionPassword())
-        .setProperty("hibernate.show_sql", ServerConfiguration.getInstance().getShowSql())
-        .setProperty("hibernate.hbm2ddl.auto", hbm2ddl_auto);
-
-        sessionFactory = createSessionFactory(configuration);
-
-        executor = new TExecutor(sessionFactory);
-    }
-    public DBService() {
-        Configuration configuration = new Configuration()
-                .addAnnotatedClass(UserDataSet.class)
-                .setProperty("hibernate.dialect", ServerConfiguration.getInstance().getDialect())
-                .setProperty("hibernate.connection.driver_class", ServerConfiguration.getInstance().getDriverClass())
-                .setProperty("hibernate.connection.url", ServerConfiguration.getInstance().getConnectionUrl())
-                .setProperty("hibernate.connection.username", ServerConfiguration.getInstance().getConnectionUsername())
-                .setProperty("hibernate.connection.password", ServerConfiguration.getInstance().getConnectionPassword())
-                .setProperty("hibernate.show_sql", ServerConfiguration.getInstance().getShowSql())
-                .setProperty("hibernate.hbm2ddl.auto", ServerConfiguration.getInstance().getHbm2ddAuto());
+    public DBService(Configuration configuration) {
 
         sessionFactory = createSessionFactory(configuration);
 
