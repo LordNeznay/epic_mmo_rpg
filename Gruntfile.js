@@ -98,17 +98,22 @@ module.exports = function (grunt) {
             
             forProd: {
                 src: ['public_html/index/index_prod.html'],
-                dest: 'public_html/index.html',
+                dest: 'production/public_html/index.html',
             },
             
             forDev: {
                 src: ['public_html/index/index_dev.html'],
                 dest: 'public_html/index.html',
-            }
+            },
+            
+            mapForProd: {
+                src: ['src/main/resources/data/tilemap.json'],
+                dest: 'production/public_html/res/tilemap.json',
+            },
         },
         
         cssmin: {
-            target: {
+            dev: {
                 files: [{
                     expand: true,
                     cwd: 'public_html/css',
@@ -116,7 +121,16 @@ module.exports = function (grunt) {
                     dest: 'public_html/css',
                     ext: '.min.css'
                 }]
-            }
+            },
+            prod: {
+                files: [{
+                    expand: true,
+                    cwd: 'public_html/css',
+                    src: ['*.css', '!*.min.css'],
+                    dest: 'production/public_html/css',
+                    ext: '.min.css'
+                }]
+            }        
         },
         
         requirejs: {
@@ -134,7 +148,7 @@ module.exports = function (grunt) {
         uglify: { 
 			build: {
 				files: {
-					'public_html/js/build.min.js': ['public_html/js/build.js']
+					'production/public_html/js/build.min.js': ['public_html/js/build.js']
 				}
 			}
 		}
@@ -151,7 +165,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:map', 'concat:css', 'cssmin', 'concurrent']);
-    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:map', 'concat:css', 'concat:build', 'cssmin', 'uglify', 'concurrent']);
+    grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:map', 'concat:css', 'cssmin:dev', 'concurrent']);
+    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:mapForProd', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify']);
 
 };
