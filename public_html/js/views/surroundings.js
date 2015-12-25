@@ -1,8 +1,10 @@
 ﻿define([
     'backbone',
+    'utils/initAnimations',
     'tmpl/game'
 ], function(
     Backbone,
+    initAnimations,
     tmpl
 ){
 
@@ -31,7 +33,7 @@
         offsetY: 0,
         directMove: "none",
         fps: 30,
-        sfps: 5,
+        sfps: 1000/500,
         dst: 0,
         minD: 0.5,
         
@@ -48,17 +50,7 @@
             this.on("entitiesIsLoad", this.newEntities, this);
             this.on("readyDrawMap", this.drawMap, this);
             
-            that.all_animations['red_player'] = {
-                'move': {
-                    'el'    : null,
-                    'src'   : 'res/move_red.png',
-                    'step'  : 0,
-                    'speed' : 3,
-                    'curr'  : 0,
-                    'steps' : 8,
-                    'onend' : null
-                }
-            }
+            that.all_animations = initAnimations;          
         },
         
         newEntities: function(newEntities){
@@ -312,7 +304,7 @@
                         offsetY: 0,
                         direct: 'none',
                         dst: 0,
-                        anim: 'wait',
+                        anim: 'move',
                         number: entity.number,
                         command: entity.image
                     }        
@@ -329,11 +321,37 @@
 
             var that = this;
             that.forRedrawing.forEach(function(anim){
+                var pic = undefined;
+                var steps;
+                switch(anim.command){
+                    case "red_people.png":{
+                        pic = that.all_animations['red_player'][anim.anim].el;
+                        steps = that.all_animations['red_player'][anim.anim].steps;
+                    }; break;
+                    case "blue_people.png":{
+                        pic = that.all_animations['blue_player'][anim.anim].el;
+                        steps = that.all_animations['blue_player'][anim.anim].steps;
+                    }; break;
+                }
+                
+                that.canvas_middleground_context.drawImage(pic, 
+                    canvas_tile_width * Math.floor(anim.dst / steps),
+                    0,
+                    canvas_tile_width,
+                    canvas_tile_height,
+                    (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX,
+                    (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY,
+                    canvas_tile_width,
+                    canvas_tile_height);
+                
+                // = all_animations
+            
+            /*
                 var pic = new Image();
                 pic.src = 'http://' + document.location.host + '/res/' + anim.command;
                 pic.onload = function(){
                     that.canvas_middleground_context.drawImage(pic, (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX, (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY);
-                }
+                }*/
             });
         },
         
