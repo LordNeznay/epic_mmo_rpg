@@ -20,8 +20,9 @@
         </div>
         
         <div class="game-map">
-            <canvas id="game-map__background"></canvas>
             <canvas id="game-map__middleground"></canvas>
+            <canvas id="game-map__background"></canvas>
+            <canvas id="game-map__middleground2"></canvas>
             <canvas id="game-map__frontground"></canvas>
         </div>
         

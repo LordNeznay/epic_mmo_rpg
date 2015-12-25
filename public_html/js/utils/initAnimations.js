@@ -6,6 +6,12 @@ define([
     var animations = [];
     
     animations['red_player'] = {
+        'wait': {
+            'el'    : null,
+            'src'   : 'res/wait_red.png',
+            'steps' : 5,
+            'onend' : null
+        },
         'move': {
             'el'    : null,
             'src'   : 'res/move_red.png',
@@ -14,6 +20,12 @@ define([
         }
     };
     animations['blue_player'] = {
+        'wait': {
+            'el'    : null,
+            'src'   : 'res/wait_blue.png',
+            'steps' : 5,
+            'onend' : null
+        },
         'move': {
             'el'    : null,
             'src'   : 'res/move_blue.png',
@@ -21,16 +33,20 @@ define([
             'onend' : null
         }
     };   
-
-    /*animations.forEach(function(classAnim){
-
-        classAnim.forEach(function(anim){
-            var img = new Image();
-            img.src = anim.src;
-            console.log(anim);
-            anim.el = img;
-        });
-    });*/
+    animations['flag'] = {
+        'wait': {
+            'el'    : null,
+            'src'   : 'res/flag.png',
+            'steps' : 1,
+            'onend' : null
+        },
+        'move': {
+            'el'    : null,
+            'src'   : 'res/flag.png',
+            'steps' : 1,
+            'onend' : null
+        }
+    };   
     
     for(var t in animations){
         for(var a in animations[t]){

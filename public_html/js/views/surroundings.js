@@ -24,6 +24,8 @@
         canvas_background_context: undefined,
         canvas_middleground: undefined,
         canvas_middleground_context: undefined,
+        canvas_middleground2: undefined,
+        canvas_middleground_context2: undefined,
         canvas_frontground: undefined,
         canvas_frontground_context: undefined,
         
@@ -199,19 +201,11 @@
             });
             this.amountTilesets = amount;
         },
-        
-        /*
-            var anim = {
-                x: l_entity.x,
-                y: l_entity.y,
-                offsetX: 0,
-                offsetY: 0,
-                direct: 'none',
-                dst: 0,
-                anim: 'wait',
-                number: l_entity.number
-            }        
-        */
+
+
+
+
+
         
         //anim, entity
         checkNeedOffset: function(a, e){
@@ -225,25 +219,32 @@
                     a.offsetX = -canvas_tile_width;
                     a.offsetY = 0;
                     a.dst = 0;
+                    a.anim = 'move';
+                    a.isRotate = false;
                 }
                 if(e.x < a.x && e.y == a.y){
                     a.direct = "left";
                     a.offsetX = canvas_tile_width;
                     a.offsetY = 0;
                     a.dst = 0;
+                    a.anim = 'move';
+                    a.isRotate = true;
                 }
                 if(e.x == a.x && e.y > a.y){
                     a.direct = "down";
                     a.offsetX = 0;
                     a.offsetY = -canvas_tile_width;
                     a.dst = 0;
+                    a.anim = 'move';
                 }
                 if(e.x == a.x && e.y < a.y){
                     a.direct = "up";
                     a.offsetX = 0;
                     a.offsetY = canvas_tile_width;
                     a.dst = 0;
+                    a.anim = 'move';
                 }
+                
             }
             a.x = e.x;
             a.y = e.y;
@@ -276,6 +277,7 @@
                     anim.offsetY = 0;
                     anim.direct = "none";
                     anim.dst = 0;
+                    anim.anim = 'wait';
                 }
             });
             this.drawEntities();
@@ -306,7 +308,8 @@
                         dst: 0,
                         anim: 'move',
                         number: entity.number,
-                        command: entity.image
+                        command: entity.image,
+                        isRotate: false
                     }        
                 }
                 newAnim.push(anim);
@@ -332,27 +335,43 @@
                         pic = that.all_animations['blue_player'][anim.anim].el;
                         steps = that.all_animations['blue_player'][anim.anim].steps;
                     }; break;
+                    case "flag.png":{
+                        pic = that.all_animations['flag'][anim.anim].el;
+                        steps = that.all_animations['flag'][anim.anim].steps;
+                    }; break;
+                    default: {
+                        console.log(anim.command);
+                    }; break;
                 }
-                
-                that.canvas_middleground_context.drawImage(pic, 
-                    canvas_tile_width * Math.floor(anim.dst / steps),
-                    0,
-                    canvas_tile_width,
-                    canvas_tile_height,
-                    (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX,
-                    (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY,
-                    canvas_tile_width,
-                    canvas_tile_height);
-                
-                // = all_animations
-            
-            /*
-                var pic = new Image();
-                pic.src = 'http://' + document.location.host + '/res/' + anim.command;
-                pic.onload = function(){
-                    that.canvas_middleground_context.drawImage(pic, (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX, (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY);
-                }*/
+
+                if(!anim.isRotate){
+                    that.canvas_middleground_context.drawImage(pic, 
+                        canvas_tile_width * Math.floor(anim.dst / (canvas_tile_width / steps)),
+                        0,
+                        canvas_tile_width,
+                        canvas_tile_height,
+                        (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX,
+                        (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY,
+                        canvas_tile_width,
+                        canvas_tile_height);
+                } else {
+                    that.canvas_middleground_context.save();
+                    that.canvas_middleground_context.scale(-1, 1);
+                    that.canvas_middleground_context.drawImage(pic, 
+                        canvas_tile_width * Math.floor(anim.dst / (canvas_tile_width / steps)),
+                        0,
+                        canvas_tile_width,
+                        canvas_tile_height,
+                        -((anim.x - that.pos_x + 7 + 1) * canvas_tile_width  + that.offsetX + anim.offsetX),
+                        (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY,
+                        canvas_tile_width,
+                        canvas_tile_height);
+                    that.canvas_middleground_context.restore();
+                }
             });
+            
+            this.canvas_middleground_context2.clearRect(0, 0, this.canvas_middleground.width, this.canvas_middleground.height);
+            this.canvas_middleground_context2.drawImage(this.canvas_middleground, 0, 0);
         },
         
         drawMap: function(){

@@ -40,7 +40,13 @@
             that.surroundings.canvas_middleground =  document.getElementById("game-map__middleground");
             that.surroundings.canvas_middleground_context = that.surroundings.canvas_middleground.getContext('2d');
             that.surroundings.canvas_middleground.width  = canvas_map_width;     
-            that.surroundings.canvas_middleground.height = canvas_map_height;   
+            that.surroundings.canvas_middleground.height = canvas_map_height;  
+
+            //Слой буфера
+            that.surroundings.canvas_middleground2 =  document.getElementById("game-map__middleground2");
+            that.surroundings.canvas_middleground_context2 = that.surroundings.canvas_middleground2.getContext('2d');
+            that.surroundings.canvas_middleground2.width  = canvas_map_width;     
+            that.surroundings.canvas_middleground2.height = canvas_map_height;  
             
             that.surroundings.canvas_frontground =  document.getElementById("game-map__frontground");
             that.surroundings.canvas_frontground_context = that.surroundings.canvas_frontground.getContext('2d');
