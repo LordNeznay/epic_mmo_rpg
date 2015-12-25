@@ -12,8 +12,8 @@
     Surroundings
 ){
 
-    var canvas_map_height = 576;
-    var canvas_map_width = 960;
+    var canvas_map_height = 1152;
+    var canvas_map_width = 1920;
 
     var View = BaseView.extend({
         name: 'game',

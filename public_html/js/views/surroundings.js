@@ -6,10 +6,10 @@
     tmpl
 ){
 
-    var canvas_map_height = 576;
-    var canvas_map_width = 960;
-    var canvas_tile_width = 64;
-    var canvas_tile_height = 64;
+    var canvas_map_height = 1152;
+    var canvas_map_width = 1920;
+    var canvas_tile_width = 128;
+    var canvas_tile_height = 128;
 
 
     var View = Backbone.View.extend({
@@ -25,6 +25,8 @@
         canvas_frontground: undefined,
         canvas_frontground_context: undefined,
         
+        all_animations: [],
+        
         offsetX: 0,
         offsetY: 0,
         directMove: "none",
@@ -39,10 +41,24 @@
         amountTilesets: 0,
 
         initialize: function(){
+            var that = this;
+
             this.on("mapIsLoad", this.loadingTilesets, this);
             this.on("newPlayerPosition", this.updMap, this);
             this.on("entitiesIsLoad", this.newEntities, this);
             this.on("readyDrawMap", this.drawMap, this);
+            
+            that.all_animations['red_player'] = {
+                'move': {
+                    'el'    : null,
+                    'src'   : 'res/move_red.png',
+                    'step'  : 0,
+                    'speed' : 3,
+                    'curr'  : 0,
+                    'steps' : 8,
+                    'onend' : null
+                }
+            }
         },
         
         newEntities: function(newEntities){
