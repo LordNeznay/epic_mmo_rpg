@@ -36,6 +36,7 @@ public class Entity {
     private Entity target = null;
     private Map<String, Ability> abilities = new HashMap<>();
     private int abilityDelay = 0;
+    private int number = 0;
 
     public Entity(@NotNull GameMap _map){
         map = _map;
@@ -45,6 +46,14 @@ public class Entity {
 
     public Entity getTarget() {
         return target;
+    }
+
+    public void setNumber(int _number){
+        number = _number;
+    }
+
+    public int getNumber(){
+        return number;
     }
 
     public void setTarget(@Nullable Entity target) {

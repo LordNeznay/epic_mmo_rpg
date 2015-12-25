@@ -92,8 +92,9 @@
             });
             
             this.surroundings.listenTo(this.player, "loadEntities", function(entities){
-                that.surroundings.entities = entities;
-                that.surroundings.trigger("entitiesIsLoad");
+                //that.surroundings.entities = entities;
+                that.surroundings.newEntities(entities);
+                //that.surroundings.trigger("entitiesIsLoad");
             });
             this.player.on("availableActions", function(availableActions){
                 that.availableActions = availableActions;

@@ -36,15 +36,15 @@ public class ResponseConstructorTest {
 
         String command = "CommandRed";
         String result = ResponseConstructor.getFlagJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_flag.png\"}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_flag.png\",\"number\":-1}");
 
         command = "CommandBlue";
         result = ResponseConstructor.getFlagJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_flag.png\"}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_flag.png\",\"number\":-1}");
 
         command = "none";
         result = ResponseConstructor.getFlagJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"flag.png\"}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"flag.png\",\"number\":-1}");
     }
 
 
@@ -53,16 +53,16 @@ public class ResponseConstructorTest {
         Vec2d vec = new Vec2d(1, 1);
 
         String command = "CommandRed";
-        String result = ResponseConstructor.getEntityJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_people.png\"}");
+        String result = ResponseConstructor.getEntityJson(vec, command, 1);
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_people.png\",\"number\":1}");
 
         command = "CommandBlue";
-        result = ResponseConstructor.getEntityJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_people.png\"}");
+        result = ResponseConstructor.getEntityJson(vec, command, 1);
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_people.png\",\"number\":1}");
 
         command = "none";
-        result = ResponseConstructor.getEntityJson(vec, command);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"people.png\"}");
+        result = ResponseConstructor.getEntityJson(vec, command, 1);
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"people.png\",\"number\":1}");
     }
 
     @Test

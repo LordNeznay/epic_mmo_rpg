@@ -44,43 +44,47 @@ public class ResponseConstructor {
         result.append((int)vec.x);
         result.append(",\"y\":");
         result.append((int)vec.y);
-        result.append(",\"image\":\"");
+        result.append(",\"image\":");
         switch(command){
             case "CommandBlue":
-                result.append("blue_flag.png");
+                result.append("\"blue_flag.png\"");
                 break;
             case "CommandRed":
-                result.append("red_flag.png");
+                result.append("\"red_flag.png\"");
                 break;
             default:
-                result.append("flag.png");
+                result.append("\"flag.png\"");
                 break;
         }
-        result.append("\"}");
+        result.append(",\"number\":");
+        result.append(-1);
+        result.append('}');
         return result.toString();
     }
 
     @NotNull
     @Contract(pure = true)
-    public static String getEntityJson(Vec2d vec, String command){
+    public static String getEntityJson(Vec2d vec, String command, int number){
         StringBuilder result = new StringBuilder();
         result.append("{\"x\":");
         result.append((int)vec.x);
         result.append(",\"y\":");
         result.append((int)vec.y);
-        result.append(",\"image\":\"");
+        result.append(",\"image\":");
         switch(command){
             case "CommandBlue":
-                result.append("blue_people.png");
+                result.append("\"blue_people.png\"");
                 break;
             case "CommandRed":
-                result.append("red_people.png");
+                result.append("\"red_people.png\"");
                 break;
             default:
-                result.append("people.png");
+                result.append("\"people.png\"");
                 break;
         }
-        result.append("\"}");
+        result.append(",\"number\":");
+        result.append(number);
+        result.append('}');
         return result.toString();
     }
 

@@ -29,6 +29,7 @@ public class GameMap implements Abonent, Runnable{
     private Address address = new Address();
     private MessageSystem messageSystem;
 
+    private int playersNumber = 0;
     private static final int STEP_TIME = ServerConfiguration.getInstance().getStepTime();
     private static final int MAX_PLAYERS_IN_COMMAND = ServerConfiguration.getInstance().getAmountPlayerInCommand();
     private static final int VIEW_WIDTH_2 = 8;
@@ -115,6 +116,7 @@ public class GameMap implements Abonent, Runnable{
             ++amountBluePlayers;
             userEntity.setCommand("CommandBlue");
         }
+        userEntity.setNumber(++playersNumber);
         entities.put(userProfile, userEntity);
 
         sendConfirmation(userProfile);
@@ -148,16 +150,14 @@ public class GameMap implements Abonent, Runnable{
     private String getAllEntityInViewAreaJson(Entity entity){
         StringBuilder result = new StringBuilder();
         int amountEntity = 0;
-        int y = 0;
-        for(int j = (int)entity.getCoord().y - VIEW_HEIGHT_2; j <= entity.getCoord().y + VIEW_HEIGHT_2; ++j, ++y){
-            int x=0;
-            for(int i = (int)entity.getCoord().x - VIEW_WIDTH_2; i <= entity.getCoord().x + VIEW_WIDTH_2; ++i, ++x){
+        for(int j = (int)entity.getCoord().y - VIEW_HEIGHT_2; j <= entity.getCoord().y + VIEW_HEIGHT_2; ++j){
+            for(int i = (int)entity.getCoord().x - VIEW_WIDTH_2; i <= entity.getCoord().x + VIEW_WIDTH_2; ++i){
                 if(isPositionCorrect(j, i)) {
                     if((int)flag.getPosition().x == i && (int)flag.getPosition().y == j){
                         if(amountEntity!=0) {
                             result.append(", ");
                         }
-                        result.append(ResponseConstructor.getFlagJson(new Vec2d(x, y), flag.getOwner()));
+                        result.append(ResponseConstructor.getFlagJson(new Vec2d(i, j), flag.getOwner()));
                         ++amountEntity;
                     }
 
@@ -167,16 +167,16 @@ public class GameMap implements Abonent, Runnable{
                             if (amountEntity != 0) {
                                 result.append(", ");
                             }
-                            result.append(ResponseConstructor.getTargetJson(new Vec2d(x, y)));
+                            result.append(ResponseConstructor.getTargetJson(new Vec2d(i, j)));
                             ++amountEntity;
                         }
                     }
 
-                    if(entityLocation[i][j].equals(entity)) continue;
+                    //if(entityLocation[i][j].equals(entity)) continue;
                     if(amountEntity!=0) {
                         result.append(", ");
                     }
-                    result.append(ResponseConstructor.getEntityJson(new Vec2d(x, y), entityLocation[i][j].getCommand()));
+                    result.append(ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber()));
                     ++amountEntity;
                 }
             }

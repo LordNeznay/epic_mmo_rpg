@@ -33,14 +33,22 @@
         dst: 0,
         minD: 0.5,
         
+        forRedrawing: [],
+        
         loadTilesets: 0,
         amountTilesets: 0,
 
         initialize: function(){
             this.on("mapIsLoad", this.loadingTilesets, this);
             this.on("newPlayerPosition", this.updMap, this);
-            this.on("entitiesIsLoad", this.drawEntities, this);
+            this.on("entitiesIsLoad", this.newEntities, this);
             this.on("readyDrawMap", this.drawMap, this);
+        },
+        
+        newEntities: function(newEntities){
+            var that = this;
+            that.entities = newEntities;
+            this.updEntities();
         },
         
         updMap: function(){
@@ -130,7 +138,7 @@
                 this.stopMove();
             }
             this.redrawMap();
-            that.trigger("entitiesIsLoad");
+            this.stepEntities();
         },
         
         setMap: function(map){
@@ -179,30 +187,138 @@
                     tileset.image = pic;
                     that.loadTilesets++;
                     that.trigger("readyDrawMap");
-                    //alert("x=" + amount);
                 }
             });
             this.amountTilesets = amount;
         },
         
-        drawEntities: function(){
-            this.canvas_middleground.width  = canvas_map_width;     
-            this.canvas_middleground.height = canvas_map_height;  
+        /*
+            var anim = {
+                x: l_entity.x,
+                y: l_entity.y,
+                offsetX: 0,
+                offsetY: 0,
+                direct: 'none',
+                dst: 0,
+                anim: 'wait',
+                number: l_entity.number
+            }        
+        */
         
+        //anim, entity
+        checkNeedOffset: function(a, e){
             var that = this;
-            this.entities.entities.forEach(function(entity){
-                var pic = new Image();
-                pic.src = 'http://' + document.location.host + '/res/' + entity.image;
-                pic.onload = function(){
-                    that.canvas_middleground_context.drawImage(pic, (entity.x-1) * canvas_tile_width  + that.offsetX, (entity.y-1) * canvas_tile_height  + that.offsetY);
+            if((a.x > e.x && a.y > e.y) || (a.x < e.x && a.y < e.y)
+                || ((a.x - e.x) > 1) || ((a.x - e.x) < -1) || ((a.y - e.y) > 1) || ((a.y - e.y) < -1)
+                ){
+            } else {
+                if(e.x > a.x && e.y == a.y){
+                    a.direct = "right";
+                    a.offsetX = -canvas_tile_width;
+                    a.offsetY = 0;
+                    a.dst = 0;
+                }
+                if(e.x < a.x && e.y == a.y){
+                    a.direct = "left";
+                    a.offsetX = canvas_tile_width;
+                    a.offsetY = 0;
+                    a.dst = 0;
+                }
+                if(e.x == a.x && e.y > a.y){
+                    a.direct = "down";
+                    a.offsetX = 0;
+                    a.offsetY = -canvas_tile_width;
+                    a.dst = 0;
+                }
+                if(e.x == a.x && e.y < a.y){
+                    a.direct = "up";
+                    a.offsetX = 0;
+                    a.offsetY = canvas_tile_width;
+                    a.dst = 0;
+                }
+            }
+            a.x = e.x;
+            a.y = e.y;
+        },
+        
+        stepEntities: function(){
+            var that = this;
+            var dist = canvas_tile_width*that.sfps/that.fps;
+            that.forRedrawing.forEach(function(anim){
+                anim.dst += dist;
+                switch(anim.direct){
+                    case "up": {
+                        anim.offsetY -= dist;
+                    }; break;
+                    case "down": {
+                        anim.offsetY += dist;
+                    }; break;
+                    case "left": {
+                        anim.offsetX -= dist;
+                    }; break;
+                    case "right": {
+                        anim.offsetX += dist;
+                    }; break;
+                }
+                
+                if((Math.abs(anim.offsetX) < this.minD && Math.abs(anim.offsetY) < this.minD)
+                    || anim.dst > canvas_tile_width
+                  ){
+                    anim.offsetX = 0;
+                    anim.offsetY = 0;
+                    anim.direct = "none";
+                    anim.dst = 0;
                 }
             });
+            this.drawEntities();
+        },
+        
+        updEntities: function(){
+            var that = this;
+            var newAnim = [];
+            //Обходим все новые сущности
+            this.entities.entities.forEach(function(entity){
+                //Ищем существующее изображение сущности
+                var anim = undefined;
+                that.forRedrawing.forEach(function(_anim){
+                    if(_anim.number == entity.number){
+                        anim = _anim;
+                        that.checkNeedOffset(anim, entity);
+                        return;
+                    }
+                });
+                //Создаем его, если не находим
+                if(anim == undefined){
+                    anim = {
+                        x: entity.x,
+                        y: entity.y,
+                        offsetX: 0,
+                        offsetY: 0,
+                        direct: 'none',
+                        dst: 0,
+                        anim: 'wait',
+                        number: entity.number,
+                        command: entity.image
+                    }        
+                }
+                newAnim.push(anim);
+                
+            });
             
-            var pic = new Image();
-            pic.src = 'http://' + document.location.host + '/res/' + this.entities.player.image;
-            pic.onload = function(){
-                that.canvas_middleground_context.drawImage(pic, (that.entities.player.x-1) * canvas_tile_width, (that.entities.player.y-1) * canvas_tile_height);
-            }
+            that.forRedrawing = newAnim;
+        },
+        
+        drawEntities: function(){
+            this.canvas_middleground_context.clearRect(0, 0, this.canvas_middleground.width, this.canvas_middleground.height);
+
+            var that = this;
+            that.forRedrawing.forEach(function(anim){
+                var pic = new Image();
+                pic.src = 'http://' + document.location.host + '/res/' + anim.command;
+                pic.onload = function(){
+                    that.canvas_middleground_context.drawImage(pic, (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX, (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY);
+                }
+            });
         },
         
         drawMap: function(){
