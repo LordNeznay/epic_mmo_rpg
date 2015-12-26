@@ -37,11 +37,16 @@ public class Entity {
     private Map<String, Ability> abilities = new HashMap<>();
     private int abilityDelay = 0;
     private int number = 0;
+    private String directAbility = "none";
 
     public Entity(@NotNull GameMap _map){
         map = _map;
-        abilities.put("OrdinaryHealing", new OrdinaryHealing());
-        abilities.put("OrdinaryHit", new OrdinaryHit());
+        abilities.put("Healing", new OrdinaryHealing());
+        abilities.put("Hit", new OrdinaryHit());
+    }
+
+    public String getDirectAbility(){
+        return directAbility;
     }
 
     public Entity getTarget() {
@@ -114,6 +119,7 @@ public class Entity {
         timeUntilMove = timeUntilMove > 0 ? timeUntilMove-STEP_TIME : 0;
         abilityDelay = abilityDelay > 0 ? abilityDelay-STEP_TIME : 0;
         sendAbilityStatus(userProfile);
+        directAbility = "none";
     }
 
     private void sendAbilityStatus(UserProfile userProfile){
@@ -227,6 +233,32 @@ public class Entity {
         }
         AbilityAction action = ability.use();
         if(action != null) {
+            Vec2d trg = target.getCoord();
+            if(trg.x > x) {
+                if (trg.y == y) {
+                    directAbility = "rr";
+                } else if (trg.y > y) {
+                    directAbility = "rb";
+                } else if (trg.y < y) {
+                    directAbility = "rt";
+                }
+            } else if(trg.x < x){
+                if (trg.y == y) {
+                    directAbility = "lr";
+                } else if (trg.y > y) {
+                    directAbility = "lb";
+                } else if (trg.y < y) {
+                    directAbility = "lt";
+                }
+            } else {
+                if (trg.y == y) {
+                    directAbility = "cr";
+                } else if (trg.y > y) {
+                    directAbility = "cb";
+                } else if (trg.y < y) {
+                    directAbility = "ct";
+                }
+            }
             target.affect(action);
             abilityDelay = ABILITY_DELAY;
         }

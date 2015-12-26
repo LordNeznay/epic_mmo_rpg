@@ -30,7 +30,7 @@ define([
 
             this.ws = new WebSocket('ws://' + document.location.host + '/gameplay');
             this.ws.onopen = function (event) {
-                console.log("Socket was opened\n");
+                //console.log("Socket was opened\n");
                 that.isOpenedSocket = true;
                 that.trigger("joinGame");
             }
@@ -93,22 +93,22 @@ define([
                 });
             }
             this.ws.onerror = function(){
-                console.log("Socket was not opened\n");
+                //console.log("Socket was not opened\n");
                 that.isOpenedSocket = false;
                 Backbone.history.navigate('', true);
             },
             this.ws.onclose = function (event) {
-                console.log("Socket was closed\n");
+                //console.log("Socket was closed\n");
                 that.isOpenedSocket = false;
                 Backbone.history.navigate('', true);
             }
         },
         sendMessage: function(message){
             if(this.isOpenedSocket){
-                console.log("Query " + message + " was sended\n");
+                //console.log("Query " + message + " was sended\n");
                 this.ws.send(message);
             } else {
-                console.log("Error: Socket was not opened!\n");
+                //console.log("Error: Socket was not opened!\n");
             }
         },
         

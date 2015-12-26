@@ -171,6 +171,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:css', 'cssmin:dev', 'concurrent']);
-    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify', 'concat:config']);
+    grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify']);
 
 };

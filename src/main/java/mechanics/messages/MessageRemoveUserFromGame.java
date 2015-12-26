@@ -18,5 +18,6 @@ public class MessageRemoveUserFromGame extends MessageToGameMechanics {
     @Override
     protected void exec(GameMechanics gameMechanics){
         gameMechanics.removeUser(userProfile);
+        System.out.print("User was excluded " + userProfile.getLogin() + '\n');
     }
 }

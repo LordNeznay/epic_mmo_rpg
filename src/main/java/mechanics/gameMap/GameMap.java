@@ -176,7 +176,7 @@ public class GameMap implements Abonent, Runnable{
                     if(amountEntity!=0) {
                         result.append(", ");
                     }
-                    result.append(ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber()));
+                    result.append(ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber(), entityLocation[i][j].getDirectAbility()));
                     ++amountEntity;
                 }
             }

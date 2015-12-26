@@ -22,5 +22,8 @@ public class MessageIsAuthenticated extends MessageToFrontend {
     protected void exec(Frontend frontend) {
         frontend.authenticated(sessionId, userProfile);
         frontend.addResponseAuthorization(sessionId, userProfile!=null);
+        if(userProfile!=null){
+            System.out.print("User authenticated " + userProfile.getLogin() + '\n');
+        }
     }
 }
