@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.jetbrains.annotations.NotNull;
 import resource.ServerConfiguration;
 
 import java.util.List;
@@ -28,41 +29,41 @@ public class DBService {
         executor = new TExecutor(sessionFactory);
     }
 
-    public UserDataSet getByName(String username) {
-        return executor.execQuery((session, param) -> {
+    public UserDataSet getByName(@NotNull String username) {
+        return executor.execQuery((session) -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
-            return dao.getUserByName(param);
-            }, username);
+            return dao.getUserByName(username);
+        });
     }
 
 
-    public boolean deleteByName(String username) {
-        return executor.execQuery((session, param) -> {
+    public boolean deleteByName(@NotNull String username) {
+        return executor.execQuery((session) -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
-            return dao.deleteByName(param);
-        }, username);
+            return dao.deleteByName(username);
+        });
     }
 
 
     public long getRegCount() {
-        return executor.execQuery((session, param) -> {
+        return executor.execQuery((session) -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
             return dao.getRegCount();
-        }, 0);
+        });
     }
 
     public void saveUser(UserDataSet dataSet) {
-        executor.execUpdate((session, param) -> {
+        executor.execUpdate((session) -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
-            dao.save(param);
-        }, dataSet);
+            dao.save(dataSet);
+        });
     }
 
-    public boolean isAvailable(String username) {
-        return executor.execQuery((session, param) -> {
+    public boolean isAvailable(@NotNull String username) {
+        return executor.execQuery((session) -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
-            return dao.isAvailable(param);
-        }, username);
+            return dao.isAvailable(username);
+        });
     }
 
 
