@@ -188,7 +188,6 @@
             var that = this;
             var amount = 0;
             that.loadTilesets = 0;
-            //console.log(this.map);
             this.map.tilesets.forEach(function(tileset){
                 amount += 1;
                 var pic = new Image();
@@ -423,10 +422,6 @@
                     }; break;
                 }
 
-                //if(anim.number == 2){
-                    //console.log(anim.animStatus);
-                    //console.log(anim.anim);
-                //}
                 if(!anim.isRotate){
                     that.canvas_middleground_context.drawImage(pic, 
                         canvas_tile_width * Math.floor(anim.animStatus / (canvas_tile_width / steps)),
@@ -507,7 +502,6 @@
                     }
                 }
             });
-            //alert("1");
         }
         
     });

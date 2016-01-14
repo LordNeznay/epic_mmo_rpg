@@ -8,7 +8,6 @@ define([
         hideViews: function(view) {
             this.views.forEach(function(h_view, index, arr) {
                 if (view.cid != h_view.cid) {
-                    //console.log(h_view.name);
                     h_view.hide(); 
                 }
             });

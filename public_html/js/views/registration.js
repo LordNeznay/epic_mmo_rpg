@@ -18,6 +18,14 @@
             "submit .form-registration": "submitSignup",
             "click a": "hide"
         },
+        render: function () {
+            View.__super__.render.call(this);
+            this.el_registration_form = $(".form-registration");
+            this.el_registration_form__errors = $('.form-registration .form__errors');
+            this.el_registration_login = $(".form-registration input[name=name]");
+            this.el_registration_password = $(".form-registration input[name=password]");
+        },
+        
         show: function () {
             View.__super__.show.call(this);
             $.ajax({
@@ -32,41 +40,42 @@
             });
         },
         submitSignup: function(){
-            clearErrors();
-            if(validateForm()){
+            this.clearErrors();
+            if(this.validateForm()){
                 var pView = this;
-                var values = $('.form-registration').serialize();
+                var values = this.el_registration_form.serialize();
                 this.player.registration(values, {
                     success: function(data) {
                         if(data.errors == 'null'){
                             pView.player.login(values);
                             Backbone.history.navigate('login', true);
                         } else {
-                            $(".form-registration .form__errors").html(data.errors);
+                            pView.el_registration_form__errors.html(data.errors);
                         }
                     }
                 });
             }
             return false;
+        },
+    
+        validateForm: function(){
+            var userName = this.el_registration_login.val();
+            if (userName=='') {
+                this.el_registration_form__errors.text("Какая-то жуткая ошибка! Так делать нельзя!");
+                return false;
+            }
+            var userPassword = this.el_registration_password.val();
+            if (userPassword=='') {
+                this.el_registration_form__errors.text("Какая-то жуткая ошибка! Так делать нельзя!");
+                return false;
+            }
+            return true;
+        },
+        
+        clearErrors: function(){
+            this.el_registration_form__errors.text("");
         }
     });
-
-    function validateForm(){
-        var userName = $(".form-registration input[name=name]").val();
-        if (userName=='') {
-            $('.form-registration .form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
-            return false;
-        }
-        var userPassword = $(".form-registration input[name=password]").val();
-        if (userPassword=='') {
-            $('.form-registration .form__errors').text("Какая-то жуткая ошибка! Так делать нельзя!");
-            return false;
-        }
-        return true;
-    }
-    function clearErrors(){
-        $('.form-registration .form__errors').text("");
-    }
-
+    
     return new View({content: '.page-registration'});
 });

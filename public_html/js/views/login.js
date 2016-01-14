@@ -18,27 +18,36 @@
             "submit .form-unlogin": "submitUnlogin",
             "click a": "hide"
         },
+        render: function () {
+            View.__super__.render.call(this);
+            this.el_login_form__div = $(".login-form");
+            this.el_login_form = $(".form-login");
+            this.el_unlogin_form__div = $(".unlogin-form");
+            this.el_login_errors = $(".form-login .form__errors");
+            this.el_input_login = $(".form-login input[name=name]");
+            this.el_input_password = $(".form-login input[name=password]");
+        },
         show: function () {
             View.__super__.show.call(this);
             this.player.status();
             if(this.player.isLogin){
-                $(".login-form").hide();
-                $(".unlogin-form").show();
+                this.el_login_form__div.hide();
+                this.el_unlogin_form__div.show();
             } else {
-                $(".unlogin-form").hide();
-                $(".login-form").show();
+                this.el_unlogin_form__div.hide();
+                this.el_login_form__div.show();
             }
         },
         submitLogin: function(event){
-            clearErrors();
-            if(validateForm()){
+            this.clearErrors();
+            if(this.validateForm()){
                 var pView = this;	
-                this.player.login($('.form-login').serialize(), {
+                this.player.login(pView.el_login_form.serialize(), {
                     success: function(data){
                         if(data.errors == 'null'){
                             Backbone.history.navigate('', true);
                         } else {
-                            $(".form-login .form__errors").html(data.errors);
+                            pView.el_login_errors.html(data.errors);
                         }
                     }
                 });
@@ -53,25 +62,26 @@
                 }
             });
             return false;
+        },
+
+        validateForm: function(){
+            var userName = this.el_input_login.val();
+            if (userName=='') {
+                this.el_login_errors.text("Введите имя!");
+                return false;
+            }
+            var userPassword = this.el_input_password.val();
+            if (userPassword=='') {
+                this.el_login_errors.text("Введите пароль!");
+                return false;
+            }
+            return true;
+        }, 
+        clearErrors: function(){
+            this.el_login_errors.text("");
         }
+        
     });
-
-    function validateForm(){
-        var userName = $(".form-login input[name=name]").val();
-        if (userName=='') {
-            $('.form-login .form__errors').text("Введите имя!");
-            return false;
-        }
-        var userPassword = $(".form-login input[name=password]").val();
-        if (userPassword=='') {
-            $('.form-login .form__errors').text("Введите пароль!");
-            return false;
-        }
-        return true;
-    }
-    function clearErrors(){
-        $('.form-login .form__errors').text("");
-    }
-
+    
     return new View({content: '.page-login'});
 });
