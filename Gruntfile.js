@@ -88,13 +88,13 @@ module.exports = function (grunt) {
             },
             
             build: {
-				separator: ';\n',
-				src: [
-					'public_html/js/lib/almond.js',
-					'public_html/js/build/main.js'
-				],
-				dest: 'public_html/js/build.js'
-			},
+                separator: ';\n',
+                src: [
+                    'public_html/js/lib/almond.js',
+                    'public_html/js/build/main.js'
+                ],
+                dest: 'public_html/js/build.js'
+            },
             
             forProd: {
                 src: ['public_html/index/index_prod.html'],
@@ -139,24 +139,24 @@ module.exports = function (grunt) {
         },
         
         requirejs: {
-			build: {
-				options: {
-					almond: true,
-					baseUrl: 'public_html/js',
+            build: {
+                options: {
+                    almond: true,
+                    baseUrl: 'public_html/js',
                     mainConfigFile: 'public_html/js/main.js',
-					name: 'main',
-					optimize: 'none',
-					out: 'public_html/js/build/main.js'
-				}
-			}
-		},
+                    name: 'main',
+                    optimize: 'none',
+                    out: 'public_html/js/build/main.js'
+                }
+            }
+        },
         uglify: { 
-			build: {
-				files: {
-					'production/public_html/js/build.min.js': ['public_html/js/build.js']
-				}
-			}
-		}
+            build: {
+                files: {
+                    'production/public_html/js/build.min.js': ['public_html/js/build.js']
+                }
+            }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -168,7 +168,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     
     grunt.loadNpmTasks('grunt-contrib-requirejs');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:css', 'cssmin:dev', 'concurrent']);
     grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify']);
