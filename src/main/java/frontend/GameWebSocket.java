@@ -3,6 +3,8 @@ package frontend;
 import main.UserProfile;
 import mechanics.messages.*;
 import messageSystem.Message;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -27,6 +29,8 @@ public class GameWebSocket {
     @NotNull
     private Frontend frontend;
     private Session session;
+
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     public GameWebSocket(UserProfile userProfile, @NotNull Frontend frontend) {
         this.userProfile = userProfile;
@@ -126,7 +130,8 @@ public class GameWebSocket {
         try {
             session.getRemote().sendString(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            removeUserFromGame();
+            LOGGER.warn("Не удалось отправить сообщение, пользователь удален: " + userProfile.getLogin());
         }
     }
 
@@ -146,6 +151,18 @@ public class GameWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+        LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
+        LOGGER.info("Status-code=" + statusCode + ", reason=" + reason);
+    }
 
+    @OnWebSocketClose
+    public void onClose(int statusCode) {
+        LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
+        LOGGER.info("Status-code=" + statusCode);
+    }
+
+    @OnWebSocketClose
+    public void onClose() {
+        LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
     }
 }

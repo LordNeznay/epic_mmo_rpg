@@ -11,6 +11,9 @@ import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
 import messageSystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import resource.ServerConfiguration;
 import utils.ResponseConstructor;
 import utils.ResponseHeaders;
@@ -28,11 +31,12 @@ public class GameMechanics implements Abonent, Runnable {
     private Map<UserProfile, Address> usersMaps = new HashMap<>();
     private Map<Address, Integer> amountPlayerInMaps = new HashMap<>();
     private ArrayList<UserProfile> userQueue = new ArrayList<>();
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     private volatile boolean isWorked = false;
 
     public GameMechanics(MessageSystem messageSystem){
-        System.out.print("GameMechanics-server was started\n");
+        LOGGER.info("GameMechanics-server was started");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
         messageSystem.getAddressService().registerGameMechanics(this);
@@ -57,6 +61,7 @@ public class GameMechanics implements Abonent, Runnable {
                 Message messageAddUserInGameMap = new MessageAddUserInGameMap(address, entry.getKey(), userProfile);
                 messageSystem.sendMessage(messageAddUserInGameMap);
                 usersMaps.put(userProfile, entry.getKey());
+                LOGGER.info(userProfile.getLogin() + " добавлен на карту");
                 return;
             }
         }
@@ -65,6 +70,7 @@ public class GameMechanics implements Abonent, Runnable {
             return;
         }
         userQueue.add(userProfile);
+        LOGGER.info(userProfile.getLogin() + " добавлен в очередь");
 
         String response = ResponseConstructor.getResponse(ResponseHeaders.WAIT_START, "{}");
         userProfile.addMessageForSending(response);
@@ -81,6 +87,7 @@ public class GameMechanics implements Abonent, Runnable {
                 Message messageAddUserInGameMap = new MessageAddUserInGameMap(address, addressMap, anUserQueue);
                 messageSystem.sendMessage(messageAddUserInGameMap);
                 usersMaps.put(anUserQueue, addressMap);
+                LOGGER.info(anUserQueue.getLogin() + " добавлен на карту");
             }
             userQueue.clear();
         }
@@ -110,6 +117,7 @@ public class GameMechanics implements Abonent, Runnable {
     public void removeUser(UserProfile userProfile){
         if(userQueue.contains(userProfile)){
             userQueue.remove(userProfile);
+            LOGGER.info(userProfile.getLogin() + " удален из очереди");
             return;
         }
 
@@ -118,6 +126,7 @@ public class GameMechanics implements Abonent, Runnable {
         Message message = new MessageRemoveUserOnGameMap(address, mapWithUser, userProfile);
         messageSystem.sendMessage(message);
         usersMaps.remove(userProfile);
+        LOGGER.info(userProfile.getLogin() + " удален из карты");
     }
 
     public void shutdown(){
@@ -140,11 +149,11 @@ public class GameMechanics implements Abonent, Runnable {
             try {
                 Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                System.out.print("GameMechanics-server was shutdown\n");
+                LOGGER.info("GameMechanics-server was shutdown with InterruptedException");
                 return;
             }
         }
-        System.out.print("GameMechanics-server was shutdown\n");
+        LOGGER.info("GameMechanics-server was shutdown");
     }
 
     public void removeMap(Address mapAddress){

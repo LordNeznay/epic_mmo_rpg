@@ -10,6 +10,9 @@ import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
 import messageSystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +42,7 @@ public class GameMap implements Abonent, Runnable{
     private int mapWidth;
     private int mapHeight;
     private volatile boolean isWorked = false;
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     private Map<UserProfile, Entity> entities = new HashMap<>();
     private Flag flag = new Flag();
@@ -69,7 +73,7 @@ public class GameMap implements Abonent, Runnable{
     }
 
     public GameMap(MessageSystem messageSystem){
-        System.out.print("GameMap was created\n");
+        LOGGER.info("GameMap was created");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
 
@@ -281,7 +285,7 @@ public class GameMap implements Abonent, Runnable{
             Entity userEntity = entities.get(userProfile);
             return userEntity.getCommand();
         } catch(RuntimeException e){
-//            Repairer.getInstance().repaireUser(userProfile);
+            LOGGER.warn(userProfile.getLogin() + " был исключен из-за ошибки в getUserCommand()");
             Message message = new MessageRemoveUserFromGame(address, messageSystem.getAddressService().getGameMechanicsAddress(), userProfile);
             messageSystem.sendMessage(message);
         }
@@ -297,7 +301,7 @@ public class GameMap implements Abonent, Runnable{
             objW = Integer.valueOf(obj.get("width").toString());
             objH = Integer.valueOf(obj.get("height").toString());
         }catch (NumberFormatException e) {
-//            Repairer.getInstance().repaireGameMap(this);
+            LOGGER.warn("Карта была исключена из-за ошибки в getObjectsPosition()");
             Message message = new MessageExludeGameMap(address, messageSystem.getAddressService().getGameMechanicsAddress());
             messageSystem.sendMessage(message);
             stop();
@@ -312,7 +316,7 @@ public class GameMap implements Abonent, Runnable{
             Object obj = jsonPaser.parse(objects);
             mapObjects = (JSONArray)obj;
         } catch (ParseException e) {
-//            Repairer.getInstance().repaireGameMap(this);
+            LOGGER.warn("Карта была исключена из-за ошибки в parseObjectLayer()");
             Message message = new MessageExludeGameMap(address, messageSystem.getAddressService().getGameMechanicsAddress());
             messageSystem.sendMessage(message);
             stop();
@@ -406,10 +410,10 @@ public class GameMap implements Abonent, Runnable{
             try {
                 Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                System.out.print("GameMap was deleted\n");
+                LOGGER.info("GameMap was deleted with InterruptedException");
                 return;
             }
         }
-        System.out.print("GameMap was deleted\n");
+        LOGGER.info("GameMap was deleted");
     }
 }

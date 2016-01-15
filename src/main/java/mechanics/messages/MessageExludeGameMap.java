@@ -17,5 +17,6 @@ public class MessageExludeGameMap  extends MessageToGameMechanics {
     @Override
     protected void exec(GameMechanics gameMechanics){
         gameMechanics.removeMap(gameMapForExclude);
+        System.out.print("Выключить карту!");
     }
 }

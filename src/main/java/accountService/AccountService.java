@@ -6,6 +6,9 @@ import main.UserProfile;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import resource.ServerConfiguration;
 
@@ -19,6 +22,7 @@ public class AccountService implements Abonent, Runnable{
     private final Address address = new Address();
     private final MessageSystem messageSystem;
     private DBService dbservice;
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public Address getAddress(){
@@ -27,7 +31,7 @@ public class AccountService implements Abonent, Runnable{
 
 
     public AccountService(MessageSystem messageSystem, DBService dbservice) {
-        System.out.print("Account-server was started\n");
+        LOGGER.info("Account-server was started");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
         messageSystem.getAddressService().registerAccountService(this);
@@ -77,10 +81,10 @@ public class AccountService implements Abonent, Runnable{
             try {
                 Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                System.out.print("Account-server was shutdown\n");
+                LOGGER.info("Account-server was shutdown with InterruptedException");
                 return;
             }
         }
-        System.out.print("Account-server was shutdown\n");
+        LOGGER.info("Account-server was shutdown");
     }
 }

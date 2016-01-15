@@ -18,6 +18,5 @@ public class MessageAddUserInGameMap extends MessageToGameMap {
     @Override
     protected void exec(GameMap service){
         service.addUser(user);
-        System.out.print("User " + user.getLogin() + " was added in game\n");
     }
 }

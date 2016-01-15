@@ -10,6 +10,8 @@ import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
 import messageSystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -17,6 +19,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import resource.ServerConfiguration;
@@ -33,15 +36,16 @@ public class Frontend implements Abonent, Runnable {
     private Address address = new Address();
     private MessageSystem messageSystem;
     private volatile boolean isWorked = false;
-    Server server;
+    private Server server;
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     private Map<String, UserProfile> sessions = new HashMap<>();
     private Map<String, Boolean> responsesAuthorization = new HashMap<>();
     private Map<String, Boolean> responsesExistUser = new HashMap<>();
 
     public Frontend(MessageSystem messageSystem, int port) throws Exception {
-        System.out.print("Frontend-server was started\n");
-        System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
+        LOGGER.info("Frontend-server was started");
+        LOGGER.info("Starting at port: " + String.valueOf(port));
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
         messageSystem.getAddressService().registerFrontend(this);
@@ -86,7 +90,10 @@ public class Frontend implements Abonent, Runnable {
 
 
 
-    public void removeUser(String sessionId) { sessions.remove(sessionId); }
+    public void removeUser(String sessionId) {
+        sessions.remove(sessionId);
+        LOGGER.info("Сессия разорвана " + sessionId);
+    }
 
     public int getAuthUsersNumber(){
         return sessions.size();
@@ -122,10 +129,14 @@ public class Frontend implements Abonent, Runnable {
     public void authenticated(String sessionId, @Nullable UserProfile userProfile){
         if(userProfile != null) {
             sessions.put(sessionId, userProfile);
+            LOGGER.info("Пользователь авторизовался: " + userProfile.getLogin() + ", " + sessionId);
+        } else {
+            LOGGER.info("Попытка авторизации провалена: " + sessionId);
         }
     }
 
     public void authenticate(String login, String password, String sessionId){
+        LOGGER.info("Попытка авторизоваться: " + login + ", session " + sessionId);
         Message messageAuthenticate = new MessageAuthenticate(address, messageSystem.getAddressService().getAccountServiceAddress(), login, password, sessionId);
         messageSystem.sendMessage(messageAuthenticate);
     }
@@ -185,10 +196,10 @@ public class Frontend implements Abonent, Runnable {
             try {
                 Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                System.out.print("Frontend-server was shutdown\n");
+                LOGGER.warn("Frontend-server was shutdown with InterruptedException");
                 return;
             }
         }
-        System.out.print("Frontend-server was shutdown\n");
+        LOGGER.info("Frontend-server was shutdown");
     }
 }
