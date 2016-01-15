@@ -167,7 +167,7 @@ define([
         
         getCoord: function(){
             var message = '{"command": "getcoord"}';
-            ws.send(message);
+            this.ws.send(message);
         },
         
         
