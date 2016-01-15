@@ -154,15 +154,4 @@ public class GameWebSocket {
         LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
         LOGGER.info("Status-code=" + statusCode + ", reason=" + reason);
     }
-
-    @OnWebSocketClose
-    public void onClose(int statusCode) {
-        LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
-        LOGGER.info("Status-code=" + statusCode);
-    }
-
-    @OnWebSocketClose
-    public void onClose() {
-        LOGGER.info("У игрока " + userProfile.getLogin() + " закрылся соккет");
-    }
 }
