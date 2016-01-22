@@ -28,7 +28,6 @@ public class TExecutor {
             if (tx != null) tx.rollback();
             throw e;
         }
-
         return result;
     }
 
@@ -42,8 +41,6 @@ public class TExecutor {
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
-            throw e;
         }
-
     }
 }

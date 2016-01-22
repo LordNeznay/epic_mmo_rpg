@@ -63,6 +63,9 @@ public class ComplexTest {
     @After
     public void after(){
         frontend.signalShutdown();
+        for(int i=0; i<AMOUNT_STEP; ++i){
+             TimeHelper.sleep(STEP_TIME);
+        }
     }
 
     @Test
