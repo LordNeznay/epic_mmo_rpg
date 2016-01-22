@@ -1,14 +1,14 @@
 package frontend;
 
-import accountService.messages.MessageAuthenticate;
-import accountService.messages.MessageIsUserExist;
-import accountService.messages.MessageRegisterUser;
-import accountService.messages.MessageSignalShutdownAccountService;
+import accountservice.messages.MessageAuthenticate;
+import accountservice.messages.MessageIsUserExist;
+import accountservice.messages.MessageRegisterUser;
+import accountservice.messages.MessageSignalShutdownAccountService;
 import main.UserProfile;
 import mechanics.messages.MessageSignalShutdownGameMechanics;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.MessageSystem;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.MessageSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

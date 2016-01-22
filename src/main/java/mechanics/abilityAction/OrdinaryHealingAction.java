@@ -1,7 +1,8 @@
-package mechanics.abilityAction;
+package mechanics.abilityaction;
 
 import mechanics.Entity;
 import org.jetbrains.annotations.NotNull;
+import resource.ServerConfiguration;
 import utils.Helper;
 
 /**
@@ -10,6 +11,7 @@ import utils.Helper;
 public final class OrdinaryHealingAction extends AbilityAction{
     @Override
     public void run(@NotNull Entity entity){
-        entity.makeDamage(-Helper.randomInt(50, 125));
+        entity.makeDamage(-Helper.randomInt(ServerConfiguration.getInstance().getAbilityMinEffect("OrdinaryHealing"),
+                                            ServerConfiguration.getInstance().getAbilityMaxEffect("OrdinaryHealing")));
     }
 }

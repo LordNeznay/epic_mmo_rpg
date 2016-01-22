@@ -1,5 +1,6 @@
 package dbservice;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,7 +24,7 @@ public class TExecutor {
             result = handler.execQuery(session, param);
 
             tx.commit();
-        } catch (RuntimeException e) {
+        } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             throw e;
         }
@@ -39,7 +40,7 @@ public class TExecutor {
             handler.execUpdate(session, param);
 
             tx.commit();
-        } catch (RuntimeException e) {
+        } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             throw e;
         }

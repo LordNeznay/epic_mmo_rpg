@@ -15,19 +15,15 @@ import java.util.Scanner;
 public class MapReader {
     @Nullable
     public static JSONObject readMap(String fileName) {
-        Scanner file = null;
-        try {
-            file = new Scanner(new File(fileName));
+        StringBuilder data = new StringBuilder();
+        try (Scanner file = new Scanner(new File(fileName))) {
+            while (file.hasNext()) {
+                data.append(file.nextLine());
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch(RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.print(e.toString());
-        }
-        assert file != null;
-        StringBuilder data = new StringBuilder();
-        while(file.hasNext())
-        {
-            data.append(file.nextLine());
         }
 
         JSONObject gameMap = null;

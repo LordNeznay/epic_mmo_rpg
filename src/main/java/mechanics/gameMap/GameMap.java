@@ -1,4 +1,4 @@
-package mechanics.gameMap;
+package mechanics.gamemap;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
@@ -6,12 +6,13 @@ import mechanics.Entity;
 import mechanics.Flag;
 import mechanics.messages.MessageExludeGameMap;
 import mechanics.messages.MessageRemoveUserFromGame;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -151,6 +152,15 @@ public class GameMap implements Abonent, Runnable{
         userProfile.addMessageForSending(response);
     }
 
+    private int addEntityInResult(StringBuilder result, int amountEntity, String entityString){
+        if(amountEntity!=0) {
+            result.append(", ");
+        }
+        result.append(entityString);
+        return amountEntity+1;
+    }
+
+    @NotNull
     private String getAllEntityInViewAreaJson(Entity entity){
         StringBuilder result = new StringBuilder();
         int amountEntity = 0;
@@ -158,30 +168,17 @@ public class GameMap implements Abonent, Runnable{
             for(int i = (int)entity.getCoord().x - VIEW_WIDTH_2; i <= entity.getCoord().x + VIEW_WIDTH_2; ++i){
                 if(isPositionCorrect(j, i)) {
                     if((int)flag.getPosition().x == i && (int)flag.getPosition().y == j){
-                        if(amountEntity!=0) {
-                            result.append(", ");
-                        }
-                        result.append(ResponseConstructor.getFlagJson(new Vec2d(i, j), flag.getOwner()));
-                        ++amountEntity;
+                        amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getFlagJson(new Vec2d(i, j), flag.getOwner()));
                     }
 
                     if(entityLocation[i][j] == null) continue;
                     if(entity.getTarget() != null) {
                         if (entity.getTarget().equals(entityLocation[i][j])) {
-                            if (amountEntity != 0) {
-                                result.append(", ");
-                            }
-                            result.append(ResponseConstructor.getTargetJson(new Vec2d(i, j)));
-                            ++amountEntity;
+                            amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getTargetJson(new Vec2d(i, j)));
                         }
                     }
 
-                    //if(entityLocation[i][j].equals(entity)) continue;
-                    if(amountEntity!=0) {
-                        result.append(", ");
-                    }
-                    result.append(ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber(), entityLocation[i][j].getDirectAbility()));
-                    ++amountEntity;
+                    amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber(), entityLocation[i][j].getDirectAbility()));
                 }
             }
         }
@@ -197,6 +194,8 @@ public class GameMap implements Abonent, Runnable{
         userProfile.addMessageForSending(response);
     }
 
+    @SuppressWarnings("all")
+    @Contract(pure = true)
     private boolean isPositionCorrect(int j, int i) {
         return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
     }

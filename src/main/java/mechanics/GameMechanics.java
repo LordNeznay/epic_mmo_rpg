@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import main.UserProfile;
-import mechanics.gameMap.GameMap;
-import mechanics.gameMap.messages.*;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import mechanics.gamemap.GameMap;
+import mechanics.gamemap.messages.*;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

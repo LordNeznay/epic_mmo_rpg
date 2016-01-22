@@ -1,11 +1,11 @@
-package accountService;
+package accountservice;
 
 import dbservice.DBService;
 import dbservice.UserDataSet;
 import main.UserProfile;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

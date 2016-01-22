@@ -1,7 +1,7 @@
 package mechanics.messages;
 
 import mechanics.GameMechanics;
-import messageSystem.Address;
+import messagesystem.Address;
 
 /**
  * Created by Андрей on 21.12.2015.
@@ -17,6 +17,5 @@ public class MessageExludeGameMap  extends MessageToGameMechanics {
     @Override
     protected void exec(GameMechanics gameMechanics){
         gameMechanics.removeMap(gameMapForExclude);
-        System.out.print("Выключить карту!");
     }
 }

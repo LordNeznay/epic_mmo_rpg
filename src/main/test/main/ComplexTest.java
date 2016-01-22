@@ -1,12 +1,12 @@
 package main;
 
-import accountService.AccountService;
+import accountservice.AccountService;
 import dbservice.DBService;
 import dbservice.UserDataSet;
 import frontend.Frontend;
 import main.TimeHelper;
 import mechanics.GameMechanics;
-import messageSystem.MessageSystem;
+import messagesystem.MessageSystem;
 import org.hibernate.cfg.Configuration;
 import org.junit.After;
 import org.junit.Before;

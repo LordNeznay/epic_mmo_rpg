@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import static org.junit.Assert.*;
 

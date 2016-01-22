@@ -2,7 +2,7 @@ package frontend;
 
 import main.UserProfile;
 import mechanics.messages.*;
-import messageSystem.Message;
+import messagesystem.Message;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;

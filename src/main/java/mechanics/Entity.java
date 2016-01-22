@@ -3,8 +3,8 @@ package mechanics;
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
 import mechanics.ability.*;
-import mechanics.abilityAction.AbilityAction;
-import mechanics.gameMap.GameMap;
+import mechanics.abilityaction.AbilityAction;
+import mechanics.gamemap.GameMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import utils.ResponseConstructor;
@@ -148,32 +148,48 @@ public class Entity {
         userProfile.addMessageForSending(response);
     }
 
+    private void moveUp(){
+        if(map.isPassability(new Vec2d(x, y-1))) {
+            moving(new Vec2d(x, y-1));
+            timeUntilMove = MOVE_DELAY;
+        }
+    }
+
+    private void moveDown(){
+        if(map.isPassability(new Vec2d(x, y+1))) {
+            moving(new Vec2d(x, y+1));
+            timeUntilMove = MOVE_DELAY;
+        }
+    }
+
+    private void moveLeft(){
+        if(map.isPassability(new Vec2d(x-1, y))) {
+            moving(new Vec2d(x-1, y));
+            timeUntilMove = MOVE_DELAY;
+        }
+    }
+
+    private void moveRight(){
+        if(map.isPassability(new Vec2d(x+1, y))) {
+            moving(new Vec2d(x+1, y));
+            timeUntilMove = MOVE_DELAY;
+        }
+    }
+
     public void move(String params){
         if(timeUntilMove > 0) return;
         switch (params){
             case "up":
-                if(map.isPassability(new Vec2d(x, y-1))) {
-                    moving(new Vec2d(x, y-1));
-                    timeUntilMove = MOVE_DELAY;
-                }
+                moveUp();
                 break;
             case "down":
-                if(map.isPassability(new Vec2d(x, y+1))) {
-                    moving(new Vec2d(x, y+1));
-                    timeUntilMove = MOVE_DELAY;
-                }
+                moveDown();
                 break;
             case "left":
-                if(map.isPassability(new Vec2d(x-1, y))) {
-                    moving(new Vec2d(x-1, y));
-                    timeUntilMove = MOVE_DELAY;
-                }
+                moveLeft();
                 break;
             case "right":
-                if(map.isPassability(new Vec2d(x+1, y))) {
-                    moving(new Vec2d(x+1, y));
-                    timeUntilMove = MOVE_DELAY;
-                }
+                moveRight();
                 break;
             default: break;
         }
@@ -215,6 +231,36 @@ public class Entity {
         return true;
     }
 
+    @SuppressWarnings("all")
+    private void updAbilityDirect(){
+        Vec2d trg = target.getCoord();
+        if(trg.x > x) {
+            if (trg.y == y) {
+                directAbility = "rr";
+            } else if (trg.y > y) {
+                directAbility = "rb";
+            } else if (trg.y < y) {
+                directAbility = "rt";
+            }
+        } else if(trg.x < x){
+            if (trg.y == y) {
+                directAbility = "lr";
+            } else if (trg.y > y) {
+                directAbility = "lb";
+            } else if (trg.y < y) {
+                directAbility = "lt";
+            }
+        } else {
+            if (trg.y == y) {
+                directAbility = "cr";
+            } else if (trg.y > y) {
+                directAbility = "cb";
+            } else if (trg.y < y) {
+                directAbility = "ct";
+            }
+        }
+    }
+
     public void useAbility(String abilityName){
         if(abilityDelay != 0){
             return;
@@ -233,32 +279,7 @@ public class Entity {
         }
         AbilityAction action = ability.use();
         if(action != null) {
-            Vec2d trg = target.getCoord();
-            if(trg.x > x) {
-                if (trg.y == y) {
-                    directAbility = "rr";
-                } else if (trg.y > y) {
-                    directAbility = "rb";
-                } else if (trg.y < y) {
-                    directAbility = "rt";
-                }
-            } else if(trg.x < x){
-                if (trg.y == y) {
-                    directAbility = "lr";
-                } else if (trg.y > y) {
-                    directAbility = "lb";
-                } else if (trg.y < y) {
-                    directAbility = "lt";
-                }
-            } else {
-                if (trg.y == y) {
-                    directAbility = "cr";
-                } else if (trg.y > y) {
-                    directAbility = "cb";
-                } else if (trg.y < y) {
-                    directAbility = "ct";
-                }
-            }
+            updAbilityDirect();
             target.affect(action);
             abilityDelay = ABILITY_DELAY;
         }

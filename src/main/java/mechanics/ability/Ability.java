@@ -1,6 +1,6 @@
 package mechanics.ability;
 
-import mechanics.abilityAction.AbilityAction;
+import mechanics.abilityaction.AbilityAction;
 import org.jetbrains.annotations.Nullable;
 import resource.ServerConfiguration;
 

@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

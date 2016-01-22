@@ -1,7 +1,7 @@
 package frontend.messages;
 
 import frontend.Frontend;
-import messageSystem.Address;
+import messagesystem.Address;
 
 /**
  * Created by Андрей on 20.12.2015.

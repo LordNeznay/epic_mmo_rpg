@@ -1,13 +1,13 @@
-package mechanics.gameMap.messages;
+package mechanics.gamemap.messages;
 
 import main.UserProfile;
 import mechanics.GameMechanics;
-import mechanics.gameMap.GameMap;
+import mechanics.gamemap.GameMap;
 import mechanics.messages.MessageExludeGameMap;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -2,7 +2,7 @@ package frontend.messages;
 
 import frontend.Frontend;
 import main.UserProfile;
-import messageSystem.Address;
+import messagesystem.Address;
 import org.jetbrains.annotations.Nullable;
 
 /**

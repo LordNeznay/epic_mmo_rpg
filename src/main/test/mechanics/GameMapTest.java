@@ -2,10 +2,10 @@ package mechanics;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
-import mechanics.gameMap.GameMap;
-import mechanics.gameMap.PhysMap;
-import messageSystem.AddressService;
-import messageSystem.MessageSystem;
+import mechanics.gamemap.GameMap;
+import mechanics.gamemap.PhysMap;
+import messagesystem.AddressService;
+import messagesystem.MessageSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

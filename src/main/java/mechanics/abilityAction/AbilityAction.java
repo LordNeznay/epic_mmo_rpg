@@ -1,4 +1,4 @@
-package mechanics.abilityAction;
+package mechanics.abilityaction;
 
 import mechanics.Entity;
 import org.jetbrains.annotations.NotNull;

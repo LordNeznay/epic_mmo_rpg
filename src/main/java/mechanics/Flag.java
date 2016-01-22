@@ -22,7 +22,8 @@ public class Flag {
 
     public boolean isMayInteract(Entity entity){
         Vec2d entityPosition = entity.getCoord();
-        return !(entityPosition.x - position.x < -1 || entityPosition.x - position.x > 1 || entityPosition.y - position.y < -1 || entityPosition.y - position.y > 1);
+        int dist = (int)Math.sqrt((entityPosition.x - position.x)*(entityPosition.x - position.x) + (entityPosition.y - position.y)*(entityPosition.y - position.y));
+        return dist <= 1;
     }
 
     public String getOwner() {

@@ -1,9 +1,9 @@
 package mechanics.messages;
 
 import mechanics.GameMechanics;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
 
 /**
  * Created by Андрей on 20.12.2015.

@@ -1,4 +1,4 @@
-package mechanics.gameMap;
+package mechanics.gamemap;
 
 import com.sun.javafx.geom.Vec2d;
 

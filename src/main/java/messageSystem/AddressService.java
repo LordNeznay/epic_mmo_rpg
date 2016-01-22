@@ -1,7 +1,7 @@
-package messageSystem;
+package messagesystem;
 
 import frontend.Frontend;
-import accountService.AccountService;
+import accountservice.AccountService;
 import mechanics.GameMechanics;
 
 

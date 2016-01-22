@@ -2,8 +2,7 @@ package mechanics.messages;
 
 import main.UserProfile;
 import mechanics.GameMechanics;
-import messageSystem.Address;
-import messageSystem.Message;
+import messagesystem.Address;
 
 /**
  * Created by Андрей on 20.12.2015.

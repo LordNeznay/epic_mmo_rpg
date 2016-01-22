@@ -1,15 +1,15 @@
 package frontend;
 
-import accountService.messages.MessageAuthenticate;
-import accountService.messages.MessageIsUserExist;
-import accountService.messages.MessageRegisterUser;
-import accountService.messages.MessageSignalShutdownAccountService;
+import accountservice.messages.MessageAuthenticate;
+import accountservice.messages.MessageIsUserExist;
+import accountservice.messages.MessageRegisterUser;
+import accountservice.messages.MessageSignalShutdownAccountService;
 import main.UserProfile;
 import mechanics.messages.MessageSignalShutdownGameMechanics;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;

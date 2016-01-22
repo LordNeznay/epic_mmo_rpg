@@ -2,8 +2,8 @@ package frontend.messages;
 
 import frontend.Frontend;
 import main.UserProfile;
-import messageSystem.Address;
-import messageSystem.Message;
+import messagesystem.Address;
+import messagesystem.Message;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
