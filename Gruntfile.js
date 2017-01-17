@@ -172,5 +172,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['concat:forDev', 'sass:dev', 'concat:css', 'cssmin:dev', 'concurrent']);
     grunt.registerTask('build', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify']);
+    grunt.registerTask('rbuild', ['concat:forProd', 'sass:dev', 'requirejs', 'concat:css', 'concat:build', 'cssmin:prod', 'uglify', 'shell']);
 
 };
