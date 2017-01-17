@@ -66,28 +66,28 @@
 
             that.hide_game_info();
             that.gameField.show(); 
-            that.gameField.hide();              
-            $(".game-result").hide();
+            that.gameField.hide();    
+            this.please_wait = $(".please_wait");
+            this.game_result = $(".game-result");
+            this.game_result.hide();
             
             this.player.on("isWait:change", function(){
                 if(that.player.isWait){
                     that.hide_game_info();
                     that.gameField.hide();              
-                    $(".game-result").hide();
-                    $(".please_wait").show();
+                    that.game_result.hide();
+                    that.please_wait.show();
                     that.surroundings.stopAnimation();
                 } else if(!that.player.isWait){
                     that.show_game_info();
                     that.gameField.show(); 
-                    $(".game-result").hide();
-                    $(".please_wait").hide();
+                    that.game_result.hide();
+                    that.please_wait.hide();
                     that.surroundings.startAnimation();
                 }
             });
             
             this.surroundings.listenTo(this.player, "playerPosition", function(_pos){
-                //that.surroundings.pos_x = _pos.x;
-                //that.surroundings.pos_y = _pos.y;
                 that.surroundings.newPosition(_pos.x, _pos.y);
                 that.surroundings.trigger("newPlayerPosition");
             });
@@ -98,45 +98,60 @@
             });
             
             this.surroundings.listenTo(this.player, "loadEntities", function(entities){
-                //that.surroundings.entities = entities;
                 that.surroundings.newEntities(entities);
-                //that.surroundings.trigger("entitiesIsLoad");
             });
+            
+            this.pressZ = $(".pressZ");
             this.player.on("availableActions", function(availableActions){
                 that.availableActions = availableActions;
                 if(that.availableActions.length != 0){
-                    $(".pressZ").show(); 
+                    that.pressZ.show(); 
                 } else {
-                    $(".pressZ").hide();
+                    that.pressZ.hide();
                 }
             });
+            
+            this.pointsRed = $(".pointsRed");
+            this.pointsBlue = $(".pointsBlue");
+            this.captureTime = $(".captureTime");
             this.player.on("flagStatus", function(flagStatus){
-                $(".pointsRed").html(flagStatus.commandRed);
-                $(".pointsBlue").html(flagStatus.commandBlue);
-                $(".captureTime").html(flagStatus.captureTime);
+                that.pointsRed.html(flagStatus.commandRed);
+                that.pointsBlue.html(flagStatus.commandBlue);
+                that.captureTime.html(flagStatus.captureTime);
             });
+            
+            this.players_hitpoints__player = $(".players-hitpoints__player");
+            this.players_hitpoints__player_target = $(".players-hitpoints__players-target");
             this.player.on("entityStatus", function(entityStatus){
-                $(".players-hitpoints__player").html(entityStatus.hp);
-                $(".players-hitpoints__players-target").html(entityStatus.thp);
+                that.players_hitpoints__player.html(entityStatus.hp);
+                that.players_hitpoints__player_target.html(entityStatus.thp);
             });
+            
+            this.game_result__result_blue = $(".game-result__result-blue");
+            this.game_result__result_red = $(".game-result__result-red");
+            this.game_result__result_winner = $(".game-result__result-winner");
+            this.game_result__winner_status = $(".game-result__winner-status");
+            this.game_result__player_team = $(".game-result__player-team");
+            this.game_result__player_result = $(".game-result__player-result");
+            this.game_result = $(".game-result");
             this.player.on("gameResult", function(result, playerCommand){
                 result = JSON.parse(result);
-                $(".game-result__result-blue").html(result.CommandBlue);
-                $(".game-result__result-red").html(result.CommandRed);
-                $(".game-result__result-winner").html(result.winner);
+                that.game_result__result_blue.html(result.CommandBlue);
+                that.game_result__result_red.html(result.CommandRed);
+                that.game_result__result_winner.html(result.winner);
                 if(result.isTechnical){
-                    $(".game-result__winner-status").html("Техническая победа");
+                    that.game_result__winner_status.html("Техническая победа");
                 } else {
-                    $(".game-result__winner-status").html(" ");
+                    that.game_result__winner_status.html(" ");
                 }
-                $(".game-result__player-team").html(playerCommand); 
+                that.game_result__player_team.html(playerCommand); 
                 if(result.winner === playerCommand){
-                    $(".game-result__player-result").html("You win!"); 
+                    that.game_result__player_result.html("You win!"); 
                 } else {
-                    $(".game-result__player-result").html("You lose!"); 
+                    that.game_result__player_result.html("You lose!"); 
                 }
                 that.hide_game_info();
-                $(".game-result").show(); 
+                that.game_result.show(); 
             });
             this.player.on("abilityStatus", function(abilityStatus){
                 abilityStatus.forEach(function(ability, i){
@@ -150,6 +165,8 @@
             });
             
             
+            
+            //Для адаптивного внешнего вида
             that.canv = $('canvas');
             that.gm = $('.game-map');
             that.ab = $('.ability');
@@ -191,7 +208,6 @@
                 
                 that.gm.css('margin-left', (w-h/12*15)/2);
                 that.gi.css('margin-left', (w-h/12*15)/2);
-                //that.abs.css('margin-left', (w-h/12*15)/2);
             } else {
                 that.gm.width(w);
                 that.gm.height(w/15 * 9);
@@ -208,7 +224,6 @@
                 
                 that.gm.css('margin-left', 0);
                 that.gi.css('margin-left', 0);
-                //that.abs.css('margin-left', 0);
             }
         },
         
@@ -244,27 +259,23 @@
             }
             var sim = String.fromCharCode(ev.keyCode || ev.which || 0);
             var that = this;
-            //console.log();
+
             switch(sim){
                 case 'ц':
                 case 'w':{
                     that.player.move("up");
-                    //that.surroundings.startMove("up");
                 }; break;
                 case 'ы':
                 case 's':{
                     that.player.move("down");
-                    //that.surroundings.startMove("down");
                 }; break;
                 case 'ф':
                 case 'a':{
                     that.player.move("left");
-                    //that.surroundings.startMove("left");
                 }; break;
                 case 'в':
                 case 'd':{
                     that.player.move("right");
-                    //that.surroundings.startMove("right");
                 }; break;
                 case 'я':
                 case 'z':{

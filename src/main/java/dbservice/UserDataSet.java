@@ -86,8 +86,8 @@ public class UserDataSet implements Serializable {
         this.score = score;
     }
 
-    public void addScore(long score) {
-        this.score += score;
+    public void addScore(long _score) {
+        this.score += _score;
     }
 
 }

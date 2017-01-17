@@ -1,9 +1,9 @@
-package mechanics.gameMap.messages;
+package mechanics.gamemap.messages;
 
-import mechanics.gameMap.GameMap;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
+import mechanics.gamemap.GameMap;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
 
 /**
  * Created by Андрей on 21.12.2015.

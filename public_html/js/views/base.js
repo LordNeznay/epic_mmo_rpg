@@ -13,23 +13,24 @@ define([
         initialize: function(options){
             this.player.status();
             if(options.content) {
-                this.content = options.content;
+                this.el = options.content;
             }
             this.render();
         },
         
         render: function() {
             this.$el.append(this.template());
+            this.$el = $(this.el);
         },
 
         show: function() {
             this.player.status();
             this.trigger('show', this);
-            $(this.content).show();           
+            $(this.el).show();      
         },
 
         hide: function() {
-            $(this.content).hide();
+            $(this.el).hide();
         },
         
     });    

@@ -1,4 +1,4 @@
-package mechanics.gameMap;
+package mechanics.gamemap;
 
 import com.sun.javafx.geom.Vec2d;
 import main.UserProfile;
@@ -6,10 +6,14 @@ import mechanics.Entity;
 import mechanics.Flag;
 import mechanics.messages.MessageExludeGameMap;
 import mechanics.messages.MessageRemoveUserFromGame;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +43,7 @@ public class GameMap implements Abonent, Runnable{
     private int mapWidth;
     private int mapHeight;
     private volatile boolean isWorked = false;
+    @NotNull private static final Logger LOGGER = LogManager.getLogger();
 
     private Map<UserProfile, Entity> entities = new HashMap<>();
     private Flag flag = new Flag();
@@ -69,7 +74,7 @@ public class GameMap implements Abonent, Runnable{
     }
 
     public GameMap(MessageSystem messageSystem){
-        System.out.print("GameMap was created\n");
+        LOGGER.info("GameMap was created");
         this.messageSystem = messageSystem;
         messageSystem.addService(this);
 
@@ -147,6 +152,15 @@ public class GameMap implements Abonent, Runnable{
         userProfile.addMessageForSending(response);
     }
 
+    private int addEntityInResult(StringBuilder result, int amountEntity, String entityString){
+        if(amountEntity!=0) {
+            result.append(", ");
+        }
+        result.append(entityString);
+        return amountEntity+1;
+    }
+
+    @NotNull
     private String getAllEntityInViewAreaJson(Entity entity){
         StringBuilder result = new StringBuilder();
         int amountEntity = 0;
@@ -154,30 +168,17 @@ public class GameMap implements Abonent, Runnable{
             for(int i = (int)entity.getCoord().x - VIEW_WIDTH_2; i <= entity.getCoord().x + VIEW_WIDTH_2; ++i){
                 if(isPositionCorrect(j, i)) {
                     if((int)flag.getPosition().x == i && (int)flag.getPosition().y == j){
-                        if(amountEntity!=0) {
-                            result.append(", ");
-                        }
-                        result.append(ResponseConstructor.getFlagJson(new Vec2d(i, j), flag.getOwner()));
-                        ++amountEntity;
+                        amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getFlagJson(new Vec2d(i, j), flag.getOwner()));
                     }
 
                     if(entityLocation[i][j] == null) continue;
                     if(entity.getTarget() != null) {
                         if (entity.getTarget().equals(entityLocation[i][j])) {
-                            if (amountEntity != 0) {
-                                result.append(", ");
-                            }
-                            result.append(ResponseConstructor.getTargetJson(new Vec2d(i, j)));
-                            ++amountEntity;
+                            amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getTargetJson(new Vec2d(i, j)));
                         }
                     }
 
-                    //if(entityLocation[i][j].equals(entity)) continue;
-                    if(amountEntity!=0) {
-                        result.append(", ");
-                    }
-                    result.append(ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber()));
-                    ++amountEntity;
+                    amountEntity = addEntityInResult(result, amountEntity, ResponseConstructor.getEntityJson(new Vec2d(i, j), entityLocation[i][j].getCommand(), entityLocation[i][j].getNumber(), entityLocation[i][j].getDirectAbility()));
                 }
             }
         }
@@ -193,6 +194,8 @@ public class GameMap implements Abonent, Runnable{
         userProfile.addMessageForSending(response);
     }
 
+    @SuppressWarnings("all")
+    @Contract(pure = true)
     private boolean isPositionCorrect(int j, int i) {
         return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
     }
@@ -281,7 +284,7 @@ public class GameMap implements Abonent, Runnable{
             Entity userEntity = entities.get(userProfile);
             return userEntity.getCommand();
         } catch(RuntimeException e){
-//            Repairer.getInstance().repaireUser(userProfile);
+            LOGGER.warn(userProfile.getLogin() + " был исключен из-за ошибки в getUserCommand()");
             Message message = new MessageRemoveUserFromGame(address, messageSystem.getAddressService().getGameMechanicsAddress(), userProfile);
             messageSystem.sendMessage(message);
         }
@@ -297,7 +300,7 @@ public class GameMap implements Abonent, Runnable{
             objW = Integer.valueOf(obj.get("width").toString());
             objH = Integer.valueOf(obj.get("height").toString());
         }catch (NumberFormatException e) {
-//            Repairer.getInstance().repaireGameMap(this);
+            LOGGER.warn("Карта была исключена из-за ошибки в getObjectsPosition()");
             Message message = new MessageExludeGameMap(address, messageSystem.getAddressService().getGameMechanicsAddress());
             messageSystem.sendMessage(message);
             stop();
@@ -312,7 +315,7 @@ public class GameMap implements Abonent, Runnable{
             Object obj = jsonPaser.parse(objects);
             mapObjects = (JSONArray)obj;
         } catch (ParseException e) {
-//            Repairer.getInstance().repaireGameMap(this);
+            LOGGER.warn("Карта была исключена из-за ошибки в parseObjectLayer()");
             Message message = new MessageExludeGameMap(address, messageSystem.getAddressService().getGameMechanicsAddress());
             messageSystem.sendMessage(message);
             stop();
@@ -406,10 +409,10 @@ public class GameMap implements Abonent, Runnable{
             try {
                 Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
-                System.out.print("GameMap was deleted\n");
+                LOGGER.info("GameMap was deleted with InterruptedException");
                 return;
             }
         }
-        System.out.print("GameMap was deleted\n");
+        LOGGER.info("GameMap was deleted");
     }
 }

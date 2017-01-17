@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import org.jetbrains.annotations.TestOnly;
 

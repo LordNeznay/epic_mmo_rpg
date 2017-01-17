@@ -1,6 +1,4 @@
-package messageSystem;
-
-import org.jetbrains.annotations.TestOnly;
+package messagesystem;
 
 /**
  * Created by Андрей on 21.12.2015.

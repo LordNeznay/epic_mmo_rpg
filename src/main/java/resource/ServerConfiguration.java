@@ -64,6 +64,8 @@ public final class ServerConfiguration {
     private void getAbilityConfig(Properties properties, String abilityName){
         serverProperties.put(abilityName + ".range", properties.getProperty("ability." + abilityName + ".range"));
         serverProperties.put(abilityName + ".cooldown", properties.getProperty("ability." + abilityName + ".cooldown"));
+        serverProperties.put(abilityName + ".minEffect", properties.getProperty("ability." + abilityName + ".minEffect"));
+        serverProperties.put(abilityName + ".maxEffect", properties.getProperty("ability." + abilityName + ".maxEffect"));
     }
 
     public int getAbilityRange(String abilityName){
@@ -72,6 +74,14 @@ public final class ServerConfiguration {
 
     public int getAbilityCooldown(String abilityName){
         return Integer.parseInt(serverProperties.get(abilityName + ".cooldown"));
+    }
+
+    public int getAbilityMinEffect(String abilityName){
+        return Integer.parseInt(serverProperties.get(abilityName + ".minEffect"));
+    }
+
+    public int getAbilityMaxEffect(String abilityName){
+        return Integer.parseInt(serverProperties.get(abilityName + ".maxEffect"));
     }
 
     public int getPort() {

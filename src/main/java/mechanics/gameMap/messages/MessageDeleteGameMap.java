@@ -1,7 +1,7 @@
-package mechanics.gameMap.messages;
+package mechanics.gamemap.messages;
 
-import mechanics.gameMap.GameMap;
-import messageSystem.Address;
+import mechanics.gamemap.GameMap;
+import messagesystem.Address;
 
 /**
  * Created by Андрей on 21.12.2015.

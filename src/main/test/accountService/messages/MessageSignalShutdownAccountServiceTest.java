@@ -1,10 +1,10 @@
-package accountService.messages;
+package accountservice.messages;
 
-import accountService.AccountService;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import accountservice.AccountService;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.junit.Before;
 import org.junit.Test;
 

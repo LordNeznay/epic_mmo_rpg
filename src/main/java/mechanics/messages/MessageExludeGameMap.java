@@ -1,7 +1,7 @@
 package mechanics.messages;
 
 import mechanics.GameMechanics;
-import messageSystem.Address;
+import messagesystem.Address;
 
 /**
  * Created by Андрей on 21.12.2015.

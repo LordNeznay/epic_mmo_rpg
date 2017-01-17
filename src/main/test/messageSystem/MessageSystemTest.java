@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import org.junit.Before;
 import org.junit.Test;

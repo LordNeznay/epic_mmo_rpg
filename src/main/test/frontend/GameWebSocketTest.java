@@ -2,9 +2,9 @@ package frontend;
 
 import main.UserProfile;
 import mechanics.messages.*;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.MessageSystem;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.MessageSystem;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,8 +18,14 @@ public class Address {
         return id;
     }
 
+
     @Override
-    public boolean equals(Object obj){
-        return this.hashCode() == obj.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        return id == address.id;
     }
 }

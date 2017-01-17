@@ -1,12 +1,12 @@
-package accountService.messages;
+package accountservice.messages;
 
-import accountService.AccountService;
+import accountservice.AccountService;
 import frontend.messages.MessageIsAuthenticated;
 import frontend.messages.MessageIsUserExisted;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import org.junit.Before;
 import org.junit.Test;
 

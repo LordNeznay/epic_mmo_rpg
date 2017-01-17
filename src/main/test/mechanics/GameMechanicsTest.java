@@ -1,11 +1,11 @@
 package mechanics;
 
 import main.UserProfile;
-import mechanics.gameMap.GameMap;
-import mechanics.gameMap.messages.*;
-import messageSystem.Address;
-import messageSystem.AddressService;
-import messageSystem.MessageSystem;
+import mechanics.gamemap.GameMap;
+import mechanics.gamemap.messages.*;
+import messagesystem.Address;
+import messagesystem.AddressService;
+import messagesystem.MessageSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +59,7 @@ public class GameMechanicsTest {
 
 //    @Test
 //    public void testAddUserToCreateManyMap() throws Exception {
-//        GameMechanics mechanics = new GameMechanics(messageSystem);
+//        GameMechanics mechanics = new GameMechanics(messagesystem);
 //
 //        int amountPlayersInCommand = GameMap.getMaxPlayersInCommand();
 //        for(int i=0; i<amountPlayersInCommand * 5; ++i){

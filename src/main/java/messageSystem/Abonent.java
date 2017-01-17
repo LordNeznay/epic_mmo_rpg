@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 /**
  * Created by Андрей on 20.12.2015.

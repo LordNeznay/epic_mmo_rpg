@@ -1,7 +1,7 @@
 package mechanics.ability;
 
-import mechanics.abilityAction.AbilityAction;
-import mechanics.abilityAction.OrdinaryHitAction;
+import mechanics.abilityaction.AbilityAction;
+import mechanics.abilityaction.OrdinaryHitAction;
 import resource.ServerConfiguration;
 
 /**

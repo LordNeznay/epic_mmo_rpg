@@ -30,14 +30,11 @@ define([
 
             this.ws = new WebSocket('ws://' + document.location.host + '/gameplay');
             this.ws.onopen = function (event) {
-                console.log("Socket was opened\n");
                 that.isOpenedSocket = true;
                 that.trigger("joinGame");
             }
             this.ws.onmessage = function (event) {
-                //console.log(event.data);
                 var allData = JSON.parse(event.data);
-                //console.log(allData);
                 allData.forEach(function(data){
                     switch(data.t){
                         case headers.waitStart:{
@@ -93,23 +90,18 @@ define([
                 });
             }
             this.ws.onerror = function(){
-                console.log("Socket was not opened\n");
                 that.isOpenedSocket = false;
                 Backbone.history.navigate('', true);
             },
             this.ws.onclose = function (event) {
-                console.log("Socket was closed\n");
                 that.isOpenedSocket = false;
                 Backbone.history.navigate('', true);
             }
         },
         sendMessage: function(message){
             if(this.isOpenedSocket){
-                console.log("Query " + message + " was sended\n");
                 this.ws.send(message);
-            } else {
-                console.log("Error: Socket was not opened!\n");
-            }
+            } 
         },
         
         startGame: function(){
@@ -121,7 +113,6 @@ define([
         },
         
         joinGame: function(){
-            //alert("joinGame");
             var that = this;
             var message = '{"command": "join_game"}';
             that.sendMessage(message);
@@ -176,7 +167,7 @@ define([
         
         getCoord: function(){
             var message = '{"command": "getcoord"}';
-            ws.send(message);
+            this.ws.send(message);
         },
         
         

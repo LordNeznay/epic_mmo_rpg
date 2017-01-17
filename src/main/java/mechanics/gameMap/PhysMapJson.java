@@ -1,6 +1,7 @@
-package mechanics.gameMap;
+package mechanics.gamemap;
 
 import com.sun.javafx.geom.Vec2d;
+import org.jetbrains.annotations.Contract;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import resource.Resource;
@@ -85,7 +86,8 @@ public class PhysMapJson implements PhysMap, Resource {
         return  isNotPassability;
     }
 
-
+    @SuppressWarnings("all")
+    @Contract(pure = true)
     private boolean isPositionCorrect(int j, int i) {
         return i >= 0 && i < mapWidth && j >= 0 && j < mapHeight;
     }

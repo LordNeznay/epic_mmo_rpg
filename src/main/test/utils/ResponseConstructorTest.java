@@ -54,15 +54,15 @@ public class ResponseConstructorTest {
 
         String command = "CommandRed";
         String result = ResponseConstructor.getEntityJson(vec, command, 1);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_people.png\",\"number\":1}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"red_people.png\",\"number\":1,\"da\":\"none\"}");
 
         command = "CommandBlue";
         result = ResponseConstructor.getEntityJson(vec, command, 1);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_people.png\",\"number\":1}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"blue_people.png\",\"number\":1,\"da\":\"none\"}");
 
         command = "none";
         result = ResponseConstructor.getEntityJson(vec, command, 1);
-        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"people.png\",\"number\":1}");
+        assertEquals(result, "{\"x\":1,\"y\":1,\"image\":\"people.png\",\"number\":1,\"da\":\"none\"}");
     }
 
     @Test

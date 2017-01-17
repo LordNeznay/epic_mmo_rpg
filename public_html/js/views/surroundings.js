@@ -188,7 +188,6 @@
             var that = this;
             var amount = 0;
             that.loadTilesets = 0;
-            //console.log(this.map);
             this.map.tilesets.forEach(function(tileset){
                 amount += 1;
                 var pic = new Image();
@@ -221,6 +220,7 @@
                     a.dst = 0;
                     a.anim = 'move';
                     a.isRotate = false;
+                    a.animStatus = 0;
                 }
                 if(e.x < a.x && e.y == a.y){
                     a.direct = "left";
@@ -229,6 +229,7 @@
                     a.dst = 0;
                     a.anim = 'move';
                     a.isRotate = true;
+                    a.animStatus = 0;
                 }
                 if(e.x == a.x && e.y > a.y){
                     a.direct = "down";
@@ -236,6 +237,7 @@
                     a.offsetY = -canvas_tile_width;
                     a.dst = 0;
                     a.anim = 'move';
+                    a.animStatus = 0;
                 }
                 if(e.x == a.x && e.y < a.y){
                     a.direct = "up";
@@ -243,6 +245,7 @@
                     a.offsetY = canvas_tile_width;
                     a.dst = 0;
                     a.anim = 'move';
+                    a.animStatus = 0;
                 }
                 
             }
@@ -255,6 +258,11 @@
             var dist = canvas_tile_width*that.sfps/that.fps;
             that.forRedrawing.forEach(function(anim){
                 anim.dst += dist;
+                anim.animStatus += dist;
+                if(anim.animStatus > canvas_tile_width){
+                    anim.animStatus = 0;
+                    anim.anim = 'wait';
+                }
                 switch(anim.direct){
                     case "up": {
                         anim.offsetY -= dist;
@@ -277,7 +285,10 @@
                     anim.offsetY = 0;
                     anim.direct = "none";
                     anim.dst = 0;
-                    anim.anim = 'wait';
+                    if(anim.anim == 'move'){
+                        anim.anim = 'wait';
+                        anim.animStatus = 0;
+                    }
                 }
             });
             this.drawEntities();
@@ -294,6 +305,9 @@
                     if(_anim.number == entity.number){
                         anim = _anim;
                         that.checkNeedOffset(anim, entity);
+                        if(entity.number == -1){
+                            anim.command = entity.image;
+                        }
                         return;
                     }
                 });
@@ -306,11 +320,54 @@
                         offsetY: 0,
                         direct: 'none',
                         dst: 0,
-                        anim: 'move',
+                        anim: 'wait',
                         number: entity.number,
                         command: entity.image,
-                        isRotate: false
+                        isRotate: false,
+                        animStatus: 0
                     }        
+                }
+                
+                switch(entity.da){
+                    case "rr":{
+                        anim.anim = 'attack_right';
+                        anim.isRotate = false;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "rb":{
+                        anim.anim = 'attack_bottom';
+                        anim.isRotate = false;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "rt":{
+                        anim.anim = 'attack_top';
+                        anim.isRotate = false;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "lr":{
+                        anim.anim = 'attack_right';
+                        anim.isRotate = true;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "lb":{
+                        anim.anim = 'attack_bottom';
+                        anim.isRotate = true;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "lt":{
+                        anim.anim = 'attack_top';
+                        anim.isRotate = true;
+                        anim.animStatus = 0;
+                    }; break;
+                    case "cb":{
+                        anim.anim = 'attack_bottom';
+                        anim.animStatus = 0;
+                    }; break;
+                    case "ct":{
+                        anim.anim = 'attack_top';
+                        anim.animStatus = 0;
+                    }; break;
+                    default: break;
                 }
                 newAnim.push(anim);
                 
@@ -326,29 +383,50 @@
             that.forRedrawing.forEach(function(anim){
                 var pic = undefined;
                 var steps;
+                var width;
                 switch(anim.command){
                     case "red_people.png":{
                         pic = that.all_animations['red_player'][anim.anim].el;
                         steps = that.all_animations['red_player'][anim.anim].steps;
+                        width = that.all_animations['red_player'][anim.anim].width;
                     }; break;
                     case "blue_people.png":{
                         pic = that.all_animations['blue_player'][anim.anim].el;
                         steps = that.all_animations['blue_player'][anim.anim].steps;
+                        width = that.all_animations['blue_player'][anim.anim].width;
                     }; break;
                     case "flag.png":{
                         pic = that.all_animations['flag'][anim.anim].el;
                         steps = that.all_animations['flag'][anim.anim].steps;
+                        width = that.all_animations['flag'][anim.anim].width;
                     }; break;
+                    case "blue_flag.png":{
+                        pic = that.all_animations['blue_flag'][anim.anim].el;
+                        steps = that.all_animations['blue_flag'][anim.anim].steps;
+                        width = that.all_animations['blue_flag'][anim.anim].width;
+                    }; break;
+                    case "red_flag.png":{
+                        pic = that.all_animations['red_flag'][anim.anim].el;
+                        steps = that.all_animations['red_flag'][anim.anim].steps;
+                        width = that.all_animations['red_flag'][anim.anim].width;
+                    }; break;    
+                    case "target.png":{
+                        pic = that.all_animations['target'][anim.anim].el;
+                        steps = that.all_animations['target'][anim.anim].steps;
+                        width = that.all_animations['target'][anim.anim].width;
+                    }; break;    
                     default: {
-                        console.log(anim.command);
+                        pic = that.all_animations['ifError'][anim.anim].el;
+                        steps = that.all_animations['ifError'][anim.anim].steps;
+                        width = that.all_animations['ifError'][anim.anim].width;
                     }; break;
                 }
 
                 if(!anim.isRotate){
                     that.canvas_middleground_context.drawImage(pic, 
-                        canvas_tile_width * Math.floor(anim.dst / (canvas_tile_width / steps)),
+                        canvas_tile_width * Math.floor(anim.animStatus / (canvas_tile_width / steps)),
                         0,
-                        canvas_tile_width,
+                        width,
                         canvas_tile_height,
                         (anim.x - that.pos_x + 7) * canvas_tile_width  + that.offsetX + anim.offsetX,
                         (anim.y - that.pos_y + 4) * canvas_tile_height  + that.offsetY + anim.offsetY,
@@ -358,7 +436,7 @@
                     that.canvas_middleground_context.save();
                     that.canvas_middleground_context.scale(-1, 1);
                     that.canvas_middleground_context.drawImage(pic, 
-                        canvas_tile_width * Math.floor(anim.dst / (canvas_tile_width / steps)),
+                        canvas_tile_width * Math.floor(anim.animStatus / (canvas_tile_width / steps)),
                         0,
                         canvas_tile_width,
                         canvas_tile_height,
@@ -424,7 +502,6 @@
                     }
                 }
             });
-            //alert("1");
         }
         
     });

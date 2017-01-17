@@ -62,9 +62,16 @@ public class ResponseConstructor {
         return result.toString();
     }
 
+
     @NotNull
     @Contract(pure = true)
     public static String getEntityJson(Vec2d vec, String command, int number){
+        return getEntityJson(vec, command, number, "none");
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public static String getEntityJson(Vec2d vec, String command, int number, String directAbility){
         StringBuilder result = new StringBuilder();
         result.append("{\"x\":");
         result.append((int)vec.x);
@@ -84,6 +91,9 @@ public class ResponseConstructor {
         }
         result.append(",\"number\":");
         result.append(number);
+        result.append(",\"da\":\"");
+        result.append(directAbility);
+        result.append('"');
         result.append('}');
         return result.toString();
     }
@@ -149,4 +159,5 @@ public class ResponseConstructor {
         result.append('}');
         return result.toString();
     }
+
 }

@@ -4,7 +4,8 @@ node_modules/
 public_html/js/tmpl/
 #Игнорирование папки с байт-кодом
 target
-.idea/
+.idea/workspace.xml
+.idea/tasks.xml
 #Логи проверки покрытия тестов java
 coverage-error.log
 #Sass
@@ -19,3 +20,4 @@ public_html/js/build.js
 public_html/js/build.min.js
 public_html/js/build
 production
+out

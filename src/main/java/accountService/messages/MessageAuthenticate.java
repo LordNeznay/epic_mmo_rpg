@@ -1,10 +1,10 @@
-package accountService.messages;
+package accountservice.messages;
 
-import accountService.AccountService;
+import accountservice.AccountService;
 import frontend.messages.MessageIsAuthenticated;
 import main.UserProfile;
-import messageSystem.Address;
-import messageSystem.Message;
+import messagesystem.Address;
+import messagesystem.Message;
 
 /**
  * Created by Андрей on 20.12.2015.

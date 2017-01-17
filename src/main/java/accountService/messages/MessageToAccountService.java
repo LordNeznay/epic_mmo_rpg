@@ -1,9 +1,9 @@
-package accountService.messages;
+package accountservice.messages;
 
-import accountService.AccountService;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
+import accountservice.AccountService;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
 
 /**
  * Created by Андрей on 20.12.2015.

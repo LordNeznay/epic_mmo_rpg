@@ -1,6 +1,6 @@
-package messageSystem;
+package messagesystem;
 
-import accountService.AccountService;
+import accountservice.AccountService;
 import frontend.Frontend;
 import mechanics.GameMechanics;
 import org.junit.Test;
