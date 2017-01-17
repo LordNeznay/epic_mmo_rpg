@@ -129,6 +129,9 @@ define([
                 this.sendMessage(message);
                 this.isInGame = false;
             }
+			if(this.ws != null)
+				this.ws.close();
+			this.ws = null;
         },
         
         move: function(params){
